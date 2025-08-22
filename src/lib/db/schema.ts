@@ -7,7 +7,7 @@ export const campaign = sqliteTable(
     id: integer('id').primaryKey(),
     slug: text('slug').notNull(),
     name: text('name').notNull(),
-    description: text('description'),
+    description: text('description', { mode: 'json' }),
     createdAt: integer('created_at', {
       mode: 'timestamp',
     }).notNull(),
@@ -16,7 +16,68 @@ export const campaign = sqliteTable(
     }).notNull(),
     userId: text('user_id').notNull(),
   },
-  (table) => [unique('user_slug_unique').on(table.userId, table.slug)]
+  (table) => [unique('user_campaignSlug_unique').on(table.userId, table.slug)]
+)
+
+export const arc = sqliteTable(
+  'arc',
+  {
+    id: integer('id').primaryKey(),
+    slug: text('slug').notNull(),
+    name: text('name').notNull(),
+    hook: text('hook', { mode: 'json' }),
+    protagonist: text('protagonist', { mode: 'json' }),
+    antagonist: text('antagonist', { mode: 'json' }),
+    problem: text('problem', { mode: 'json' }),
+    key: text('key'),
+    outcome: text('outcome', { mode: 'json' }),
+    createdAt: integer('created_at', {
+      mode: 'timestamp',
+    }).notNull(),
+    updatedAt: integer('updated_at', {
+      mode: 'timestamp',
+    }).notNull(),
+    campaignId: integer('campaign_id').notNull(),
+  },
+  (table) => [
+    unique('campaign_arcSlug_unique').on(table.campaignId, table.slug),
+  ]
+)
+
+export const thingType = sqliteTable('thing_type', {
+  id: integer('id').primaryKey(),
+  name: text('name').notNull(),
+  campaignId: integer('campaign_id').notNull(),
+})
+
+export const thing = sqliteTable(
+  'thing',
+  {
+    id: integer('id').primaryKey(),
+    slug: text('slug').notNull(),
+    typeId: integer('type_id')
+      .notNull()
+      .references(() => thingType.id, { onDelete: 'cascade' }),
+    name: text('slug'),
+    description: text('description', { mode: 'json' }),
+    campaignId: integer('campaign_id').notNull(),
+  },
+  (table) => [
+    unique('campaign_thingSlug_unique').on(table.campaignId, table.slug),
+  ]
+)
+
+export const arcThing = sqliteTable(
+  'arc_thing',
+  {
+    arcId: integer('arc_id')
+      .notNull()
+      .references(() => arc.id, { onDelete: 'cascade' }),
+    thingId: integer('thing_id')
+      .notNull()
+      .references(() => thing.id, { onDelete: 'cascade' }),
+  },
+  (table) => [unique('arc_thing_unique').on(table.arcId, table.thingId)]
 )
 
 // Auth Tables
