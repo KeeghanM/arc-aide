@@ -1,0 +1,23 @@
+---
+import DashboardScreen from '@/components/app/screens/dashboard'
+import { db } from '@/lib/db/db'
+import { campaign } from '@/lib/db/schema'
+import MainLayout from '@layouts/main-layout.astro'
+import { desc } from 'drizzle-orm'
+
+const campaigns = await db
+  .select()
+  .from(campaign)
+  .orderBy(desc(campaign.updatedAt))
+---
+
+<MainLayout
+  title='Dashboard | ArcAide'
+  seo={{ description: 'Manage your campaigns from one hub, right here!' }}
+>
+  <DashboardScreen
+    initialCampaigns={campaigns}
+    user={Astro.locals.user}
+    client:load
+  />
+</MainLayout>

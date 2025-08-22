@@ -15,7 +15,7 @@ const { SITE_URL } = loadEnv(process.env.NODE_ENV!, process.cwd(), '')
 
 export default defineConfig({
   site: SITE_URL, // The base URL for the site, used for generating absolute URLs
-  output: 'static', // Output mode for the site, 'static' for static site generation - we opt in to SSR per route
+  output: 'server', // Output mode for the site, 'static' for static site generation - we opt in to SSR per route
   env: {
     schema: envDefinition, // Environment variable schema definition
     validateSecrets: true, // Validate secrets in production builds

@@ -14,7 +14,8 @@
       "@lib/*": ["src/lib/*"],
       "@styles/*": ["src/styles/*"],
       "@db/*": ["src/lib/db/*"],
-      "@auth/*": ["src/lib/auth/*"]
+      "@auth/*": ["src/lib/auth/*"],
+      "@hooks/*": ["src/components/app/hooks/*"]
     }
   }
 }

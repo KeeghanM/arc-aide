@@ -1,4 +1,5 @@
 import type { CodegenConfig } from '@graphql-codegen/cli'
+import process from 'node:process'
 import { loadEnv } from 'vite'
 
 const { HYGRAPH_ENDPOINT } = loadEnv(

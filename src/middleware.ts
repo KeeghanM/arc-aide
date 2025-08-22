@@ -25,6 +25,16 @@ export const onRequest = defineMiddleware(async (context, next) => {
     })
   }
 
+  if (isAuthed && context.url.pathname.startsWith('/auth')) {
+    // Redirect to dashboard if authenticated and trying to access auth routes
+    return new Response(null, {
+      status: 302,
+      headers: {
+        Location: `/dashboard`,
+      },
+    })
+  }
+
   // Otherwise, continue to the next middleware or route handler
   return next()
 })

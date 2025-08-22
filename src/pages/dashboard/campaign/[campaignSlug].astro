@@ -1,0 +1,31 @@
+---
+import MainLayout from '@/layouts/main-layout.astro'
+import { db } from '@/lib/db/db'
+import { campaign as campaignSchema } from '@/lib/db/schema'
+import { and, eq } from 'drizzle-orm'
+
+const { campaignSlug } = Astro.params
+const { user } = Astro.locals
+
+if (!campaignSlug) {
+  return Astro.redirect('/404')
+}
+
+const campaignData = await db
+  .select()
+  .from(campaignSchema)
+  .where(
+    and(eq(campaignSchema.userId, user.id), eq(campaignSchema.id, campaignSlug))
+  )
+  .limit(1)
+
+const campaign = campaignData[0]
+
+if (!campaign) {
+  return Astro.redirect('/404')
+}
+---
+
+<MainLayout title={campaign.name}>
+  <h1>{campaign.name}</h1>
+</MainLayout>

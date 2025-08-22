@@ -1,14 +1,36 @@
 ---
-import MainLayout from '../layouts/main-layout.astro'
+export const prerender = true
+
+import { Button } from '@/components/ui/button'
+import MainLayout from '@layouts/main-layout.astro'
 ---
 
 <MainLayout
-  title='Welcome to My Astro Page'
-  seo={{ description: 'A simple Astro page' }}
+  title='The best way to manage your D&D campaigns'
+  seo={{
+    description:
+      'ArcAide is an opinionated, yet flexible, way to manage your D&D campaigns and plan out engaging storylines for your players.',
+  }}
 >
-  <section class='bg-primary p-8 text-white'>
-    <h1 class='mb-4 text-4xl font-bold'>Hello, Astro!</h1>
-    <p class='text-lg'>This is a simple page built with Astro.</p>
-    <p class='text-lg'>Explore the features and enjoy the performance!</p>
-  </section>
+  <main>
+    <section
+      class='container mx-auto flex min-h-screen flex-col items-center justify-center p-4 text-center'
+    >
+      <div class='max-w-2xl space-y-6'>
+        <h1 class='text-primary text-4xl font-bold md:text-5xl'>
+          Create more compelling D&D campaigns, easily.
+        </h1>
+        <p class='text-foreground text-lg md:text-xl'>
+          ArcAide is an opinionated, yet flexible, way to manage your D&D
+          campaigns and plan out engaging storylines for your players.
+        </p>
+        <Button
+          variant='default'
+          size='lg'
+        >
+          <a href='/auth/register'>Get Started</a>
+        </Button>
+      </div>
+    </section>
+  </main>
 </MainLayout>

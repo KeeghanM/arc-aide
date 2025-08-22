@@ -1,6 +1,18 @@
 import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core'
 
 // Core tables
+export const campaign = sqliteTable('campaign', {
+  id: text('id').primaryKey(),
+  name: text('name').notNull(),
+  description: text('description'),
+  createdAt: integer('created_at', {
+    mode: 'timestamp',
+  }).notNull(),
+  updatedAt: integer('updated_at', {
+    mode: 'timestamp',
+  }).notNull(),
+  userId: text('user_id').notNull(),
+})
 
 // Auth Tables
 export const user = sqliteTable('user', {
