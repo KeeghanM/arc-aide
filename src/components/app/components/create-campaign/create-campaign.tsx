@@ -17,6 +17,14 @@ export default function CreateCampaign() {
   const [campaignName, setCampaignName] = useState('')
   const [open, setOpen] = useState(false)
 
+  const handleCreate = async () => {
+    await createCampaign.mutateAsync({ name: campaignName })
+    if (!createCampaign.error) {
+      setCampaignName('')
+      setOpen(false)
+    }
+  }
+
   return (
     <Dialog
       open={open}
@@ -38,6 +46,15 @@ export default function CreateCampaign() {
           placeholder='Campaign name'
           value={campaignName}
           onChange={(e) => setCampaignName(e.target.value)}
+          onKeyDown={(e) => {
+            if (
+              e.key === 'Enter' &&
+              !createCampaign.isPending &&
+              campaignName
+            ) {
+              handleCreate()
+            }
+          }}
         />
         {createCampaign.error && (
           <div className='mt-2 text-sm text-red-500'>
@@ -48,13 +65,7 @@ export default function CreateCampaign() {
           <Button
             variant='default'
             disabled={createCampaign.isPending || !campaignName}
-            onClick={async () => {
-              await createCampaign.mutateAsync({ name: campaignName })
-              if (!createCampaign.error) {
-                setCampaignName('')
-                setOpen(false)
-              }
-            }}
+            onClick={handleCreate}
           >
             {createCampaign.isPending ? 'Creating...' : 'Create'}
           </Button>

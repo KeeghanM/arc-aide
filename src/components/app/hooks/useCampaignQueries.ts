@@ -16,13 +16,15 @@ export function useCampaignQueries() {
     },
   })
 
-  const campaignQuery = useQuery({
-    queryKey: ['campaign'],
-    queryFn: async (campaignId: string): Promise<TCampaign> => {
-      const response = await fetch(`/api/campaigns/${campaignId}`)
-      return response.json()
-    },
-  })
+  const campaignQuery = (slug: string) =>
+    useQuery({
+      queryKey: ['campaign', slug],
+      queryFn: async ({ queryKey }): Promise<TCampaign> => {
+        const [_key, campaignSlug] = queryKey
+        const response = await fetch(`/api/campaigns/${campaignSlug}`)
+        return response.json()
+      },
+    })
 
   const createCampaign = useMutation({
     mutationFn: async (newCampaign: { name: string }) => {
@@ -42,12 +44,12 @@ export function useCampaignQueries() {
   })
 
   const deleteCampaign = useMutation({
-    mutationFn: async (campaignId: number) => {
-      await fetch(`/api/campaigns/${campaignId}`, {
+    mutationFn: async (slug: number) => {
+      await fetch(`/api/campaigns/${slug}`, {
         method: 'DELETE',
       })
 
-      posthog?.capture('campaign_deleted', { id: campaignId })
+      posthog?.capture('campaign_deleted', { id: slug })
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['campaigns'] })
@@ -56,11 +58,11 @@ export function useCampaignQueries() {
 
   const modifyCampaign = useMutation({
     mutationFn: async (updatedCampaign: {
-      id: number
+      slug: string
       name: string
       description: string | null
     }) => {
-      await fetch(`/api/campaigns/${updatedCampaign.id}`, {
+      await fetch(`/api/campaigns/${updatedCampaign.slug}`, {
         method: 'PUT',
         body: JSON.stringify({ updatedCampaign }),
         headers: { 'Content-Type': 'application/json' },

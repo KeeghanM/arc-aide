@@ -1,18 +1,23 @@
-import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core'
+import { integer, sqliteTable, text, unique } from 'drizzle-orm/sqlite-core'
 
 // Core tables
-export const campaign = sqliteTable('campaign', {
-  id: text('id').primaryKey(),
-  name: text('name').notNull(),
-  description: text('description'),
-  createdAt: integer('created_at', {
-    mode: 'timestamp',
-  }).notNull(),
-  updatedAt: integer('updated_at', {
-    mode: 'timestamp',
-  }).notNull(),
-  userId: text('user_id').notNull(),
-})
+export const campaign = sqliteTable(
+  'campaign',
+  {
+    id: integer('id').primaryKey(),
+    slug: text('slug').notNull(),
+    name: text('name').notNull(),
+    description: text('description'),
+    createdAt: integer('created_at', {
+      mode: 'timestamp',
+    }).notNull(),
+    updatedAt: integer('updated_at', {
+      mode: 'timestamp',
+    }).notNull(),
+    userId: text('user_id').notNull(),
+  },
+  (table) => [unique('user_slug_unique').on(table.userId, table.slug)]
+)
 
 // Auth Tables
 export const user = sqliteTable('user', {

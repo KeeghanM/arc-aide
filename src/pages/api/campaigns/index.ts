@@ -63,7 +63,7 @@ export const POST: APIRoute = async ({ request }) => {
     const result = await db
       .insert(campaign)
       .values({
-        id: slugify(parsedCampaign.data.name),
+        slug: slugify(parsedCampaign.data.name),
         name: parsedCampaign.data.name,
         userId: session.user.id,
         createdAt: now,

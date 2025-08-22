@@ -15,7 +15,10 @@ const campaignData = await db
   .select()
   .from(campaignSchema)
   .where(
-    and(eq(campaignSchema.userId, user.id), eq(campaignSchema.id, campaignSlug))
+    and(
+      eq(campaignSchema.userId, user.id),
+      eq(campaignSchema.slug, campaignSlug)
+    )
   )
   .limit(1)
 
