@@ -16,6 +16,13 @@ export default function SearchBar() {
   const { searchQuery } = useSearchQueries()
   const query = searchQuery(value, 'any')
 
+  // Check if any results have spell corrections
+  const hasCorrections = query.data?.some(
+    (result) =>
+      result.correctedQuery && result.correctedQuery !== result.originalQuery
+  )
+  const correctedQuery = hasCorrections ? query.data?.[0]?.correctedQuery : null
+
   return (
     <>
       <h2 className='mb-2 flex items-center gap-2 text-2xl font-semibold'>
@@ -28,6 +35,14 @@ export default function SearchBar() {
         onChange={(e) => setValue(e.target.value)}
         className='border-border focus:border-primary mb-4 w-full rounded-md border p-2 focus:outline-none'
       />
+
+      {hasCorrections && correctedQuery && (
+        <div className='mb-3 text-sm text-orange-600'>
+          <span className='font-medium'>Did you mean:</span>{' '}
+          <em>"{correctedQuery}"</em>
+        </div>
+      )}
+
       {query.data && (
         <ul className='max-h-60 space-y-2 overflow-y-auto'>
           {query.data.map((result) => (

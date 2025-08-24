@@ -1,7 +1,7 @@
 import { auth } from '@/lib/auth/auth'
 import { db } from '@/lib/db/db'
 import { campaign } from '@/lib/db/schema'
-import { searchWithHighlight } from '@/lib/db/search'
+import { fuzzySearchWithHighlight, searchWithHighlight } from '@/lib/db/search'
 import type { APIRoute } from 'astro'
 import { and, eq } from 'drizzle-orm'
 
@@ -40,8 +40,13 @@ export const GET: APIRoute = async ({ request, params }) => {
     const searchParams = url.searchParams
     const query = searchParams.get('query') || ''
     const type = searchParams.get('type') || 'any' // 'any', 'arc', 'thing', etc.
+    const fuzzy =
+      searchParams.get('fuzzy') === 'true' || searchParams.get('fuzzy') === '1'
 
-    const results = await searchWithHighlight(query, campaignResult[0].id, type)
+    // Use fuzzy search if enabled, otherwise fall back to exact search
+    const results = fuzzy
+      ? await fuzzySearchWithHighlight(query, campaignResult[0].id, type, true)
+      : await searchWithHighlight(query, campaignResult[0].id, type)
 
     return new Response(JSON.stringify(results), {
       status: 200,
