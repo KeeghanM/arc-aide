@@ -6,31 +6,442 @@ import MainLayout from '@layouts/main-layout.astro'
 ---
 
 <MainLayout
-  title='The best way to manage your D&D campaigns'
+  title='ArcAide - The best way to manage your D&D campaigns'
   seo={{
     description:
-      'ArcAide is an opinionated, yet flexible, way to manage your D&D campaigns and plan out engaging storylines for your players.',
+      'ArcAide helps Dungeon Masters create compelling storylines using a structured arc-based approach. Manage campaigns, NPCs, locations, and plot elements with powerful organization tools.',
   }}
 >
   <main>
+    <!-- Hero Section -->
+    <section class='from-primary/10 to-background bg-gradient-to-b'>
+      <div
+        class='container mx-auto flex min-h-screen flex-col items-center justify-center p-4 text-center'
+      >
+        <div class='max-w-4xl space-y-8'>
+          <h1 class='text-primary text-4xl font-bold md:text-6xl lg:text-7xl'>
+            Create more compelling D&D campaigns, easily
+          </h1>
+          <p
+            class='text-foreground mx-auto max-w-3xl text-xl font-light md:text-2xl lg:text-3xl'
+          >
+            ArcAide helps Dungeon Masters structure engaging storylines using
+            our proven arc-based framework
+          </p>
+          <div
+            class='flex flex-col items-center justify-center gap-4 sm:flex-row'
+          >
+            <Button
+              variant='default'
+              size='lg'
+              className='px-8 py-6 text-lg'
+            >
+              <a href='/auth/register/'>Start Your Campaign</a>
+            </Button>
+            <Button
+              variant='outline'
+              size='lg'
+              className='px-8 py-6 text-lg'
+            >
+              <a href='#learn-more'>Learn More</a>
+            </Button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Arc Framework Section -->
     <section
-      class='container mx-auto flex min-h-screen flex-col items-center justify-center p-4 text-center'
+      id='learn-more'
+      class='bg-card py-20'
     >
-      <div class='max-w-2xl space-y-6'>
-        <h1 class='text-primary text-4xl font-bold md:text-5xl'>
-          Create more compelling D&D campaigns, easily.
-        </h1>
-        <p class='text-foreground text-lg md:text-xl'>
-          ArcAide is an opinionated, yet flexible, way to manage your D&D
-          campaigns and plan out engaging storylines for your players.
-        </p>
-        <Button
-          variant='default'
-          size='lg'
+      <div class='container mx-auto px-4'>
+        <div class='mb-16 text-center'>
+          <h2 class='text-primary mb-4 text-3xl font-bold md:text-4xl'>
+            The Arc Framework
+          </h2>
+          <p class='text-muted-foreground mx-auto max-w-2xl text-lg'>
+            Structure your stories with our proven six-part framework that
+            creates compelling, player-driven narratives
+          </p>
+        </div>
+
+        <div
+          class='mx-auto grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3'
         >
-          <a href='/auth/register/'>Get Started</a>
-        </Button>
+          <div
+            class='bg-background border-border rounded-lg border p-6 shadow-sm'
+          >
+            <div class='text-primary mb-2 text-2xl font-bold'>1. Hook</div>
+            <h3 class='mb-3 text-lg font-semibold'>Draw Players In</h3>
+            <p class='text-muted-foreground'>
+              The opening scene or inciting incident that captures your players'
+              attention and pulls them into the story.
+            </p>
+            <div class='bg-accent/10 mt-4 rounded p-3 text-sm italic'>
+              "While traveling to Phandalin, the party discovers an abandoned
+              wagon..."
+            </div>
+          </div>
+
+          <div
+            class='bg-background border-border rounded-lg border p-6 shadow-sm'
+          >
+            <div class='text-primary mb-2 text-2xl font-bold'>
+              2. Protagonist
+            </div>
+            <h3 class='mb-3 text-lg font-semibold'>Define the Heroes</h3>
+            <p class='text-muted-foreground'>
+              The main characters or heroes of this particular story arc -
+              usually your players or key allies.
+            </p>
+            <div class='bg-accent/10 mt-4 rounded p-3 text-sm italic'>
+              "The adventuring party, hired by Gundren Rockseeker..."
+            </div>
+          </div>
+
+          <div
+            class='bg-background border-border rounded-lg border p-6 shadow-sm'
+          >
+            <div class='text-primary mb-2 text-2xl font-bold'>
+              3. Antagonist
+            </div>
+            <h3 class='mb-3 text-lg font-semibold'>Create Opposition</h3>
+            <p class='text-muted-foreground'>
+              The opposition, conflict source, or "villain" that stands in the
+              way of the protagonists' goals.
+            </p>
+            <div class='bg-accent/10 mt-4 rounded p-3 text-sm italic'>
+              "Klarg, the bugbear leader who has captured Gundren..."
+            </div>
+          </div>
+
+          <div
+            class='bg-background border-border rounded-lg border p-6 shadow-sm'
+          >
+            <div class='text-primary mb-2 text-2xl font-bold'>4. Problem</div>
+            <h3 class='mb-3 text-lg font-semibold'>Define the Challenge</h3>
+            <p class='text-muted-foreground'>
+              The central challenge or conflict that needs to be resolved to
+              move the story forward.
+            </p>
+            <div class='bg-accent/10 mt-4 rounded p-3 text-sm italic'>
+              "Gundren has been captured and his location is unknown..."
+            </div>
+          </div>
+
+          <div
+            class='bg-background border-border rounded-lg border p-6 shadow-sm'
+          >
+            <div class='text-primary mb-2 text-2xl font-bold'>5. Key</div>
+            <h3 class='mb-3 text-lg font-semibold'>Provide Solutions</h3>
+            <p class='text-muted-foreground'>
+              The solution, tool, method, or insight needed to resolve the
+              problem and overcome the challenge.
+            </p>
+            <div class='bg-accent/10 mt-4 rounded p-3 text-sm italic'>
+              "Following goblin tracks to their hideout and staging a rescue..."
+            </div>
+          </div>
+
+          <div
+            class='bg-background border-border rounded-lg border p-6 shadow-sm'
+          >
+            <div class='text-primary mb-2 text-2xl font-bold'>6. Outcome</div>
+            <h3 class='mb-3 text-lg font-semibold'>Deliver Consequences</h3>
+            <p class='text-muted-foreground'>
+              The resolution and consequences of the arc's events that set up
+              future adventures.
+            </p>
+            <div class='bg-accent/10 mt-4 rounded p-3 text-sm italic'>
+              "Gundren reveals the location of Wave Echo Cave..."
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class='bg-background py-20'>
+      <div class='container mx-auto px-4'>
+        <div class='mb-16 text-center'>
+          <h2 class='text-primary mb-4 text-3xl font-bold md:text-4xl'>
+            Everything You Need for Epic Campaigns
+          </h2>
+          <p class='text-muted-foreground mx-auto max-w-2xl text-lg'>
+            Organize your world, track your stories, and keep your players
+            engaged with powerful campaign management tools
+          </p>
+        </div>
+
+        <div class='grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3'>
+          <div class='text-center'>
+            <div
+              class='bg-primary/10 mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full'
+            >
+              <svg
+                class='text-primary h-8 w-8'
+                fill='none'
+                stroke='currentColor'
+                viewBox='0 0 24 24'
+              >
+                <path
+                  stroke-linecap='round'
+                  stroke-linejoin='round'
+                  stroke-width='2'
+                  d='M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253'
+                ></path>
+              </svg>
+            </div>
+            <h3 class='mb-3 text-xl font-semibold'>Campaign Organization</h3>
+            <p class='text-muted-foreground'>
+              Create multiple campaigns, organize them by themes, and track
+              progress across all your active games.
+            </p>
+          </div>
+
+          <div class='text-center'>
+            <div
+              class='bg-primary/10 mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full'
+            >
+              <svg
+                class='text-primary h-8 w-8'
+                fill='none'
+                stroke='currentColor'
+                viewBox='0 0 24 24'
+              >
+                <path
+                  stroke-linecap='round'
+                  stroke-linejoin='round'
+                  stroke-width='2'
+                  d='M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z'
+                ></path>
+              </svg>
+            </div>
+            <h3 class='mb-3 text-xl font-semibold'>Entity Management</h3>
+            <p class='text-muted-foreground'>
+              Track NPCs, locations, items, and organizations with custom
+              categories and rich descriptions.
+            </p>
+          </div>
+
+          <div class='text-center'>
+            <div
+              class='bg-primary/10 mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full'
+            >
+              <svg
+                class='text-primary h-8 w-8'
+                fill='none'
+                stroke='currentColor'
+                viewBox='0 0 24 24'
+              >
+                <path
+                  stroke-linecap='round'
+                  stroke-linejoin='round'
+                  stroke-width='2'
+                  d='M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z'
+                ></path>
+              </svg>
+            </div>
+            <h3 class='mb-3 text-xl font-semibold'>Rich Text Editing</h3>
+            <p class='text-muted-foreground'>
+              Create detailed content with formatting, organize information
+              clearly, and reference it quickly during sessions.
+            </p>
+          </div>
+
+          <div class='text-center'>
+            <div
+              class='bg-primary/10 mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full'
+            >
+              <svg
+                class='text-primary h-8 w-8'
+                fill='none'
+                stroke='currentColor'
+                viewBox='0 0 24 24'
+              >
+                <path
+                  stroke-linecap='round'
+                  stroke-linejoin='round'
+                  stroke-width='2'
+                  d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'
+                ></path>
+              </svg>
+            </div>
+            <h3 class='mb-3 text-xl font-semibold'>Smart Search</h3>
+            <p class='text-muted-foreground'>
+              Find any NPC, location, or plot element instantly with powerful
+              search across all your campaign content.
+            </p>
+          </div>
+
+          <div class='text-center'>
+            <div
+              class='bg-primary/10 mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full'
+            >
+              <svg
+                class='text-primary h-8 w-8'
+                fill='none'
+                stroke='currentColor'
+                viewBox='0 0 24 24'
+              >
+                <path
+                  stroke-linecap='round'
+                  stroke-linejoin='round'
+                  stroke-width='2'
+                  d='M13 10V3L4 14h7v7l9-11h-7z'
+                ></path>
+              </svg>
+            </div>
+            <h3 class='mb-3 text-xl font-semibold'>Real-time Updates</h3>
+            <p class='text-muted-foreground'>
+              Changes save automatically as you type. Never lose your ideas or
+              session notes again.
+            </p>
+          </div>
+
+          <div class='text-center'>
+            <div
+              class='bg-primary/10 mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full'
+            >
+              <svg
+                class='text-primary h-8 w-8'
+                fill='none'
+                stroke='currentColor'
+                viewBox='0 0 24 24'
+              >
+                <path
+                  stroke-linecap='round'
+                  stroke-linejoin='round'
+                  stroke-width='2'
+                  d='M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z'
+                ></path>
+              </svg>
+            </div>
+            <h3 class='mb-3 text-xl font-semibold'>Mobile Ready</h3>
+            <p class='text-muted-foreground'>
+              Access your campaigns from any device. Perfect for quick updates
+              between sessions or reference at the table.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class='bg-card py-20'>
+      <div class='container mx-auto px-4'>
+        <div class='mb-16 text-center'>
+          <h2 class='text-primary mb-4 text-3xl font-bold md:text-4xl'>
+            How ArcAide Works
+          </h2>
+          <p class='text-muted-foreground mx-auto max-w-2xl text-lg'>
+            Get started in minutes and transform how you plan and run your D&D
+            campaigns
+          </p>
+        </div>
+
+        <div class='mx-auto grid max-w-4xl grid-cols-1 gap-8 md:grid-cols-3'>
+          <div class='text-center'>
+            <div
+              class='bg-primary text-primary-foreground mx-auto mb-6 flex h-12 w-12 items-center justify-center rounded-full text-xl font-bold'
+            >
+              1
+            </div>
+            <h3 class='mb-4 text-xl font-semibold'>Create Your Campaign</h3>
+            <p class='text-muted-foreground'>
+              Start by creating a new campaign. Give it a name and begin
+              organizing your adventure ideas.
+            </p>
+          </div>
+
+          <div class='text-center'>
+            <div
+              class='bg-primary text-primary-foreground mx-auto mb-6 flex h-12 w-12 items-center justify-center rounded-full text-xl font-bold'
+            >
+              2
+            </div>
+            <h3 class='mb-4 text-xl font-semibold'>Structure Your Stories</h3>
+            <p class='text-muted-foreground'>
+              Use our arc framework to plan compelling storylines. Each arc
+              guides you through creating engaging narratives.
+            </p>
+          </div>
+
+          <div class='text-center'>
+            <div
+              class='bg-primary text-primary-foreground mx-auto mb-6 flex h-12 w-12 items-center justify-center rounded-full text-xl font-bold'
+            >
+              3
+            </div>
+            <h3 class='mb-4 text-xl font-semibold'>Add Your World</h3>
+            <p class='text-muted-foreground'>
+              Create NPCs, locations, items, and organizations. Link them to
+              your arcs to show how everything connects.
+            </p>
+          </div>
+        </div>
+
+        <div class='mt-12 text-center'>
+          <Button
+            variant='default'
+            size='lg'
+            className='px-8 py-6 text-lg'
+          >
+            <a href='/auth/register/'>Start Your First Campaign</a>
+          </Button>
+          <p class='text-muted-foreground mt-4 text-sm'>
+            Free to use • No credit card required
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonial Section -->
+    <section class='bg-background py-20'>
+      <div class='container mx-auto px-4'>
+        <div class='mx-auto max-w-4xl text-center'>
+          <blockquote
+            class='text-foreground mb-8 text-2xl font-light italic md:text-3xl'
+          >
+            "ArcAide transformed how I plan my campaigns. The arc framework
+            helps me create stories that my players actually care about, and the
+            organization tools mean I never lose track of important details."
+          </blockquote>
+          <div class='text-primary text-lg font-semibold'>— Experienced DM</div>
+          <div class='text-muted-foreground'>
+            Running campaigns for 8+ years
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class='bg-primary text-primary-foreground py-20'>
+      <div class='container mx-auto px-4 text-center'>
+        <div class='mx-auto max-w-2xl'>
+          <h2 class='mb-6 text-3xl font-bold md:text-4xl'>
+            Ready to Create Epic Campaigns?
+          </h2>
+          <p class='mb-8 text-xl opacity-90'>
+            Join DMs who are already using ArcAide to create more engaging and
+            organized D&D campaigns.
+          </p>
+          <Button
+            variant='secondary'
+            size='lg'
+            className='px-8 py-6 text-lg'
+          >
+            <a href='/auth/register/'>Get Started Free</a>
+          </Button>
+        </div>
       </div>
     </section>
   </main>
 </MainLayout>
+
+<style>
+  * {
+    scroll-behavior: smooth;
+  }
+</style>
