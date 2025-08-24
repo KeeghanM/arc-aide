@@ -125,7 +125,7 @@ export function AuthForm({ type }: { type: 'login' | 'register' }) {
                   />
                   {type === 'login' ? (
                     <a
-                      href='/auth/forgot-password'
+                      href='/auth/forgot-password/'
                       className='inline-block text-xs italic underline-offset-4 hover:underline'
                     >
                       Forgot your password?
@@ -152,7 +152,7 @@ export function AuthForm({ type }: { type: 'login' | 'register' }) {
                 <>
                   Don&apos;t have an account?{' '}
                   <a
-                    href='/auth/register'
+                    href='/auth/register/'
                     className='underline underline-offset-4'
                   >
                     Sign up
@@ -162,7 +162,7 @@ export function AuthForm({ type }: { type: 'login' | 'register' }) {
                 <>
                   Already have an account?{' '}
                   <a
-                    href='/auth/login'
+                    href='/auth/login/'
                     className='underline underline-offset-4'
                   >
                     Login

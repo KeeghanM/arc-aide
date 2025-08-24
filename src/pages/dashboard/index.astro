@@ -16,6 +16,7 @@ const campaigns = await db
   seo={{ description: 'Manage your campaigns from one hub, right here!' }}
 >
   <DashboardScreen
+    campaignSlug={undefined}
     initialCampaigns={campaigns}
     user={Astro.locals.user}
     client:load

@@ -18,15 +18,12 @@ export default function CampaignList({ initialCampaigns }: TCampaignList) {
         : campaignsQuery.data
       ).map((campaign) => (
         <a
-          href={`/dashboard/campaign/${slugify(campaign.name)}`}
+          href={`/dashboard/campaign/${slugify(campaign.name)}/`}
           key={campaign.id}
           className='cursor-pointer rounded-lg border p-4 shadow transition-shadow hover:shadow-lg'
           type='button'
         >
           <h2 className='mb-2 text-xl font-semibold'>{campaign.name}</h2>
-          {campaign.description && (
-            <p className='mb-4 text-gray-600'>{campaign.description}</p>
-          )}
           <p className='text-sm text-gray-500'>
             Last updated: {new Date(campaign.updatedAt).toLocaleDateString()}
           </p>

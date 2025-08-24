@@ -4,21 +4,32 @@ import { useAppStore } from './stores/appStore'
 
 const queryClient = new QueryClient()
 
-export interface User {
+type TUser = {
   name: string
 }
 
-export interface ScreenWrapperProps {
-  user: User
-  children: React.ReactNode
+export type TScreenWrapperProps = {
+  user: TUser
+  children?: React.ReactNode
+  campaignSlug: string | undefined
 }
 
-export default function ScreenWrapper({ user, children }: ScreenWrapperProps) {
-  const { setUser } = useAppStore()
+export default function ScreenWrapper({
+  user,
+  children,
+  campaignSlug,
+}: TScreenWrapperProps) {
+  const { setUser, setCampaignSlug } = useAppStore()
 
   useEffect(() => {
     setUser(user)
   }, [user, setUser])
+
+  useEffect(() => {
+    if (campaignSlug) {
+      setCampaignSlug(campaignSlug)
+    }
+  }, [setCampaignSlug, campaignSlug])
 
   return (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>

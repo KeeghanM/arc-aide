@@ -1,14 +1,13 @@
 import type { TCampaign } from '@hooks/useCampaignQueries'
 import CampaignList from '../components/campaign-list/campaign-list'
 import CreateCampaign from '../components/create-campaign/create-campaign'
-import ScreenWrapper, { type User } from '../screen-wrapper'
+import ScreenWrapper, { type TScreenWrapperProps } from '../screen-wrapper'
 
-interface DashboardProps {
+type TDashboardProps = {
   initialCampaigns: TCampaign[]
-  user: User
 }
 
-function Dashboard({ initialCampaigns }: { initialCampaigns: TCampaign[] }) {
+function Dashboard({ initialCampaigns }: TDashboardProps) {
   return (
     <div className='h-full w-full space-y-6 p-4 md:p-6 lg:p-12'>
       <h1 className='text-primary text-4xl font-bold md:text-5xl'>
@@ -23,9 +22,12 @@ function Dashboard({ initialCampaigns }: { initialCampaigns: TCampaign[] }) {
 export default function DashboardScreen({
   initialCampaigns,
   user,
-}: DashboardProps) {
+}: TDashboardProps & TScreenWrapperProps) {
   return (
-    <ScreenWrapper user={user}>
+    <ScreenWrapper
+      user={user}
+      campaignSlug={undefined}
+    >
       <Dashboard initialCampaigns={initialCampaigns} />
     </ScreenWrapper>
   )

@@ -1,6 +1,7 @@
 import type { campaign } from '@/lib/db/schema'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { usePostHog } from 'posthog-js/react'
+import { useSyncMutation } from './useSyncMutation'
 
 export type TCampaign = typeof campaign.$inferSelect
 
@@ -26,7 +27,7 @@ export function useCampaignQueries() {
       },
     })
 
-  const createCampaign = useMutation({
+  const createCampaign = useSyncMutation({
     mutationFn: async (newCampaign: { name: string }) => {
       await fetch('/api/campaigns', {
         method: 'POST',
@@ -43,7 +44,7 @@ export function useCampaignQueries() {
     },
   })
 
-  const deleteCampaign = useMutation({
+  const deleteCampaign = useSyncMutation({
     mutationFn: async (slug: number) => {
       await fetch(`/api/campaigns/${slug}`, {
         method: 'DELETE',
@@ -56,7 +57,7 @@ export function useCampaignQueries() {
     },
   })
 
-  const modifyCampaign = useMutation({
+  const modifyCampaign = useSyncMutation({
     mutationFn: async (updatedCampaign: {
       slug: string
       name: string

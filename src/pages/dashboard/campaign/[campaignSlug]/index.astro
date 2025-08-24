@@ -1,0 +1,66 @@
+---
+import CampaignScreen from '@/components/app/screens/campaign'
+import MainLayout from '@/layouts/main-layout.astro'
+import { db } from '@/lib/db/db'
+import { campaign as campaignSchema, arc, thing } from '@/lib/db/schema'
+import { desc } from 'drizzle-orm'
+import { and, eq } from 'drizzle-orm'
+
+const { campaignSlug } = Astro.params
+const { user } = Astro.locals
+
+if (!campaignSlug) {
+  return Astro.redirect('/404')
+}
+
+const campaignData = await db
+  .select()
+  .from(campaignSchema)
+  .where(
+    and(
+      eq(campaignSchema.userId, user.id),
+      eq(campaignSchema.slug, campaignSlug)
+    )
+  )
+  .limit(1)
+
+const campaign = campaignData[0]
+
+if (!campaign) {
+  return Astro.redirect('/404')
+}
+
+const arcData = await db
+  .select()
+  .from(arc)
+  .where(eq(arc.campaignId, campaign.id))
+  .orderBy(desc(arc.updatedAt))
+
+const thingData = await db
+  .select()
+  .from(thing)
+  .where(eq(thing.campaignId, campaign.id))
+  .orderBy(desc(thing.updatedAt))
+  .limit(10)
+---
+
+<MainLayout title={campaign.name}>
+  <main class='space-y-6 p-4 md:p-8 lg:p-12'>
+    <h1 class='text-primary text-4xl font-bold md:text-5xl'>
+      {campaign.name}
+      <a
+        href={`/dashboard/`}
+        class='text-accent ml-4 text-lg font-normal hover:italic'
+      >
+        (Back to Dashboard)</a
+      >
+    </h1>
+    <CampaignScreen
+      user={user}
+      campaignSlug={campaignSlug}
+      initialArcs={arcData}
+      latestThings={thingData}
+      client:load
+    />
+  </main>
+</MainLayout>

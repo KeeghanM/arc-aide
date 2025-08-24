@@ -1,3 +1,4 @@
+import { relations } from 'drizzle-orm'
 import { integer, sqliteTable, text, unique } from 'drizzle-orm/sqlite-core'
 
 // Core tables
@@ -14,7 +15,9 @@ export const campaign = sqliteTable(
     updatedAt: integer('updated_at', {
       mode: 'timestamp',
     }).notNull(),
-    userId: text('user_id').notNull(),
+    userId: text('user_id')
+      .notNull()
+      .references(() => user.id, { onDelete: 'cascade' }),
   },
   (table) => [unique('user_campaignSlug_unique').on(table.userId, table.slug)]
 )
@@ -29,7 +32,7 @@ export const arc = sqliteTable(
     protagonist: text('protagonist', { mode: 'json' }),
     antagonist: text('antagonist', { mode: 'json' }),
     problem: text('problem', { mode: 'json' }),
-    key: text('key'),
+    key: text('key', { mode: 'json' }),
     outcome: text('outcome', { mode: 'json' }),
     createdAt: integer('created_at', {
       mode: 'timestamp',
@@ -38,6 +41,7 @@ export const arc = sqliteTable(
       mode: 'timestamp',
     }).notNull(),
     campaignId: integer('campaign_id').notNull(),
+    parentArcId: integer('parent_arc_id'),
   },
   (table) => [
     unique('campaign_arcSlug_unique').on(table.campaignId, table.slug),
@@ -58,9 +62,15 @@ export const thing = sqliteTable(
     typeId: integer('type_id')
       .notNull()
       .references(() => thingType.id, { onDelete: 'cascade' }),
-    name: text('slug'),
+    name: text('name').notNull(),
     description: text('description', { mode: 'json' }),
     campaignId: integer('campaign_id').notNull(),
+    createdAt: integer('created_at', {
+      mode: 'timestamp',
+    }).notNull(),
+    updatedAt: integer('updated_at', {
+      mode: 'timestamp',
+    }).notNull(),
   },
   (table) => [
     unique('campaign_thingSlug_unique').on(table.campaignId, table.slug),
@@ -152,3 +162,81 @@ export const verification = sqliteTable('verification', {
   createdAt: integer('created_at', { mode: 'timestamp' }),
   updatedAt: integer('updated_at', { mode: 'timestamp' }),
 })
+
+// Relations
+export const arcRelations = relations(arc, ({ one, many }) => ({
+  parentArc: one(arc, {
+    fields: [arc.parentArcId],
+    references: [arc.id],
+    relationName: 'parentArc',
+  }),
+  childArcs: many(arc, {
+    relationName: 'parentArc',
+  }),
+  campaign: one(campaign, {
+    fields: [arc.campaignId],
+    references: [campaign.id],
+  }),
+  arcThings: many(arcThing),
+}))
+
+export const campaignRelations = relations(campaign, ({ many, one }) => ({
+  arcs: many(arc),
+  things: many(thing),
+  thingTypes: many(thingType),
+  user: one(user, {
+    fields: [campaign.userId],
+    references: [user.id],
+  }),
+}))
+
+export const thingRelations = relations(thing, ({ one, many }) => ({
+  thingType: one(thingType, {
+    fields: [thing.typeId],
+    references: [thingType.id],
+  }),
+  campaign: one(campaign, {
+    fields: [thing.campaignId],
+    references: [campaign.id],
+  }),
+  arcThings: many(arcThing),
+}))
+
+export const thingTypeRelations = relations(thingType, ({ one, many }) => ({
+  campaign: one(campaign, {
+    fields: [thingType.campaignId],
+    references: [campaign.id],
+  }),
+  things: many(thing),
+}))
+
+export const arcThingRelations = relations(arcThing, ({ one }) => ({
+  arc: one(arc, {
+    fields: [arcThing.arcId],
+    references: [arc.id],
+  }),
+  thing: one(thing, {
+    fields: [arcThing.thingId],
+    references: [thing.id],
+  }),
+}))
+
+export const userRelations = relations(user, ({ many }) => ({
+  campaigns: many(campaign),
+  sessions: many(session),
+  accounts: many(account),
+}))
+
+export const sessionRelations = relations(session, ({ one }) => ({
+  user: one(user, {
+    fields: [session.userId],
+    references: [user.id],
+  }),
+}))
+
+export const accountRelations = relations(account, ({ one }) => ({
+  user: one(user, {
+    fields: [account.userId],
+    references: [user.id],
+  }),
+}))

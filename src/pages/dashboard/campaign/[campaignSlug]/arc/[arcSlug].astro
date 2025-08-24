@@ -1,0 +1,75 @@
+---
+import { db } from '@lib/db/db'
+import { arc as arcSchema, arcThing, campaign, thing } from '@lib/db/schema'
+import { desc, eq } from 'drizzle-orm'
+import ArcScreen from '@components/app/screens/arc'
+import MainLayout from '@layouts/main-layout.astro'
+
+const { campaignSlug, arcSlug } = Astro.params
+
+if (!campaignSlug || !arcSlug) {
+  return Astro.redirect('/404')
+}
+
+const arcData = await db
+  .select({ arc: arcSchema, campaignName: campaign.name })
+  .from(arcSchema)
+  .fullJoin(campaign, eq(arcSchema.campaignId, campaign.id))
+  .where(eq(arcSchema.slug, arcSlug))
+  .limit(1)
+
+if (!arcData[0]?.arc) {
+  return Astro.redirect('/404')
+}
+
+const arc = arcData[0].arc
+const campaignName = arcData[0].campaignName
+
+const things = await db
+  .select({ thing })
+  .from(thing)
+  .fullJoin(arcThing, eq(thing.id, arcThing.thingId))
+  .where(eq(arcThing.arcId, arc.id))
+  .orderBy(desc(thing.updatedAt))
+  .limit(10)
+---
+
+<MainLayout title={arc.name}>
+  <main class='space-y-6 p-4 md:p-8 lg:p-12'>
+    <h1 class='text-primary text-4xl font-bold md:text-5xl'>
+      {campaignName}: {arc.name}
+      <a
+        href={`/dashboard/campaign/${campaignSlug}/`}
+        class='text-accent ml-4 text-lg font-normal hover:italic'
+      >
+        (Back to Campaign)</a
+      >
+    </h1>
+    <div class='grid grid-cols-1 md:grid-cols-[1fr_300px]'>
+      <ArcScreen
+        arc={arc}
+        user={Astro.locals.user}
+        campaignSlug={campaignSlug}
+        client:load
+      />
+      <div class='border-border overflow-y-auto border-l pl-6 md:pl-12'>
+        <h2 class='mb-4 text-2xl font-semibold'>Recently Updated Things</h2>
+        <div class='space-y-4'>
+          {
+            things
+              .map((thing) => thing.thing)
+              .filter((thing) => thing !== null)
+              .map((thing) => (
+                <div class='border-border bg-primary/5 rounded-lg border p-4'>
+                  <h3 class='text-lg font-semibold'>{thing.name}</h3>
+                  <p class='text-secondary line-clamp-3 text-sm'>
+                    {thing.description}
+                  </p>
+                </div>
+              ))
+          }
+        </div>
+      </div>
+    </div>
+  </main>
+</MainLayout>

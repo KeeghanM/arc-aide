@@ -1,13 +1,8 @@
-import { auth } from '@auth/auth'
-import Honeybadger from '@honeybadger-io/js'
+import { auth } from '@/lib/auth/auth'
 import type { APIRoute } from 'astro'
 
 export const ALL: APIRoute = async (ctx) => {
-  try {
-    await auth.handler(ctx.request)
-  } catch (error) {
-    console.error('Auth Error:', error)
-    Honeybadger.notify(error)
-    return new Response('Internal Server Error', { status: 500 })
-  }
+  // If you want to use rate limiting, make sure to set the 'x-forwarded-for' header to the request headers from the context
+  // ctx.request.headers.set("x-forwarded-for", ctx.clientAddress);
+  return auth.handler(ctx.request)
 }
