@@ -1,7 +1,7 @@
-import { auth } from '@/lib/auth/auth'
-import { db } from '@/lib/db/db'
-import { campaign } from '@/lib/db/schema'
-import { fuzzySearchWithHighlight, searchWithHighlight } from '@/lib/db/search'
+import { auth } from '@auth/auth'
+import { db } from '@db/db'
+import { campaign } from '@db/schema'
+import { fuzzySearchWithHighlight, searchWithHighlight } from '@db/search'
 import type { APIRoute } from 'astro'
 import { and, eq } from 'drizzle-orm'
 

@@ -1,4 +1,4 @@
-import TimeAgo from '@/components/ui/time-ago'
+import TimeAgo from '@components/ui/time-ago'
 import type { TThing } from '@hooks/useThingQueries'
 import { useAppStore } from '../../stores/appStore'
 

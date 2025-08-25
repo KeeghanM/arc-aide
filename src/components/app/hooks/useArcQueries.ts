@@ -1,4 +1,4 @@
-import type { arc } from '@/lib/db/schema'
+import type { arc } from '@db/schema'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { usePostHog } from 'posthog-js/react'
 import { useAppStore } from '../stores/appStore'

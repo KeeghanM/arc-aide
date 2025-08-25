@@ -1,4 +1,4 @@
-import type { FuzzySearchResult } from '@/lib/db/search'
+import type { FuzzySearchResult } from '@db/search'
 import { useQuery } from '@tanstack/react-query'
 import { usePostHog } from 'posthog-js/react'
 import { useAppStore } from '../stores/appStore'

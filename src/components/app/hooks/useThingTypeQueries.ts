@@ -1,4 +1,4 @@
-import type { thingType } from '@/lib/db/schema'
+import type { thingType } from '@db/schema'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { usePostHog } from 'posthog-js/react'
 import { useSyncMutation } from './useSyncMutation'

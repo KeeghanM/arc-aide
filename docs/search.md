@@ -57,7 +57,7 @@ Basic search functionality using SQLite FTS5:
 GET /api/campaigns/my-campaign/search?q=goblin&type=arc
 
 // Search function
-import { searchWithHighlight } from '@/lib/db/search'
+import { searchWithHighlight } from '@db/search'
 
 const results = await searchWithHighlight(
   'goblin tavern',
@@ -75,7 +75,7 @@ Advanced search that handles misspellings:
 GET /api/campaigns/my-campaign/search?q=protagnist&fuzzy=true
 
 // Search function
-import { fuzzySearchWithHighlight } from '@/lib/db/search'
+import { fuzzySearchWithHighlight } from '@db/search'
 
 const results = await fuzzySearchWithHighlight(
   'protagnist antgonist', // misspelled query
@@ -97,7 +97,7 @@ results.forEach((result) => {
 The `slate-text-extractor.ts` utility handles converting Slate.js AST to plain text:
 
 ```typescript
-import { extractPlainTextFromSlate } from '@/lib/slate-text-extractor'
+import { extractPlainTextFromSlate } from '@utils/slate-text-extractor'
 
 // Extract text from Slate AST
 const plainText = extractPlainTextFromSlate([
@@ -266,7 +266,7 @@ node scripts/setup-spellfix.js
 Or programmatically:
 
 ```typescript
-import { initializeSpellfixVocabulary } from '@/lib/db/search'
+import { initializeSpellfixVocabulary } from '@db/search'
 
 await initializeSpellfixVocabulary()
 ```

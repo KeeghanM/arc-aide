@@ -1,4 +1,4 @@
-import TimeAgo from '@/components/ui/time-ago'
+import TimeAgo from '@components/ui/time-ago'
 import type { TArc } from '@hooks/useArcQueries'
 
 export default function Arc({ arc }: { arc: TArc }) {

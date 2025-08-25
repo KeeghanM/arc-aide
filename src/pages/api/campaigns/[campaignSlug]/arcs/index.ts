@@ -1,10 +1,10 @@
-import { auth } from '@/lib/auth/auth'
-import { db } from '@/lib/db/db'
-import { arc, campaign } from '@/lib/db/schema'
+import { auth } from '@auth/auth'
+import { db } from '@db/db'
+import { arc, campaign } from '@db/schema'
 import Honeybadger from '@honeybadger-io/js'
 import { slugify } from '@utils/string'
 import type { APIRoute } from 'astro'
-import { and, eq } from 'drizzle-orm'
+import { and, desc, eq } from 'drizzle-orm'
 import * as z from 'zod'
 
 /**
@@ -46,6 +46,7 @@ export const GET: APIRoute = async ({ request, params }) => {
       .select()
       .from(arc)
       .where(eq(arc.campaignId, campaignResult[0].id))
+      .orderBy(desc(arc.createdAt))
 
     return new Response(JSON.stringify(arcs), { status: 200 })
   } catch (error) {

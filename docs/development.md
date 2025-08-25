@@ -114,8 +114,8 @@ import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 
 // Internal imports grouped by type
-import { Button } from '@/components/ui/button'
-import { useAppStore } from '@/components/app/stores/appStore'
+import { Button } from '@components/ui/button'
+import { useAppStore } from '@components/app/stores/appStore'
 import type { TCampaign } from '@/hooks/useCampaignQueries'
 
 // Types defined near usage
@@ -185,8 +185,8 @@ API routes follow the file-based routing pattern in `src/pages/api/`:
 
 ```typescript
 // src/pages/api/example.ts
-import { auth } from '@/lib/auth/auth'
-import { db } from '@/lib/db/db'
+import { auth } from '@auth/auth'
+import { db } from '@db/db'
 import type { APIRoute } from 'astro'
 
 export const GET: APIRoute = async ({ request }) => {
