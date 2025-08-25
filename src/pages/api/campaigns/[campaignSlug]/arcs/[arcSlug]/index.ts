@@ -128,11 +128,6 @@ export const PUT: APIRoute = async ({ request, params }) => {
     const { updatedArc } = await request.json()
     const parsedArc = UpdatedArc.safeParse(updatedArc)
 
-    console.log({
-      updatedArc: JSON.stringify(updatedArc, null, 2),
-      parsedArc: JSON.stringify(parsedArc, null, 2),
-    })
-
     if (!parsedArc.success) {
       return new Response(JSON.stringify({ error: 'Invalid arc data' }), {
         status: 400,

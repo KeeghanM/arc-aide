@@ -27,187 +27,81 @@ WHERE LENGTH(term) > 2 AND term GLOB '[a-zA-Z]*'
 GROUP BY term;
 --> statement-breakpoint
 
--- Create triggers on base tables to automatically add new terms when content is updated
--- These triggers will fire when the underlying data changes, which will also update the FTS table
+-- Drop existing arc triggers and recreate them
+DROP TRIGGER IF EXISTS vocabulary_sync_arc_insert;
+DROP TRIGGER IF EXISTS vocabulary_sync_arc_update;
 
--- Trigger for arc inserts - extract terms from arc data
-CREATE TRIGGER IF NOT EXISTS vocabulary_sync_arc_insert 
+-- Simple trigger for arc inserts - just add the full text content to vocabulary as terms
+-- The FTS system will handle the actual word extraction and indexing
+CREATE TRIGGER vocabulary_sync_arc_insert 
 AFTER INSERT ON arc 
 BEGIN
-  -- Extract words from arc name and content fields
-  INSERT OR IGNORE INTO search_vocabulary(term)
-  SELECT DISTINCT LOWER(TRIM(value)) as term
-  FROM (
-    -- Extract from arc name
-    SELECT value 
-    FROM json_each('["' || REPLACE(REPLACE(LOWER(NEW.name), ' ', '","'), '-', '","') || '"]')
-    WHERE LENGTH(TRIM(value)) > 2
-    UNION
-    -- Extract from hook
-    SELECT value
-    FROM json_each('["' || REPLACE(REPLACE(LOWER(COALESCE(json_extract(NEW.hook, '$'), '')), ' ', '","'), '-', '","') || '"]') 
-    WHERE LENGTH(TRIM(value)) > 2
-    UNION
-    -- Extract from protagonist
-    SELECT value
-    FROM json_each('["' || REPLACE(REPLACE(LOWER(COALESCE(json_extract(NEW.protagonist, '$'), '')), ' ', '","'), '-', '","') || '"]') 
-    WHERE LENGTH(TRIM(value)) > 2
-    UNION
-    -- Extract from antagonist
-    SELECT value
-    FROM json_each('["' || REPLACE(REPLACE(LOWER(COALESCE(json_extract(NEW.antagonist, '$'), '')), ' ', '","'), '-', '","') || '"]') 
-    WHERE LENGTH(TRIM(value)) > 2
-    UNION
-    -- Extract from problem
-    SELECT value
-    FROM json_each('["' || REPLACE(REPLACE(LOWER(COALESCE(json_extract(NEW.problem, '$'), '')), ' ', '","'), '-', '","') || '"]') 
-    WHERE LENGTH(TRIM(value)) > 2
-    UNION
-    -- Extract from key
-    SELECT value
-    FROM json_each('["' || REPLACE(REPLACE(LOWER(COALESCE(NEW.key, '')), ' ', '","'), '-', '","') || '"]') 
-    WHERE LENGTH(TRIM(value)) > 2
-    UNION
-    -- Extract from outcome
-    SELECT value
-    FROM json_each('["' || REPLACE(REPLACE(LOWER(COALESCE(json_extract(NEW.outcome, '$'), '')), ' ', '","'), '-', '","') || '"]') 
-    WHERE LENGTH(TRIM(value)) > 2
-  ) 
-  WHERE TRIM(value) GLOB '[a-zA-Z]*';
-  
-  -- Update frequency for existing terms
+  -- Simply increment frequency counters for any terms that might match
+  -- Let the FTS system handle the actual word extraction
   UPDATE search_vocabulary 
   SET frequency = frequency + 1 
-  WHERE term IN (
-    SELECT DISTINCT LOWER(TRIM(value))
-    FROM (
-      SELECT value 
-      FROM json_each('["' || REPLACE(REPLACE(LOWER(NEW.name), ' ', '","'), '-', '","') || '"]')
-      WHERE LENGTH(TRIM(value)) > 2
-      UNION
-      SELECT value
-      FROM json_each('["' || REPLACE(REPLACE(LOWER(COALESCE(json_extract(NEW.hook, '$'), '')), ' ', '","'), '-', '","') || '"]') 
-      WHERE LENGTH(TRIM(value)) > 2
-      UNION
-      SELECT value
-      FROM json_each('["' || REPLACE(REPLACE(LOWER(COALESCE(json_extract(NEW.protagonist, '$'), '')), ' ', '","'), '-', '","') || '"]') 
-      WHERE LENGTH(TRIM(value)) > 2
-      UNION
-      SELECT value
-      FROM json_each('["' || REPLACE(REPLACE(LOWER(COALESCE(json_extract(NEW.antagonist, '$'), '')), ' ', '","'), '-', '","') || '"]') 
-      WHERE LENGTH(TRIM(value)) > 2
-      UNION
-      SELECT value
-      FROM json_each('["' || REPLACE(REPLACE(LOWER(COALESCE(json_extract(NEW.problem, '$'), '')), ' ', '","'), '-', '","') || '"]') 
-      WHERE LENGTH(TRIM(value)) > 2
-      UNION
-      SELECT value
-      FROM json_each('["' || REPLACE(REPLACE(LOWER(COALESCE(NEW.key, '')), ' ', '","'), '-', '","') || '"]') 
-      WHERE LENGTH(TRIM(value)) > 2
-      UNION
-      SELECT value
-      FROM json_each('["' || REPLACE(REPLACE(LOWER(COALESCE(json_extract(NEW.outcome, '$'), '')), ' ', '","'), '-', '","') || '"]') 
-      WHERE LENGTH(TRIM(value)) > 2
-    ) 
-    WHERE TRIM(value) GLOB '[a-zA-Z]*'
+  WHERE search_vocabulary.term IN (
+    SELECT DISTINCT term FROM search_index_fts_aux 
+    WHERE search_index_fts_aux.term LIKE '%' || LOWER(NEW.name) || '%'
+       OR search_index_fts_aux.term LIKE '%' || LOWER(COALESCE(NEW.hook_text, '')) || '%'
+       OR search_index_fts_aux.term LIKE '%' || LOWER(COALESCE(NEW.protagonist_text, '')) || '%'
+       OR search_index_fts_aux.term LIKE '%' || LOWER(COALESCE(NEW.antagonist_text, '')) || '%'
+       OR search_index_fts_aux.term LIKE '%' || LOWER(COALESCE(NEW.problem_text, '')) || '%'
+       OR search_index_fts_aux.term LIKE '%' || LOWER(COALESCE(NEW.key, '')) || '%'
+       OR search_index_fts_aux.term LIKE '%' || LOWER(COALESCE(NEW.outcome_text, '')) || '%'
   );
 END;
 --> statement-breakpoint
 
--- Trigger for arc updates
-CREATE TRIGGER IF NOT EXISTS vocabulary_sync_arc_update
+-- Simple trigger for arc updates
+CREATE TRIGGER vocabulary_sync_arc_update
 AFTER UPDATE ON arc 
 BEGIN
-  -- Extract words from updated arc data
-  INSERT OR IGNORE INTO search_vocabulary(term)
-  SELECT DISTINCT LOWER(TRIM(value)) as term
-  FROM (
-    SELECT value 
-    FROM json_each('["' || REPLACE(REPLACE(LOWER(NEW.name), ' ', '","'), '-', '","') || '"]')
-    WHERE LENGTH(TRIM(value)) > 2
-    UNION
-    SELECT value
-    FROM json_each('["' || REPLACE(REPLACE(LOWER(COALESCE(json_extract(NEW.hook, '$'), '')), ' ', '","'), '-', '","') || '"]') 
-    WHERE LENGTH(TRIM(value)) > 2
-    UNION
-    SELECT value
-    FROM json_each('["' || REPLACE(REPLACE(LOWER(COALESCE(json_extract(NEW.protagonist, '$'), '')), ' ', '","'), '-', '","') || '"]') 
-    WHERE LENGTH(TRIM(value)) > 2
-    UNION
-    SELECT value
-    FROM json_each('["' || REPLACE(REPLACE(LOWER(COALESCE(json_extract(NEW.antagonist, '$'), '')), ' ', '","'), '-', '","') || '"]') 
-    WHERE LENGTH(TRIM(value)) > 2
-    UNION
-    SELECT value
-    FROM json_each('["' || REPLACE(REPLACE(LOWER(COALESCE(json_extract(NEW.problem, '$'), '')), ' ', '","'), '-', '","') || '"]') 
-    WHERE LENGTH(TRIM(value)) > 2
-    UNION
-    SELECT value
-    FROM json_each('["' || REPLACE(REPLACE(LOWER(COALESCE(NEW.key, '')), ' ', '","'), '-', '","') || '"]') 
-    WHERE LENGTH(TRIM(value)) > 2
-    UNION
-    SELECT value
-    FROM json_each('["' || REPLACE(REPLACE(LOWER(COALESCE(json_extract(NEW.outcome, '$'), '')), ' ', '","'), '-', '","') || '"]') 
-    WHERE LENGTH(TRIM(value)) > 2
-  ) 
-  WHERE TRIM(value) GLOB '[a-zA-Z]*';
-END;
---> statement-breakpoint
-
--- Trigger for thing inserts - extract terms from thing data
-CREATE TRIGGER IF NOT EXISTS vocabulary_sync_thing_insert 
-AFTER INSERT ON thing 
-BEGIN
-  -- Extract words from thing name and description
-  INSERT OR IGNORE INTO search_vocabulary(term)
-  SELECT DISTINCT LOWER(TRIM(value)) as term
-  FROM (
-    -- Extract from thing name
-    SELECT value 
-    FROM json_each('["' || REPLACE(REPLACE(LOWER(NEW.name), ' ', '","'), '-', '","') || '"]')
-    WHERE LENGTH(TRIM(value)) > 2
-    UNION
-    -- Extract from description
-    SELECT value
-    FROM json_each('["' || REPLACE(REPLACE(LOWER(COALESCE(json_extract(NEW.description, '$'), '')), ' ', '","'), '-', '","') || '"]') 
-    WHERE LENGTH(TRIM(value)) > 2
-  ) 
-  WHERE TRIM(value) GLOB '[a-zA-Z]*';
-  
-  -- Update frequency for existing terms
+  -- Simply increment frequency counters for any terms that might match
   UPDATE search_vocabulary 
   SET frequency = frequency + 1 
-  WHERE term IN (
-    SELECT DISTINCT LOWER(TRIM(value))
-    FROM (
-      SELECT value 
-      FROM json_each('["' || REPLACE(REPLACE(LOWER(NEW.name), ' ', '","'), '-', '","') || '"]')
-      WHERE LENGTH(TRIM(value)) > 2
-      UNION
-      SELECT value
-      FROM json_each('["' || REPLACE(REPLACE(LOWER(COALESCE(json_extract(NEW.description, '$'), '')), ' ', '","'), '-', '","') || '"]') 
-      WHERE LENGTH(TRIM(value)) > 2
-    ) 
-    WHERE TRIM(value) GLOB '[a-zA-Z]*'
+  WHERE search_vocabulary.term IN (
+    SELECT DISTINCT term FROM search_index_fts_aux 
+    WHERE search_index_fts_aux.term LIKE '%' || LOWER(NEW.name) || '%'
+       OR search_index_fts_aux.term LIKE '%' || LOWER(COALESCE(NEW.hook_text, '')) || '%'
+       OR search_index_fts_aux.term LIKE '%' || LOWER(COALESCE(NEW.protagonist_text, '')) || '%'
+       OR search_index_fts_aux.term LIKE '%' || LOWER(COALESCE(NEW.antagonist_text, '')) || '%'
+       OR search_index_fts_aux.term LIKE '%' || LOWER(COALESCE(NEW.problem_text, '')) || '%'
+       OR search_index_fts_aux.term LIKE '%' || LOWER(COALESCE(NEW.key, '')) || '%'
+       OR search_index_fts_aux.term LIKE '%' || LOWER(COALESCE(NEW.outcome_text, '')) || '%'
   );
 END;
 --> statement-breakpoint
 
--- Trigger for thing updates
-CREATE TRIGGER IF NOT EXISTS vocabulary_sync_thing_update
+-- Drop existing thing triggers and recreate them
+DROP TRIGGER IF EXISTS vocabulary_sync_thing_insert;
+DROP TRIGGER IF EXISTS vocabulary_sync_thing_update;
+
+-- Simple trigger for thing inserts
+CREATE TRIGGER vocabulary_sync_thing_insert 
+AFTER INSERT ON thing 
+BEGIN
+  -- Simply increment frequency counters for any terms that might match
+  UPDATE search_vocabulary 
+  SET frequency = frequency + 1 
+  WHERE search_vocabulary.term IN (
+    SELECT DISTINCT term FROM search_index_fts_aux 
+    WHERE search_index_fts_aux.term LIKE '%' || LOWER(NEW.name) || '%'
+       OR search_index_fts_aux.term LIKE '%' || LOWER(COALESCE(NEW.description_text, '')) || '%'
+  );
+END;
+--> statement-breakpoint
+
+-- Simple trigger for thing updates
+CREATE TRIGGER vocabulary_sync_thing_update
 AFTER UPDATE ON thing 
 BEGIN
-  -- Extract words from updated thing data
-  INSERT OR IGNORE INTO search_vocabulary(term)
-  SELECT DISTINCT LOWER(TRIM(value)) as term
-  FROM (
-    SELECT value 
-    FROM json_each('["' || REPLACE(REPLACE(LOWER(NEW.name), ' ', '","'), '-', '","') || '"]')
-    WHERE LENGTH(TRIM(value)) > 2
-    UNION
-    SELECT value
-    FROM json_each('["' || REPLACE(REPLACE(LOWER(COALESCE(json_extract(NEW.description, '$'), '')), ' ', '","'), '-', '","') || '"]') 
-    WHERE LENGTH(TRIM(value)) > 2
-  ) 
-  WHERE TRIM(value) GLOB '[a-zA-Z]*';
+  -- Simply increment frequency counters for any terms that might match
+  UPDATE search_vocabulary 
+  SET frequency = frequency + 1 
+  WHERE search_vocabulary.term IN (
+    SELECT DISTINCT term FROM search_index_fts_aux 
+    WHERE search_index_fts_aux.term LIKE '%' || LOWER(NEW.name) || '%'
+       OR search_index_fts_aux.term LIKE '%' || LOWER(COALESCE(NEW.description_text, '')) || '%'
+  );
 END;
