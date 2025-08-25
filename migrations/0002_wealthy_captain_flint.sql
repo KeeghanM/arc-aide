@@ -1,1 +1,0 @@
-ALTER TABLE `arc` ADD `parent_arc_id` integer;

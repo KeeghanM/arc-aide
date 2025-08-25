@@ -25,9 +25,15 @@ CREATE TABLE `arc` (
 	`problem` text,
 	`key` text,
 	`outcome` text,
+	`hook_text` text DEFAULT '',
+	`protagonist_text` text DEFAULT '',
+	`antagonist_text` text DEFAULT '',
+	`problem_text` text DEFAULT '',
+	`outcome_text` text DEFAULT '',
 	`created_at` integer NOT NULL,
 	`updated_at` integer NOT NULL,
-	`campaign_id` integer NOT NULL
+	`campaign_id` integer NOT NULL,
+	`parent_arc_id` integer
 );
 --> statement-breakpoint
 CREATE UNIQUE INDEX `campaign_arcSlug_unique` ON `arc` (`campaign_id`,`slug`);--> statement-breakpoint
@@ -46,7 +52,8 @@ CREATE TABLE `campaign` (
 	`description` text,
 	`created_at` integer NOT NULL,
 	`updated_at` integer NOT NULL,
-	`user_id` text NOT NULL
+	`user_id` text NOT NULL,
+	FOREIGN KEY (`user_id`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
 CREATE UNIQUE INDEX `user_campaignSlug_unique` ON `campaign` (`user_id`,`slug`);--> statement-breakpoint
@@ -65,10 +72,14 @@ CREATE TABLE `session` (
 CREATE UNIQUE INDEX `session_token_unique` ON `session` (`token`);--> statement-breakpoint
 CREATE TABLE `thing` (
 	`id` integer PRIMARY KEY NOT NULL,
-	`slug` text,
+	`slug` text NOT NULL,
 	`type_id` integer NOT NULL,
+	`name` text NOT NULL,
 	`description` text,
+	`description_text` text DEFAULT '',
 	`campaign_id` integer NOT NULL,
+	`created_at` integer NOT NULL,
+	`updated_at` integer NOT NULL,
 	FOREIGN KEY (`type_id`) REFERENCES `thing_type`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint

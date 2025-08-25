@@ -1,10 +1,12 @@
 import { auth } from '@/lib/auth/auth'
 import { db } from '@/lib/db/db'
 import { arc, campaign } from '@/lib/db/schema'
+import { extractPlainTextFromSlate } from '@/lib/slate-text-extractor'
 import { slugify } from '@/lib/utils'
 import Honeybadger from '@honeybadger-io/js'
 import type { APIRoute } from 'astro'
 import { and, eq } from 'drizzle-orm'
+import type { Descendant } from 'slate'
 import * as z from 'zod'
 
 export const GET: APIRoute = async ({ request, params }) => {
@@ -115,16 +117,21 @@ export const PUT: APIRoute = async ({ request, params }) => {
     const UpdatedArc = z.object({
       slug: z.string().min(1).max(255),
       name: z.string().min(1).max(255).optional(),
-      hook: z.any().optional(),
-      protagonist: z.any().optional(),
-      antagonist: z.any().optional(),
-      problem: z.any().optional(),
-      key: z.string().optional(),
-      outcome: z.any().optional(),
+      hook: z.array(z.unknown()).optional() as z.ZodType<Descendant[]>,
+      protagonist: z.array(z.unknown()).optional() as z.ZodType<Descendant[]>,
+      antagonist: z.array(z.unknown()).optional() as z.ZodType<Descendant[]>,
+      problem: z.array(z.unknown()).optional() as z.ZodType<Descendant[]>,
+      key: z.array(z.unknown()).optional() as z.ZodType<Descendant[], any, any>,
+      outcome: z.array(z.unknown()).optional() as z.ZodType<Descendant[]>,
     })
 
     const { updatedArc } = await request.json()
     const parsedArc = UpdatedArc.safeParse(updatedArc)
+
+    console.log({
+      updatedArc: JSON.stringify(updatedArc, null, 2),
+      parsedArc: JSON.stringify(parsedArc, null, 2),
+    })
 
     if (!parsedArc.success) {
       return new Response(JSON.stringify({ error: 'Invalid arc data' }), {
@@ -144,16 +151,31 @@ export const PUT: APIRoute = async ({ request, params }) => {
 
     // Add optional fields if provided
     if (parsedArc.data.name !== undefined) updateData.name = parsedArc.data.name
-    if (parsedArc.data.hook !== undefined) updateData.hook = parsedArc.data.hook
-    if (parsedArc.data.protagonist !== undefined)
+    if (parsedArc.data.hook !== undefined) {
+      updateData.hook = parsedArc.data.hook
+      updateData.hookText = extractPlainTextFromSlate(parsedArc.data.hook)
+    }
+    if (parsedArc.data.protagonist !== undefined) {
       updateData.protagonist = parsedArc.data.protagonist
-    if (parsedArc.data.antagonist !== undefined)
+      updateData.protagonistText = extractPlainTextFromSlate(
+        parsedArc.data.protagonist
+      )
+    }
+    if (parsedArc.data.antagonist !== undefined) {
       updateData.antagonist = parsedArc.data.antagonist
-    if (parsedArc.data.problem !== undefined)
+      updateData.antagonistText = extractPlainTextFromSlate(
+        parsedArc.data.antagonist
+      )
+    }
+    if (parsedArc.data.problem !== undefined) {
       updateData.problem = parsedArc.data.problem
+      updateData.problemText = extractPlainTextFromSlate(parsedArc.data.problem)
+    }
     if (parsedArc.data.key !== undefined) updateData.key = parsedArc.data.key
-    if (parsedArc.data.outcome !== undefined)
+    if (parsedArc.data.outcome !== undefined) {
       updateData.outcome = parsedArc.data.outcome
+      updateData.outcomeText = extractPlainTextFromSlate(parsedArc.data.outcome)
+    }
 
     // If no fields to update, return early
     if (Object.keys(updateData).length === 1) {
@@ -169,7 +191,7 @@ export const PUT: APIRoute = async ({ request, params }) => {
     return new Response(JSON.stringify(result[0]), { status: 200 })
   } catch (error) {
     console.error('Error updating arc:', error)
-    Honeybadger.notify(error as Error)
+    // Honeybadger.notify(error as Error)
     return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
       status: 500,
     })

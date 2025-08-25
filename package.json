@@ -20,9 +20,8 @@
     "push:migration:hygraph": "node --import 'data:text/javascript,import { register } from \"node:module\"; import { pathToFileUrl } from \"node:url\"; register(\"ts-node/esm\", pathToFileUrl(\"./\"));' src/lib/hygraph/migration-runner.ts",
     "pull:graphql-schema": "npx graphql-codegen --config codegen.ts",
     "generate:typed-graphql": "npx typed-graphql-builder --schema ./src/lib/hygraph/graphql/schema.graphql --output ./src/lib/graphql-api.ts",
-    "migrate:db": "drizzle-kit push",
-    "migrate:hygraph": "yarn push:migration:hygraph && yarn pull:graphql-schema && yarn generate:typed-graphql",
-    "setup:spellfix": "node scripts/setup-spellfix.js"
+    "migrate:db": "drizzle-kit generate && drizzle-kit migrate",
+    "migrate:hygraph": "yarn push:migration:hygraph && yarn pull:graphql-schema && yarn generate:typed-graphql"
   },
   "dependencies": {
     "@astrojs/node": "^9.2.2",

@@ -1,6 +1,7 @@
 import { auth } from '@/lib/auth/auth'
 import { db } from '@/lib/db/db'
 import { campaign, thing } from '@/lib/db/schema'
+import { extractPlainTextFromSlate } from '@/lib/slate-text-extractor'
 import { slugify } from '@/lib/utils'
 import Honeybadger from '@honeybadger-io/js'
 import type { APIRoute } from 'astro'
@@ -140,8 +141,12 @@ export const PUT: APIRoute = async ({ request, params }) => {
     }
     if (parsedThing.data.typeId !== undefined)
       updateData.typeId = parsedThing.data.typeId
-    if (parsedThing.data.description !== undefined)
+    if (parsedThing.data.description !== undefined) {
       updateData.description = parsedThing.data.description
+      updateData.descriptionText = extractPlainTextFromSlate(
+        parsedThing.data.description
+      )
+    }
 
     const result = await db
       .update(thing)

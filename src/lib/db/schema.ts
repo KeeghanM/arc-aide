@@ -34,6 +34,12 @@ export const arc = sqliteTable(
     problem: text('problem', { mode: 'json' }),
     key: text('key', { mode: 'json' }),
     outcome: text('outcome', { mode: 'json' }),
+    // Plain text versions for search indexing
+    hookText: text('hook_text').default(''),
+    protagonistText: text('protagonist_text').default(''),
+    antagonistText: text('antagonist_text').default(''),
+    problemText: text('problem_text').default(''),
+    outcomeText: text('outcome_text').default(''),
     createdAt: integer('created_at', {
       mode: 'timestamp',
     }).notNull(),
@@ -64,6 +70,8 @@ export const thing = sqliteTable(
       .references(() => thingType.id, { onDelete: 'cascade' }),
     name: text('name').notNull(),
     description: text('description', { mode: 'json' }),
+    // Plain text version for search indexing
+    descriptionText: text('description_text').default(''),
     campaignId: integer('campaign_id').notNull(),
     createdAt: integer('created_at', {
       mode: 'timestamp',

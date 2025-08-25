@@ -9,12 +9,15 @@ CREATE TABLE IF NOT EXISTS search_vocabulary (
     frequency INTEGER DEFAULT 1,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
+--> statement-breakpoint
 
 -- Create index for fast lookups
 CREATE INDEX IF NOT EXISTS idx_search_vocabulary_term ON search_vocabulary(term);
+--> statement-breakpoint
 
 -- Create auxiliary table to extract FTS terms  
 CREATE VIRTUAL TABLE IF NOT EXISTS search_index_fts_aux USING fts5vocab('search_index_fts', 'instance');
+--> statement-breakpoint
 
 -- Populate vocabulary table with existing FTS terms
 INSERT OR IGNORE INTO search_vocabulary(term, frequency) 
@@ -22,6 +25,7 @@ SELECT term, count(*) as frequency
 FROM search_index_fts_aux 
 WHERE LENGTH(term) > 2 AND term GLOB '[a-zA-Z]*'
 GROUP BY term;
+--> statement-breakpoint
 
 -- Create triggers on base tables to automatically add new terms when content is updated
 -- These triggers will fire when the underlying data changes, which will also update the FTS table
@@ -108,6 +112,7 @@ BEGIN
     WHERE TRIM(value) GLOB '[a-zA-Z]*'
   );
 END;
+--> statement-breakpoint
 
 -- Trigger for arc updates
 CREATE TRIGGER IF NOT EXISTS vocabulary_sync_arc_update
@@ -147,6 +152,7 @@ BEGIN
   ) 
   WHERE TRIM(value) GLOB '[a-zA-Z]*';
 END;
+--> statement-breakpoint
 
 -- Trigger for thing inserts - extract terms from thing data
 CREATE TRIGGER IF NOT EXISTS vocabulary_sync_thing_insert 
@@ -185,6 +191,7 @@ BEGIN
     WHERE TRIM(value) GLOB '[a-zA-Z]*'
   );
 END;
+--> statement-breakpoint
 
 -- Trigger for thing updates
 CREATE TRIGGER IF NOT EXISTS vocabulary_sync_thing_update
