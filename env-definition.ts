@@ -1,6 +1,6 @@
 import { envField } from 'astro/config'
-import process from 'node:process'
 import { loadEnv } from 'vite'
+import process from 'node:process'
 
 // Check if any environment variables are still set to default values
 const env = loadEnv(process.env.NODE_ENV!, process.cwd(), '')

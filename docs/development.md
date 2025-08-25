@@ -141,6 +141,102 @@ src/
 
 ## Code Style Guidelines
 
+### Comments
+
+Use comments to explain **why** something is done, not **what** is done:
+
+```tsx
+// Good: Explains reasoning
+// We debounce the save to avoid excessive API calls while typing
+const debouncedSave = useMemo(() => debounce(handleSave, 1000), [])
+
+// Bad: States the obvious
+// Set loading to true
+setLoading(true)
+```
+
+### Guard Clauses
+
+Prefer early returns to reduce nesting:
+
+```tsx
+// Good: Early return
+if (!data) {
+  return <div>Loading...</div>
+}
+
+// Main logic
+return <div>{data.content}</div>
+```
+
+This also applies to functions and error handling:
+
+```tsx
+function fetchData() {
+  if (!isAuthenticated) {
+    throw new Error('User not authenticated')
+  }
+
+  if (!api) {
+    throw new Error('API client not initialized')
+  }
+
+  // Fetch data logic
+  return api.getData()
+}
+```
+
+We use Zod wherever possible for input validation to avoid manual checks. This should be done as close to the input source as possible (e.g., API route, form submission), and as high up the function as a guard clause.
+
+```tsx
+const schema = z.object({
+  name: z.string().min(1, 'Name is required'),
+  age: z.number().min(0, 'Age must be positive'),
+})
+const result = schema.safeParse(input)
+if (!result.success) {
+  throw new Error('Invalid input data')
+}
+const { name, age } = result.data
+```
+
+### Destructuring
+
+We prefer to destructure objects and arrays for cleaner code:
+
+```tsx
+// Good: Destructuring
+const { name, age } = user
+const [firstItem, secondItem] = items
+
+// Bad: Direct property access
+const name = user.name
+const firstItem = items[0]
+```
+
+This also applies to function parameters:
+
+```tsx
+// Good: Destructured parameters
+function UserProfile({
+  user,
+  onUpdate,
+}: {
+  user: TUser
+  onUpdate: (user: TUser) => void
+}) {
+  // Component logic
+}
+// Bad: Direct parameter access
+function UserProfile(props: { user: TUser; onUpdate: (user: TUser) => void }) {
+  const user = props.user
+  const onUpdate = props.onUpdate
+  // Component logic
+}
+```
+
+While there a some exceptions, these should be rare and justified - using comments to explain why.
+
 ### Naming Conventions
 
 - **Components**: PascalCase (`UserProfile.tsx`)
@@ -151,11 +247,11 @@ src/
 ### Component Structure
 
 ```tsx
-// External imports first
-import { useState } from 'react'
+// External imports (alphabetized)
 import { useQuery } from '@tanstack/react-query'
+import { useState } from 'react'
 
-// Internal imports grouped by type
+// Internal imports (alphabetized, grouped by type)
 import { Button } from '@components/ui/button'
 import { useAppStore } from '@stores/appStore'
 import type { TCampaign } from '@hooks/useCampaignQueries'
@@ -225,20 +321,6 @@ import MarkdownEditor from '@components/app/components/editor/editor'
 
 Content conversion utilities are documented in the [Architecture guide](./architecture.md#rich-text-content-management).
 
-### Comments
-
-Use comments to explain **why** something is done, not **what** is done:
-
-```tsx
-// Good: Explains reasoning
-// We debounce the save to avoid excessive API calls while typing
-const debouncedSave = useMemo(() => debounce(handleSave, 1000), [])
-
-// Bad: States the obvious
-// Set loading to true
-setLoading(true)
-```
-
 ## Database Development
 
 ### Schema Changes
@@ -264,19 +346,6 @@ export const newTableRelations = relations(newTable, ({ one, many }) => ({
 ```
 
 ## Testing
-
-Currently, the project uses:
-
-- **ESLint** for code linting
-- **Prettier** for code formatting
-- **Stylelint** for CSS linting
-
-Run quality checks:
-
-```bash
-yarn qa        # Check all
-yarn qa:fix    # Fix auto-fixable issues
-```
 
 Currently, the project uses:
 

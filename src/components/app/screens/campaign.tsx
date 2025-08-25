@@ -1,5 +1,5 @@
-import { useArcQueries, type TArc } from '@hooks/useArcQueries'
-import { useThingQueries, type TThing } from '@hooks/useThingQueries'
+import { type TArc, useArcQueries } from '@hooks/useArcQueries'
+import { type TThing, useThingQueries } from '@hooks/useThingQueries'
 import Arc from '../components/arc/arc'
 import CreateArc from '../components/arc/create-arc/create-arc'
 import CreateThing from '../components/thing/create-thing/create-thing'

@@ -1,4 +1,4 @@
-import { useArcQueries, type TArc } from '@hooks/useArcQueries'
+import { type TArc, useArcQueries } from '@hooks/useArcQueries'
 import pDebounce from 'p-debounce'
 import type { Descendant } from 'slate'
 import MarkdownEditor, { defaultEditorValue } from '../components/editor/editor'

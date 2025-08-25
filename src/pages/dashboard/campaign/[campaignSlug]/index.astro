@@ -1,8 +1,8 @@
 ---
 import CampaignScreen from '@components/app/screens/campaign'
-import MainLayout from '@layouts/main-layout.astro'
 import { db } from '@db/db'
-import { campaign as campaignSchema, arc, thing } from '@db/schema'
+import { arc, campaign as campaignSchema, thing } from '@db/schema'
+import MainLayout from '@layouts/main-layout.astro'
 import { desc } from 'drizzle-orm'
 import { and, eq } from 'drizzle-orm'
 

@@ -1,4 +1,4 @@
-import { useThingQueries, type TThing } from '@hooks/useThingQueries'
+import { type TThing, useThingQueries } from '@hooks/useThingQueries'
 import pDebounce from 'p-debounce'
 import type { Descendant } from 'slate'
 import MarkdownEditor, { defaultEditorValue } from '../components/editor/editor'

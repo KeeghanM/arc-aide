@@ -2,6 +2,7 @@ import js from '@eslint/js'
 import tsPlugin from '@typescript-eslint/eslint-plugin'
 import * as tsParser from '@typescript-eslint/parser'
 import eslintPluginAstro from 'eslint-plugin-astro'
+import importPlugin from 'eslint-plugin-import'
 import eslintPluginJsxA11y from 'eslint-plugin-jsx-a11y'
 import react from 'eslint-plugin-react'
 import globals from 'globals'
@@ -85,14 +86,66 @@ export default [
   // Disable display-name rule for UI components
   {
     files: ['**/ui/*.{jsx,tsx}'],
-    rules: { 'react/display-name': 'off' },
+    rules: {
+      'react/display-name': 'off',
+    },
   },
   // Use Astro ESLint rules for Astro files - spread the entire config
   ...eslintPluginAstro.configs.recommended,
   {
     // Use JSX Accessibility rules for all files
+    // And add custom rule for sorting imports
     files: ['**/*.{js,mjs,cjs,jsx,mjsx,ts,tsx,mtsx,astro}'],
-    plugins: eslintPluginJsxA11y.flatConfigs.recommended.plugins,
-    rules: eslintPluginJsxA11y.flatConfigs.recommended.rules,
+    plugins: {
+      ...eslintPluginJsxA11y.flatConfigs.recommended.plugins,
+      import: importPlugin,
+    },
+    rules: {
+      ...eslintPluginJsxA11y.flatConfigs.recommended.rules,
+      'sort-imports': [
+        'error',
+        {
+          ignoreCase: true,
+          ignoreDeclarationSort: true,
+        },
+      ],
+      'import/order': [
+        'error',
+        {
+          groups: [
+            'external',
+            'builtin',
+            'internal',
+            'sibling',
+            'parent',
+            'index',
+          ],
+          pathGroups: [
+            {
+              pattern: 'components',
+              group: 'internal',
+            },
+            {
+              pattern: 'common',
+              group: 'internal',
+            },
+            {
+              pattern: 'routes/ **',
+              group: 'internal',
+            },
+            {
+              pattern: 'assets/**',
+              group: 'internal',
+              position: 'after',
+            },
+          ],
+          pathGroupsExcludedImportTypes: ['internal'],
+          alphabetize: {
+            order: 'asc',
+            caseInsensitive: true,
+          },
+        },
+      ],
+    },
   },
 ]

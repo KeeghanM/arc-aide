@@ -1,5 +1,5 @@
 ---
-import { PUBLIC_POSTHOG_KEY, PUBLIC_POSTHOG_HOST } from 'astro:env/client'
+import { PUBLIC_POSTHOG_HOST, PUBLIC_POSTHOG_KEY } from 'astro:env/client'
 
 if (!PUBLIC_POSTHOG_KEY || !PUBLIC_POSTHOG_HOST) {
   throw new Error(

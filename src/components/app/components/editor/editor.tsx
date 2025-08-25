@@ -1,14 +1,14 @@
-import { cn } from '@/lib/utils/cn.ts'
 import { css } from '@emotion/css'
+import { cn } from '@lib/utils/cn.ts'
 import Prism from 'prismjs'
 import 'prismjs/components/prism-markdown'
 import { useCallback, useMemo, useState } from 'react'
 import {
+  createEditor,
   type Descendant,
   type NodeEntry,
   type Range,
   Text,
-  createEditor,
 } from 'slate'
 import { withHistory } from 'slate-history'
 import { Editable, type RenderLeafProps, Slate, withReact } from 'slate-react'

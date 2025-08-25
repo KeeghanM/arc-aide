@@ -1,12 +1,12 @@
 ---
+import { SearchBarWrapper } from '@components/app/components/search-bar/search-bar'
+import ArcScreen from '@components/app/screens/arc'
 import { db } from '@db/db'
 import { arc as arcSchema, arcThing, campaign, thing } from '@db/schema'
-import { desc, eq } from 'drizzle-orm'
-import ArcScreen from '@components/app/screens/arc'
 import MainLayout from '@layouts/main-layout.astro'
 import { slateToHtml } from '@utils/slate-text-extractor'
+import { desc, eq } from 'drizzle-orm'
 import type { Descendant } from 'slate'
-import { SearchBarWrapper } from '@components/app/components/search-bar/search-bar'
 
 const { campaignSlug, arcSlug } = Astro.params
 

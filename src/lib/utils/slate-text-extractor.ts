@@ -1,6 +1,5 @@
-import type { Descendant } from 'slate'
-
 import showdown from 'showdown'
+import type { Descendant } from 'slate'
 
 /**
  * Converts Slate.js rich text content to plain text.

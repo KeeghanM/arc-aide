@@ -1,10 +1,10 @@
-import { useThingQueries } from '@/components/app/hooks/useThingQueries'
 import type { TArc } from '@components/app/hooks/useArcQueries'
 import ScreenWrapper, {
   type TScreenWrapperProps,
 } from '@components/app/screen-wrapper'
 import { useEffect } from 'react'
 import AddThingToArc from '../add-thing-to-arc/add-thing-to-arc'
+import { useThingQueries } from '@/components/app/hooks/useThingQueries'
 
 type TArcListProps = {
   initialArcs: TArc[]
