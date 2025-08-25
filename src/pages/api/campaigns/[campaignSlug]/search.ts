@@ -14,10 +14,15 @@ import { and, eq } from 'drizzle-orm'
  * Supports both exact and fuzzy matching with content type filtering.
  * Returns highlighted search results with spell correction suggestions.
  *
- * Query Parameters:
- * - q: Search query string (required)
- * - type: Content filter ('any', 'arc', 'thing') - defaults to 'any'
- * - fuzzy: Enable fuzzy/spell-corrected search ('true'/'false') - defaults to 'false'
+ * @param request - The incoming HTTP request object.
+ * @param params - Route parameters, including the campaign slug.
+ * @returns A Response containing search results or an error message.
+ *
+ * @remarks
+ * Query parameters:
+ * - `query`: The search query string (required).
+ * - `type`: Content filter ('any', 'arc', 'thing'). Defaults to 'any'.
+ * - `fuzzy`: Enables fuzzy/spell-corrected search ('true'/'false'). Defaults to 'false'.
  *
  * Security: Validates user ownership of campaign before allowing search
  */
@@ -61,10 +66,19 @@ export const GET: APIRoute = async ({ request, params }) => {
     const fuzzy =
       searchParams.get('fuzzy') === 'true' || searchParams.get('fuzzy') === '1'
 
+    // Only alphanumeric and spaces allowed in search query, anything
+    // else completely breaks FTS5 syntax
+    const cleanQuery = query.replace(/[^a-zA-Z0-9\s]/g, '').trim()
+
     // --- Execute search with appropriate strategy ---
     const results = fuzzy
-      ? await fuzzySearchWithHighlight(query, campaignResult[0].id, type, true)
-      : await searchWithHighlight(query, campaignResult[0].id, type)
+      ? await fuzzySearchWithHighlight(
+          cleanQuery,
+          campaignResult[0].id,
+          type,
+          true
+        )
+      : await searchWithHighlight(cleanQuery, campaignResult[0].id, type)
 
     return new Response(JSON.stringify(results), {
       status: 200,

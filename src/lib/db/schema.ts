@@ -46,7 +46,11 @@ export const arc = sqliteTable(
     updatedAt: integer('updated_at', {
       mode: 'timestamp',
     }).notNull(),
-    campaignId: integer('campaign_id').notNull(),
+    campaignId: integer('campaign_id')
+      .notNull()
+      .references(() => campaign.id, {
+        onDelete: 'cascade',
+      }),
     parentArcId: integer('parent_arc_id'),
   },
   (table) => [
@@ -57,7 +61,11 @@ export const arc = sqliteTable(
 export const thingType = sqliteTable('thing_type', {
   id: integer('id').primaryKey(),
   name: text('name').notNull(),
-  campaignId: integer('campaign_id').notNull(),
+  campaignId: integer('campaign_id')
+    .notNull()
+    .references(() => campaign.id, {
+      onDelete: 'cascade',
+    }),
 })
 
 export const thing = sqliteTable(
@@ -72,7 +80,11 @@ export const thing = sqliteTable(
     description: text('description', { mode: 'json' }),
     // Plain text version for search indexing
     descriptionText: text('description_text').default(''),
-    campaignId: integer('campaign_id').notNull(),
+    campaignId: integer('campaign_id')
+      .notNull()
+      .references(() => campaign.id, {
+        onDelete: 'cascade',
+      }),
     createdAt: integer('created_at', {
       mode: 'timestamp',
     }).notNull(),

@@ -2,6 +2,7 @@ import { type TArc, useArcQueries } from '@hooks/useArcQueries'
 import { type TThing, useThingQueries } from '@hooks/useThingQueries'
 import Arc from '../components/arc/arc'
 import CreateArc from '../components/arc/create-arc/create-arc'
+import CampaignSettings from '../components/campaign/campaign-settings/campaign-settings'
 import CreateThing from '../components/thing/create-thing/create-thing'
 import Thing from '../components/thing/thing'
 import ScreenWrapper, { type TScreenWrapperProps } from '../screen-wrapper'
@@ -29,6 +30,7 @@ function Campaign({ initialArcs, latestThings }: TCampaignProps) {
 
   return (
     <div>
+      <CampaignSettings />
       {/* --- Arcs Section --- */}
       <h2 className='mb-4 flex items-center gap-4 text-2xl font-semibold'>
         Arcs <CreateArc />
@@ -42,7 +44,7 @@ function Campaign({ initialArcs, latestThings }: TCampaignProps) {
           ? initialArcs
           : arcsQuery.data
         )
-          .filter((a) => !a.parentArcId) // Only show top level arcs
+          .filter((a) => !a.parentArcId)
           .map((a) => (
             <Arc
               arc={a}
