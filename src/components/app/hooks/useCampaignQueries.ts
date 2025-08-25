@@ -17,7 +17,7 @@ export function useCampaignQueries() {
     },
   })
 
-  const campaignQuery = (slug: string) =>
+  const useCampaignQuery = (slug: string) =>
     useQuery({
       queryKey: ['campaign', slug],
       queryFn: async ({ queryKey }): Promise<TCampaign> => {
@@ -76,7 +76,7 @@ export function useCampaignQueries() {
 
   return {
     campaignsQuery,
-    campaignQuery,
+    useCampaignQuery,
     createCampaign,
     deleteCampaign,
     modifyCampaign,

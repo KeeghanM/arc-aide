@@ -310,6 +310,61 @@ Update an existing thing.
 
 Delete a thing.
 
+### GET /api/campaigns/[campaignSlug]/things/[thingSlug]/arcs
+
+Get all arcs that include a specific thing.
+
+**Parameters:**
+
+- `campaignSlug` (string) - URL-safe campaign identifier
+- `thingSlug` (string) - URL-safe thing identifier
+
+**Response:**
+
+```json
+[
+  {
+    "id": 1,
+    "slug": "the-goblin-ambush",
+    "name": "The Goblin Ambush",
+    "hook": [...],
+    "protagonist": [...],
+    "antagonist": [...],
+    "problem": [...],
+    "key": [...],
+    "outcome": [...],
+    "campaignId": 1,
+    "createdAt": "2024-01-15T10:30:00Z",
+    "updatedAt": "2024-01-20T14:15:00Z"
+  }
+]
+```
+
+### POST /api/campaigns/[campaignSlug]/things/[thingSlug]/arcs
+
+Associate a thing with an arc.
+
+**Parameters:**
+
+- `campaignSlug` (string) - URL-safe campaign identifier
+- `thingSlug` (string) - URL-safe thing identifier
+
+**Request Body:**
+
+```json
+{
+  "arcSlug": "the-goblin-ambush"
+}
+```
+
+**Response:**
+
+```json
+{
+  "message": "Thing added to Arc successfully"
+}
+```
+
 ## Thing Types
 
 ### GET /api/campaigns/[campaignSlug]/thing-types

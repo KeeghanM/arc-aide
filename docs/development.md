@@ -64,6 +64,40 @@ This guide covers setting up your local development environment for ArcAide.
 
 Your application will be available at `http://localhost:4321`
 
+## Key Dependencies
+
+### Core Framework
+
+- **Astro** - Meta-framework for content-focused websites
+- **React** - UI library for interactive components
+- **TypeScript** - Type safety and enhanced developer experience
+
+### Data & State Management
+
+- **Drizzle ORM** - Type-safe database access
+- **Turso/LibSQL** - Serverless SQLite database
+- **TanStack Query** - Server state management and caching
+- **Zustand** - Lightweight client state management
+
+### Rich Text Editing
+
+- **Slate.js** - Highly customizable rich text editor framework
+- **Showdown** - Markdown to HTML conversion
+- **@slate-serializers/html** - Slate.js HTML serialization
+- **Prism.js** - Syntax highlighting for code blocks
+
+### UI Components
+
+- **Radix UI** - Unstyled, accessible UI primitives
+- **Tailwind CSS** - Utility-first CSS framework
+- **Tailwind Merge** - Utility for merging Tailwind classes
+
+### Authentication & Analytics
+
+- **Better Auth** - Modern authentication library
+- **PostHog** - Product analytics and feature flags
+- **Honeybadger** - Error monitoring and reporting
+
 ## Development Commands
 
 | Command           | Description                                  |
@@ -81,15 +115,23 @@ Your application will be available at `http://localhost:4321`
 src/
 ├── components/           # React components
 │   ├── app/             # Application-specific components
-│   │   ├── components/  # Feature components
-│   │   ├── hooks/       # React hooks
-│   │   └── screens/     # Page-level components
+│   │   ├── components/  # Feature components (organized by domain)
+│   │   │   ├── arc/     # Arc-related components
+│   │   │   ├── campaign/ # Campaign-related components
+│   │   │   ├── editor/  # Rich text editor components
+│   │   │   ├── search-bar/ # Search functionality
+│   │   │   └── thing/   # Thing-related components
+│   │   ├── hooks/       # React hooks for data fetching
+│   │   ├── screens/     # Page-level components
+│   │   └── stores/      # Global state management
 │   └── ui/              # Reusable UI components
 ├── layouts/             # Astro layouts
 ├── lib/                 # Utilities and configurations
 │   ├── auth/           # Authentication setup
 │   ├── db/             # Database configuration
-│   └── utils.ts        # Utility functions
+│   └── utils/          # Utility functions
+│       ├── slate-text-extractor.ts # Slate.js content conversion
+│       └── string.ts   # String manipulation utilities
 ├── pages/              # Astro pages and API routes
 │   ├── api/            # API endpoints
 │   ├── auth/           # Authentication pages
@@ -115,8 +157,8 @@ import { useQuery } from '@tanstack/react-query'
 
 // Internal imports grouped by type
 import { Button } from '@components/ui/button'
-import { useAppStore } from '@components/app/stores/appStore'
-import type { TCampaign } from '@/hooks/useCampaignQueries'
+import { useAppStore } from '@stores/appStore'
+import type { TCampaign } from '@hooks/useCampaignQueries'
 
 // Types defined near usage
 type TProps = {
@@ -138,6 +180,50 @@ export default function CampaignEditor({ campaign, onUpdate }: TProps) {
   return <div>{/* Component JSX */}</div>
 }
 ```
+
+### Import Path Aliases
+
+The project uses several TypeScript path aliases for cleaner imports:
+
+- `@components/*` - UI and app components
+- `@db/*` - Database schema and utilities
+- `@auth/*` - Authentication configuration
+- `@hooks/*` - React hooks for data fetching
+- `@stores/*` - Global state management (Zustand stores)
+- `@utils/*` - Utility functions
+
+For detailed component organization and architecture patterns, see [Architecture documentation](./architecture.md).
+
+### Data Fetching Hooks
+
+The project uses React Query for data fetching with custom hooks:
+
+```tsx
+// Hook naming convention: use[Entity]Query or use[Entity]Queries
+const { useArcQuery, createArc, modifyArc } = useArcQueries()
+const { useSearchQuery } = useSearchQueries()
+
+// Usage in components
+const arcQuery = useArcQuery(arcSlug)
+const searchResults = useSearchQuery(searchTerm, 'thing')
+```
+
+### Rich Text Editor (Slate.js)
+
+The project uses Slate.js for rich text editing with markdown support. See the [Architecture documentation](./architecture.md) for detailed component information and the [Search documentation](./search.md) for search-related functionality.
+
+```tsx
+import MarkdownEditor from '@components/app/components/editor/editor'
+
+// Usage
+;<MarkdownEditor
+  initialValue={content}
+  onChange={handleChange}
+  height='md' // 'sm' | 'md' | 'lg'
+/>
+```
+
+Content conversion utilities are documented in the [Architecture guide](./architecture.md#rich-text-content-management).
 
 ### Comments
 
@@ -177,45 +263,20 @@ export const newTableRelations = relations(newTable, ({ one, many }) => ({
 }))
 ```
 
-## API Development
-
-### Creating New Endpoints
-
-API routes follow the file-based routing pattern in `src/pages/api/`:
-
-```typescript
-// src/pages/api/example.ts
-import { auth } from '@auth/auth'
-import { db } from '@db/db'
-import type { APIRoute } from 'astro'
-
-export const GET: APIRoute = async ({ request }) => {
-  try {
-    // Always check authentication for protected routes
-    const session = await auth.api.getSession({
-      headers: request.headers,
-    })
-
-    if (!session) {
-      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
-        status: 401,
-      })
-    }
-
-    // Your logic here
-    const data = await db.select().from(someTable)
-
-    return new Response(JSON.stringify(data), { status: 200 })
-  } catch (error) {
-    console.error('Error:', error)
-    return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
-      status: 500,
-    })
-  }
-}
-```
-
 ## Testing
+
+Currently, the project uses:
+
+- **ESLint** for code linting
+- **Prettier** for code formatting
+- **Stylelint** for CSS linting
+
+Run quality checks:
+
+```bash
+yarn qa        # Check all
+yarn qa:fix    # Fix auto-fixable issues
+```
 
 Currently, the project uses:
 
@@ -249,3 +310,21 @@ yarn qa:fix    # Fix auto-fixable issues
 - Clear `.astro` directory: `rm -rf .astro`
 - Reinstall dependencies: `rm -rf node_modules && yarn install`
 - Check for TypeScript errors: `yarn build`
+
+### Rich Text Editor Issues
+
+- If Slate.js content appears malformed, check the initial value structure
+- Ensure `slateToPlainText` is used for search indexing, not raw JSON
+- For display purposes, use `slateToHtml` to properly render markdown content
+
+### Search Functionality Issues
+
+- Search results not appearing: Check that content has been properly indexed with `descriptionText`, `hookText`, etc.
+- Spell correction not working: Ensure the spellfix extension is properly loaded in your SQLite setup
+- Performance issues: Consider adding more specific search types (`thing`, `arc`) instead of using `any`
+
+### Component Import Issues
+
+- Use the TypeScript path aliases (`@stores/`, `@hooks/`, etc.) instead of relative imports
+- If imports fail, check that the alias is defined in `tsconfig.json`
+- Ensure component files follow the naming convention (kebab-case files, PascalCase exports)

@@ -1,8 +1,7 @@
+import { useThingQueries, type TThing } from '@hooks/useThingQueries'
 import pDebounce from 'p-debounce'
 import type { Descendant } from 'slate'
 import MarkdownEditor, { defaultEditorValue } from '../components/editor/editor'
-import SearchBar from '../components/search-bar/search-bar'
-import { useThingQueries, type TThing } from '../hooks/useThingQueries'
 import type { TScreenWrapperProps } from '../screen-wrapper'
 import ScreenWrapper from '../screen-wrapper'
 
@@ -29,9 +28,9 @@ function Thing({ thing }: TThingProps) {
             (thing.description as Descendant[]) ?? defaultEditorValue
           }
           onChange={handleDescriptionChange}
+          height='lg'
         />
       </div>
-      <SearchBar />
     </div>
   )
 }

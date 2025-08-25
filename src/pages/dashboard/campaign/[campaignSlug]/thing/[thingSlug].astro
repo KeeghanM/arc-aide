@@ -9,6 +9,8 @@ import {
 } from '@db/schema'
 import { eq } from 'drizzle-orm'
 import ThingScreen from '@components/app/screens/thing'
+import { SearchBarWrapper } from '@components/app/components/search-bar/search-bar'
+import ArcListWrapper from '@components/app/components/thing/arc-list/arc-list'
 import MainLayout from '@layouts/main-layout.astro'
 
 const { campaignSlug, thingSlug } = Astro.params
@@ -45,17 +47,26 @@ const arcs = await db
 ---
 
 <MainLayout title={thing.name}>
-  <main class='space-y-6 p-4 md:p-8 lg:p-12'>
-    <h1 class='text-primary text-4xl font-bold md:text-5xl'>
-      {campaignName}: {thing.name}
+  <main class='space-y-2 p-4 md:p-8 lg:p-12'>
+    <div class='flex items-baseline gap-6'>
+      <h1 class='text-primary text-4xl font-bold md:text-5xl'>
+        {campaignName}: {thing.name}
+        <span class='text-lg font-normal'>({type})</span>
+      </h1>
+      <SearchBarWrapper
+        user={Astro.locals.user}
+        campaignSlug={campaignSlug}
+        client:load
+      />
+    </div>
+    <div>
       <a
         href={`/dashboard/campaign/${campaignSlug}/`}
-        class='text-accent ml-4 text-lg font-normal hover:italic'
+        class='text-accent text-lg font-normal hover:italic'
       >
-        (Back to Campaign)</a
+        Back to Campaign</a
       >
-    </h1>
-    <h2>{type}</h2>
+    </div>
     <div class='grid grid-cols-1 md:grid-cols-[1fr_300px]'>
       <ThingScreen
         thing={thing}
@@ -65,20 +76,12 @@ const arcs = await db
       />
       <div class='border-border overflow-y-auto border-l pl-6 md:pl-12'>
         <h2 class='mb-4 text-2xl font-semibold'>Arcs this features in</h2>
-        <div class='space-y-4'>
-          {
-            arcs.map((arc) => (
-              <div class='border-border bg-primary/5 rounded-lg border p-4'>
-                <a
-                  href={`/dashboard/campaigns/${campaignSlug}/arc/${arc.slug}`}
-                  class='text-lg font-semibold'
-                >
-                  {arc.name}
-                </a>
-              </div>
-            ))
-          }
-        </div>
+        <ArcListWrapper
+          thingSlug={thingSlug}
+          initialArcs={arcs}
+          campaignSlug={campaignSlug}
+          client:load
+        />
       </div>
     </div>
   </main>

@@ -1,8 +1,9 @@
 import type { thing } from '@db/schema'
+import { useSyncMutation } from '@hooks/useSyncMutation'
+import { useAppStore } from '@stores/appStore'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { usePostHog } from 'posthog-js/react'
-import { useAppStore } from '../stores/appStore'
-import { useSyncMutation } from './useSyncMutation'
+import type { TArc } from './useArcQueries'
 
 export type TThing = typeof thing.$inferSelect
 
@@ -12,7 +13,7 @@ export function useThingQueries() {
 
   const { campaignSlug } = useAppStore()
 
-  const createThingsQuery = (count: number) =>
+  const useThingsQuery = (count: number) =>
     useQuery({
       queryKey: ['things', campaignSlug, count],
       queryFn: async ({ queryKey }): Promise<TThing[]> => {
@@ -24,7 +25,7 @@ export function useThingQueries() {
       },
     })
 
-  const thingQuery = (thingSlug: string) =>
+  const useThingQuery = (thingSlug: string) =>
     useQuery({
       queryKey: ['thing', campaignSlug, thingSlug],
       queryFn: async ({ queryKey }): Promise<TThing> => {
@@ -35,6 +36,51 @@ export function useThingQueries() {
         return response.json()
       },
     })
+
+  const useArcsWithThingQuery = (thingSlug: string) => {
+    return useQuery({
+      queryKey: ['arcs-with-thing', campaignSlug, thingSlug],
+      queryFn: async ({ queryKey }): Promise<TArc[]> => {
+        const [_key, campaignSlug, thingSlug] = queryKey
+        const response = await fetch(
+          `/api/campaigns/${campaignSlug}/things/${thingSlug}/arcs`
+        )
+        return response.json()
+      },
+    })
+  }
+
+  const addThingToArc = useSyncMutation({
+    mutationFn: async ({
+      arcSlug,
+      thingSlug,
+    }: {
+      arcSlug: string
+      thingSlug: string
+    }) => {
+      await fetch(`/api/campaigns/${campaignSlug}/things/${thingSlug}/arcs`, {
+        method: 'POST',
+        body: JSON.stringify({ arcSlug }),
+        headers: { 'Content-Type': 'application/json' },
+      })
+      posthog?.capture('thing_added_to_arc', {
+        arcSlug,
+        thingSlug,
+        campaignSlug,
+      })
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['things'],
+      })
+      queryClient.invalidateQueries({
+        queryKey: ['arcs-with-thing'],
+      })
+      queryClient.invalidateQueries({
+        queryKey: ['arcs'],
+      })
+    },
+  })
 
   const createThing = useSyncMutation({
     mutationFn: async ({
@@ -115,10 +161,12 @@ export function useThingQueries() {
   })
 
   return {
-    createThingsQuery,
-    thingQuery,
+    useThingsQuery,
+    useThingQuery,
+    useArcsWithThingQuery,
     createThing,
     deleteThing,
     modifyThing,
+    addThingToArc,
   }
 }

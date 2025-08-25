@@ -353,3 +353,67 @@ SELECT * FROM search_index_fts WHERE content MATCH 'goblin';
 - Advanced search operators (date ranges, field-specific search)
 - Search analytics and optimization
 - Autocomplete and search suggestions
+
+## Component Usage
+
+### SearchBar Component
+
+The `SearchBar` component provides a flexible search interface with multiple configuration options:
+
+```tsx
+import SearchBar from '@components/app/components/search-bar/search-bar'
+
+// Basic search with navigation
+<SearchBar />
+
+// Search with custom handler (e.g., for modals)
+<SearchBar
+  searchType="thing" // 'thing' | 'arc' | 'any'
+  returnType="function"
+  onSelect={(result) => {
+    // Handle selection
+    console.log(result.entitySlug, result.title, result.type)
+  }}
+/>
+
+// Search with title and filtering
+<SearchBar
+  showTitle={true}
+  title="Search Things"
+  searchType="thing"
+/>
+```
+
+### SearchBarWrapper Component
+
+If you need to use the SearchBar within an Astro page, use the `SearchBarWrapper` which handles user and campaign context:
+
+```tsx
+import { SearchBarWrapper } from '@components/app/components/search-bar/search-bar'
+;<SearchBarWrapper
+  user={user}
+  campaignSlug={campaignSlug}
+  searchType='any'
+  showTitle={true}
+  title='Search Campaign'
+/>
+```
+
+### Search Types
+
+- **`thing`** - Search only things (NPCs, locations, items, etc.)
+- **`arc`** - Search only story arcs
+- **`any`** - Search across all content types
+
+### Return Types
+
+- **`link`** (default) - Navigate to the selected item
+- **`function`** - Execute a callback function with the selected item
+
+The component automatically handles:
+
+- Real-time search as you type
+- Spell correction suggestions
+- Highlighted search results
+- Keyboard navigation (Escape to clear)
+- Loading states and error handling

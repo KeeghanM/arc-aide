@@ -1,6 +1,6 @@
+import { useAppStore } from '@stores/appStore'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useEffect } from 'react'
-import { useAppStore } from './stores/appStore'
 
 const queryClient = new QueryClient()
 

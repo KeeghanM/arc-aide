@@ -1,8 +1,8 @@
 import type { arc } from '@db/schema'
+import { useSyncMutation } from '@hooks/useSyncMutation'
+import { useAppStore } from '@stores/appStore'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { usePostHog } from 'posthog-js/react'
-import { useAppStore } from '../stores/appStore'
-import { useSyncMutation } from './useSyncMutation'
 
 export type TArc = typeof arc.$inferSelect
 
@@ -21,7 +21,7 @@ export function useArcQueries() {
     },
   })
 
-  const arcQuery = (arcSlug: string) =>
+  const useArcQuery = (arcSlug: string) =>
     useQuery({
       queryKey: ['arc', campaignSlug, arcSlug],
       queryFn: async ({ queryKey }): Promise<TArc> => {
@@ -100,7 +100,7 @@ export function useArcQueries() {
 
   return {
     arcsQuery,
-    arcQuery,
+    useArcQuery,
     createArc,
     deleteArc,
     modifyArc,

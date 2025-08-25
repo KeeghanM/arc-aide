@@ -17,15 +17,15 @@ import {
   SelectValue,
 } from '@components/ui/select'
 import { useThingQueries } from '@hooks/useThingQueries'
+import { useThingTypeQueries } from '@hooks/useThingTypeQueries'
+import { useAppStore } from '@stores/appStore'
 import { useState } from 'react'
-import { useThingTypeQueries } from '../../hooks/useThingTypeQueries'
-import { useAppStore } from '../../stores/appStore'
 import CreateThingType from '../create-thing-type/create-thing-type'
 
 export default function CreateThing() {
   const { campaignSlug } = useAppStore()
-  const { createThingTypesQuery } = useThingTypeQueries()
-  const thingTypes = createThingTypesQuery(campaignSlug!)
+  const { useThingTypesQuery } = useThingTypeQueries()
+  const thingTypes = useThingTypesQuery(campaignSlug!)
 
   const { createThing } = useThingQueries()
 

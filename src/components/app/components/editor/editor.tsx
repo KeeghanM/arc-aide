@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils/cn.ts'
 import { css } from '@emotion/css'
 import Prism from 'prismjs'
 import 'prismjs/components/prism-markdown'
@@ -11,7 +12,6 @@ import {
 } from 'slate'
 import { withHistory } from 'slate-history'
 import { Editable, type RenderLeafProps, Slate, withReact } from 'slate-react'
-
 import type { CustomEditor } from './custom-types.d.ts'
 
 export const defaultEditorValue: Descendant[] = [
@@ -21,13 +21,17 @@ export const defaultEditorValue: Descendant[] = [
   },
 ]
 
+type TMarkdownEditorProps = {
+  initialValue: Descendant[]
+  onChange: (value: Descendant[]) => void
+  height?: 'sm' | 'md' | 'lg'
+}
+
 export default function MarkdownEditor({
   initialValue,
   onChange,
-}: {
-  initialValue: Descendant[]
-  onChange: (value: Descendant[]) => void
-}) {
+  height = 'sm',
+}: TMarkdownEditorProps) {
   const [value, setValue] = useState(
     initialValue && initialValue.length > 0 ? initialValue : defaultEditorValue
   )
@@ -103,7 +107,12 @@ export default function MarkdownEditor({
         decorate={decorate}
         renderLeaf={renderLeaf}
         placeholder='Start writing...'
-        className='border-border focus:ring-primary min-h-[200px] rounded border p-4 focus:border-transparent focus:ring-2 focus:outline-none'
+        className={cn(
+          'border-border focus:ring-primary resize-y overflow-y-auto rounded border p-4 focus:border-transparent focus:ring-2 focus:outline-none',
+          height === 'sm' && 'h-[200px]',
+          height === 'md' && 'h-[500px]',
+          height === 'lg' && 'h-[700px]'
+        )}
       />
     </Slate>
   )

@@ -192,32 +192,54 @@ src/
 └── styles/                # Global CSS styles
 ```
 
-## Deployment Architecture
+### Component Organization
 
-### Production Environment
+Components within `src/components/app/components/` are organized by domain:
 
-- **Edge Functions**: API routes deployed as edge functions
-- **Static Assets**: CDN-distributed static files
-- **Database**: Distributed Turso database for global access
-- **Monitoring**: Honeybadger error tracking and PostHog analytics
+- **arc/** - Arc creation, editing, and display components
+  - `create-arc/` - Arc creation dialog with form validation
+- **campaign/** - Campaign listing and creation components
+  - `campaign-list/` - Campaign grid display with navigation
+  - `create-campaign/` - Campaign creation dialog
+- **editor/** - Rich text editor using Slate.js with markdown support
+  - Handles content conversion between Slate AST and plain text/HTML
+- **search-bar/** - Search functionality with auto-complete and spell correction
+  - Supports different search types (thing, arc, any)
+  - Configurable return modes (navigation vs. function callback)
+- **thing/** - Thing management, creation, and arc association
+  - `create-thing/` - Thing creation dialog with type selection
+  - `create-thing-type/` - Thing type creation dialog
+  - `add-thing-to-arc/` - Component for associating things with arcs
+  - `arc-list/` - Display arcs that contain a specific thing
 
-### Environment Configuration
+### File Naming Conventions
 
-- **Development**: Local SQLite database
-- **Staging**: Turso database with test data
-- **Production**: Turso database with backup strategies
+- **Directories**: kebab-case (`create-thing/`)
+- **Files**: kebab-case (`create-thing.tsx`)
+- **Components**: PascalCase exports (`CreateThing`)
+- **Organization**: Group related components in feature directories
 
-## Future Considerations
+Example structure:
 
-### Scalability
+```
+components/thing/
+├── create-thing/
+│   └── create-thing.tsx
+├── thing.tsx
+└── arc-list/
+    └── arc-list.tsx
+```
 
-- **Database Sharding**: Campaign-based data partitioning
-- **Caching Layer**: Redis for session and query caching
-- **CDN Integration**: Enhanced asset delivery
+### Rich Text Content Management
 
-### Features
+Content is stored as Slate.js AST and converted using utilities:
 
-- **Real-time Collaboration**: WebSocket integration for live editing
-- **Mobile App**: React Native companion app
-- **Advanced Search**: Full-text search implementation
-- **Export/Import**: Campaign data portability
+```tsx
+import { slateToPlainText, slateToHtml } from '@utils/slate-text-extractor'
+
+// For search indexing
+const searchText = slateToPlainText(slateContent)
+
+// For display rendering
+const htmlContent = slateToHtml(slateContent)
+```

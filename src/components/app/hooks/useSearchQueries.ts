@@ -1,14 +1,14 @@
 import type { FuzzySearchResult } from '@db/search'
+import { useAppStore } from '@stores/appStore'
 import { useQuery } from '@tanstack/react-query'
 import { usePostHog } from 'posthog-js/react'
-import { useAppStore } from '../stores/appStore'
 
 export function useSearchQueries() {
   const posthog = usePostHog()
 
   const { campaignSlug } = useAppStore()
 
-  const searchQuery = (searchTerm: string, type = 'any') =>
+  const useSearchQuery = (searchTerm: string, type = 'any') =>
     useQuery({
       queryKey: ['search', campaignSlug, searchTerm],
       queryFn: async (): Promise<FuzzySearchResult[]> => {
@@ -26,5 +26,5 @@ export function useSearchQueries() {
       enabled: searchTerm.length > 0,
     })
 
-  return { searchQuery }
+  return { useSearchQuery }
 }

@@ -2,7 +2,7 @@ import { auth } from '@auth/auth'
 import { db } from '@db/db'
 import { campaign, thing } from '@db/schema'
 import Honeybadger from '@honeybadger-io/js'
-import { extractPlainTextFromSlate } from '@utils/slate-text-extractor'
+import { slateToPlainText } from '@utils/slate-text-extractor'
 import { slugify } from '@utils/string'
 import type { APIRoute } from 'astro'
 import { and, eq } from 'drizzle-orm'
@@ -169,7 +169,7 @@ export const PUT: APIRoute = async ({ request, params }) => {
       updateData.typeId = parsedThing.data.typeId
     if (parsedThing.data.description !== undefined) {
       updateData.description = parsedThing.data.description
-      updateData.descriptionText = extractPlainTextFromSlate(
+      updateData.descriptionText = slateToPlainText(
         parsedThing.data.description
       )
     }

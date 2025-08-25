@@ -9,7 +9,7 @@ export function useThingTypeQueries() {
   const posthog = usePostHog()
   const queryClient = useQueryClient()
 
-  const createThingTypesQuery = (campaignSlug: string) =>
+  const useThingTypesQuery = (campaignSlug: string) =>
     useQuery({
       queryKey: ['thingTypes', campaignSlug],
       queryFn: async ({ queryKey }): Promise<TThingType[]> => {
@@ -19,7 +19,7 @@ export function useThingTypeQueries() {
       },
     })
 
-  const createThingTypeQuery = (campaignSlug: string, thingTypeId: number) =>
+  const useThingTypeQuery = (campaignSlug: string, thingTypeId: number) =>
     useQuery({
       queryKey: ['thingType', campaignSlug, thingTypeId],
       queryFn: async ({ queryKey }): Promise<TThingType> => {
@@ -125,8 +125,8 @@ export function useThingTypeQueries() {
   })
 
   return {
-    createThingTypesQuery,
-    createThingTypeQuery,
+    useThingTypesQuery,
+    useThingTypeQuery,
     createThingType,
     deleteThingType,
     modifyThingType,

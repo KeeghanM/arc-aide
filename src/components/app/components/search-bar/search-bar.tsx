@@ -1,9 +1,36 @@
+import { useSearchQueries } from '@hooks/useSearchQueries'
+import { useAppStore } from '@stores/appStore'
 import { properCase } from '@utils/string'
 import { useState } from 'react'
-import { useSearchQueries } from '../../hooks/useSearchQueries'
-import { useAppStore } from '../../stores/appStore'
+import ScreenWrapper, { type TScreenWrapperProps } from '../../screen-wrapper'
 
-export default function SearchBar() {
+type TSearchBarProps = {
+  searchType?: 'thing' | 'arc' | 'any'
+  showTitle?: boolean
+  title?: string
+} & (
+  | {
+      returnType?: 'link'
+      onSelect?: never
+    }
+  | {
+      returnType: 'function'
+      onSelect: (result: {
+        entitySlug: string
+        entityId: number
+        title: string
+        type: 'thing' | 'arc'
+      }) => void
+    }
+)
+
+export default function SearchBar({
+  searchType = 'any',
+  returnType = 'link',
+  onSelect,
+  showTitle = false,
+  title,
+}: TSearchBarProps) {
   const [value, setValue] = useState('')
   const { campaignSlug } = useAppStore()
   // // WE MIGHT WANT TO DEBOUNCE THIS LATER
@@ -14,8 +41,8 @@ export default function SearchBar() {
   //   []
   // )
 
-  const { searchQuery } = useSearchQueries()
-  const query = searchQuery(value, 'any')
+  const { useSearchQuery } = useSearchQueries()
+  const query = useSearchQuery(value, searchType)
 
   // Check if any results have spell corrections
   const hasCorrections = query.data?.some(
@@ -25,16 +52,19 @@ export default function SearchBar() {
   const correctedQuery = hasCorrections ? query.data?.[0]?.correctedQuery : null
 
   return (
-    <>
-      <h2 className='mb-2 flex items-center gap-2 text-2xl font-semibold'>
-        Search the Campaign
-      </h2>
+    <div className='relative space-y-2'>
+      {showTitle && <h2 className='text-2xl font-semibold'>{title}</h2>}
       <input
         type='text'
         placeholder='Search...'
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        className='border-border focus:border-primary mb-4 w-full rounded-md border p-2 focus:outline-none'
+        onKeyDown={(e) => {
+          if (e.key === 'Escape') {
+            setValue('')
+          }
+        }}
+        className='border-border focus:border-primary w-md max-w-full flex-1 rounded-md border p-2 focus:outline-none'
       />
 
       {query.data && (
@@ -58,20 +88,64 @@ export default function SearchBar() {
                 className='text-sm text-gray-500'
                 dangerouslySetInnerHTML={{ __html: result.highlight }}
               />
-              <a
-                href={
-                  result.type === 'arc'
-                    ? `/dashboard/campaign/${campaignSlug}/arc/${result.slug}/`
-                    : `/dashboard/campaign/${campaignSlug}/thing/${result.slug}/`
-                }
-                className='absolute inset-0'
-              >
-                <span className='sr-only'>Go to {result.title}</span>
-              </a>
+              {returnType === 'link' ? (
+                <a
+                  href={
+                    result.type === 'arc'
+                      ? `/dashboard/campaign/${campaignSlug}/arc/${result.slug}/`
+                      : `/dashboard/campaign/${campaignSlug}/thing/${result.slug}/`
+                  }
+                  className='absolute inset-0'
+                >
+                  <span className='sr-only'>Go to {result.title}</span>
+                </a>
+              ) : (
+                <button
+                  type='button'
+                  className='absolute inset-0 cursor-pointer opacity-0'
+                  onClick={() => {
+                    if (onSelect == undefined) return
+                    setValue('')
+                    onSelect({
+                      entitySlug: result.slug,
+                      entityId: result.entityId,
+                      title: result.title,
+                      type: result.type,
+                    })
+                  }}
+                >
+                  <span className='sr-only'>Select {result.title}</span>
+                </button>
+              )}
             </li>
           ))}
         </ul>
       )}
-    </>
+    </div>
+  )
+}
+
+export function SearchBarWrapper({
+  searchType = 'any',
+  returnType = 'link',
+  onSelect,
+  showTitle = false,
+  title,
+  user,
+  campaignSlug,
+}: TSearchBarProps & TScreenWrapperProps) {
+  return (
+    <ScreenWrapper
+      user={user}
+      campaignSlug={campaignSlug}
+    >
+      <SearchBar
+        searchType={searchType}
+        returnType={returnType}
+        onSelect={onSelect}
+        showTitle={showTitle}
+        title={title}
+      />
+    </ScreenWrapper>
   )
 }

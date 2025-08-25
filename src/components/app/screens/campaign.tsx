@@ -1,10 +1,9 @@
+import { useArcQueries, type TArc } from '@hooks/useArcQueries'
+import { useThingQueries, type TThing } from '@hooks/useThingQueries'
 import Arc from '../components/arc/arc'
-import CreateArc from '../components/create-arc/create-arc'
-import CreateThing from '../components/create-thing/create-thing'
-import SearchBar from '../components/search-bar/search-bar'
+import CreateArc from '../components/arc/create-arc/create-arc'
+import CreateThing from '../components/thing/create-thing/create-thing'
 import Thing from '../components/thing/thing'
-import { useArcQueries, type TArc } from '../hooks/useArcQueries'
-import { useThingQueries, type TThing } from '../hooks/useThingQueries'
 import ScreenWrapper, { type TScreenWrapperProps } from '../screen-wrapper'
 
 type TCampaignProps = {
@@ -14,13 +13,12 @@ type TCampaignProps = {
 
 function Campaign({ initialArcs, latestThings }: TCampaignProps) {
   const { arcsQuery } = useArcQueries()
-  const { createThingsQuery } = useThingQueries()
+  const { useThingsQuery } = useThingQueries()
 
-  const thingsQuery = createThingsQuery(20)
+  const thingsQuery = useThingsQuery(20)
 
   return (
     <div>
-      <SearchBar />
       <h2 className='mb-4 flex items-center gap-4 text-2xl font-semibold'>
         Arcs <CreateArc />
       </h2>

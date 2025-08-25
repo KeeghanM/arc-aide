@@ -2,7 +2,7 @@ import { auth } from '@auth/auth'
 import { db } from '@db/db'
 import { arc, campaign } from '@db/schema'
 import Honeybadger from '@honeybadger-io/js'
-import { extractPlainTextFromSlate } from '@utils/slate-text-extractor'
+import { slateToPlainText } from '@utils/slate-text-extractor'
 import { slugify } from '@utils/string'
 import type { APIRoute } from 'astro'
 import { and, eq } from 'drizzle-orm'
@@ -177,28 +177,24 @@ export const PUT: APIRoute = async ({ request, params }) => {
     if (parsedArc.data.name !== undefined) updateData.name = parsedArc.data.name
     if (parsedArc.data.hook !== undefined) {
       updateData.hook = parsedArc.data.hook
-      updateData.hookText = extractPlainTextFromSlate(parsedArc.data.hook)
+      updateData.hookText = slateToPlainText(parsedArc.data.hook)
     }
     if (parsedArc.data.protagonist !== undefined) {
       updateData.protagonist = parsedArc.data.protagonist
-      updateData.protagonistText = extractPlainTextFromSlate(
-        parsedArc.data.protagonist
-      )
+      updateData.protagonistText = slateToPlainText(parsedArc.data.protagonist)
     }
     if (parsedArc.data.antagonist !== undefined) {
       updateData.antagonist = parsedArc.data.antagonist
-      updateData.antagonistText = extractPlainTextFromSlate(
-        parsedArc.data.antagonist
-      )
+      updateData.antagonistText = slateToPlainText(parsedArc.data.antagonist)
     }
     if (parsedArc.data.problem !== undefined) {
       updateData.problem = parsedArc.data.problem
-      updateData.problemText = extractPlainTextFromSlate(parsedArc.data.problem)
+      updateData.problemText = slateToPlainText(parsedArc.data.problem)
     }
     if (parsedArc.data.key !== undefined) updateData.key = parsedArc.data.key
     if (parsedArc.data.outcome !== undefined) {
       updateData.outcome = parsedArc.data.outcome
-      updateData.outcomeText = extractPlainTextFromSlate(parsedArc.data.outcome)
+      updateData.outcomeText = slateToPlainText(parsedArc.data.outcome)
     }
 
     // If no fields to update, return early
@@ -215,7 +211,7 @@ export const PUT: APIRoute = async ({ request, params }) => {
     return new Response(JSON.stringify(result[0]), { status: 200 })
   } catch (error) {
     console.error('Error updating arc:', error)
-    // Honeybadger.notify(error as Error)
+    Honeybadger.notify(error as Error)
     return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
       status: 500,
     })

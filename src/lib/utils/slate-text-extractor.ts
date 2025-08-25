@@ -1,82 +1,52 @@
-/**
- * Utility functions for extracting plain text from Slate AST JSON
- * This ensures search indexes contain clean, readable text instead of JSON structure
- */
+import type { Descendant } from 'slate'
 
-interface SlateNode {
-  type?: string
-  text?: string
-  children?: SlateNode[]
-}
-
-type SlateValue = SlateNode | SlateNode[] | string | null | undefined
+import showdown from 'showdown'
 
 /**
- * Recursively extracts plain text from a Slate AST node or array of nodes
+ * Converts Slate.js rich text content to plain text.
+ * @param nodes - The Slate.js nodes to convert.
+ * @returns The plain text representation of the Slate.js content.
  */
-function extractTextFromSlateNode(node: SlateNode): string {
-  // If it's a text node, return the text
-  if (typeof node.text === 'string') {
-    return node.text
-  }
-
-  // If it has children, recursively extract text from them
-  if (Array.isArray(node.children)) {
-    return node.children.map(extractTextFromSlateNode).join(' ')
-  }
-
-  return ''
-}
-
-/**
- * Extracts plain text from a Slate AST value
- * Handles various input formats: JSON string, parsed object, array, etc.
- */
-export function extractPlainTextFromSlate(slateValue: SlateValue): string {
-  if (!slateValue) {
+export function slateToPlainText(nodes: Descendant[]): string {
+  if (!nodes) {
     return ''
   }
 
-  try {
-    let parsedValue: SlateNode | SlateNode[]
-
-    // If it's a string, try to parse it as JSON
-    if (typeof slateValue === 'string') {
-      try {
-        parsedValue = JSON.parse(slateValue)
-      } catch {
-        // If parsing fails, treat it as plain text
-        return slateValue
+  return nodes
+    .map((n) => {
+      if ('text' in n) {
+        return n.text
+      } else if ('children' in n) {
+        return slateToPlainText(n.children as Descendant[])
+      } else {
+        return ''
       }
-    } else {
-      parsedValue = slateValue as SlateNode | SlateNode[]
-    }
-
-    // Handle array of nodes
-    if (Array.isArray(parsedValue)) {
-      return parsedValue.map(extractTextFromSlateNode).join(' ')
-    }
-
-    // Handle single node
-    return extractTextFromSlateNode(parsedValue)
-  } catch (error) {
-    console.warn('Failed to extract text from Slate value:', error)
-    return ''
-  }
+    })
+    .join('\n')
 }
 
 /**
- * Extracts plain text from multiple Slate AST fields
- * Useful for processing arc data with multiple rich text fields
+ * Converts Slate.js rich text content to HTML.
+ * @param nodes - The Slate.js nodes to convert.
+ * @returns The HTML representation of the Slate.js content.
  */
-export function extractPlainTextFromSlateFields(
-  fields: Record<string, SlateValue>
-): Record<string, string> {
-  const result: Record<string, string> = {}
-
-  for (const [key, value] of Object.entries(fields)) {
-    result[key] = extractPlainTextFromSlate(value)
+export function slateToHtml(nodes: Descendant[]): string {
+  if (!nodes) {
+    return ''
   }
 
-  return result
+  // We're actually storing markdown in the slate editor
+  // but without the markdown syntax as any kind of node property
+  // So, we extract the raw text (which is markdown) and convert it to HTML
+  // using the markdown plugin
+  const markdown = slateToPlainText(nodes)
+
+  const converter = new showdown.Converter({
+    tables: true,
+    simplifiedAutoLink: true,
+    strikethrough: true,
+    tasklists: true,
+  })
+
+  return converter.makeHtml(markdown)
 }

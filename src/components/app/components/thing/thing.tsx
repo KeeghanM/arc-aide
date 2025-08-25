@@ -1,6 +1,6 @@
 import TimeAgo from '@components/ui/time-ago'
 import type { TThing } from '@hooks/useThingQueries'
-import { useAppStore } from '../../stores/appStore'
+import { useAppStore } from '@stores/appStore'
 
 export default function Thing({ thing }: { thing: TThing }) {
   const { campaignSlug } = useAppStore()

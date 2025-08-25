@@ -1,6 +1,6 @@
 import type { TCampaign } from '@hooks/useCampaignQueries'
-import CampaignList from '../components/campaign-list/campaign-list'
-import CreateCampaign from '../components/create-campaign/create-campaign'
+import CampaignList from '../components/campaign/campaign-list/campaign-list'
+import CreateCampaign from '../components/campaign/create-campaign/create-campaign'
 import ScreenWrapper, { type TScreenWrapperProps } from '../screen-wrapper'
 
 type TDashboardProps = {

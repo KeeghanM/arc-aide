@@ -1,8 +1,7 @@
+import { useArcQueries, type TArc } from '@hooks/useArcQueries'
 import pDebounce from 'p-debounce'
 import type { Descendant } from 'slate'
 import MarkdownEditor, { defaultEditorValue } from '../components/editor/editor'
-import SearchBar from '../components/search-bar/search-bar'
-import { useArcQueries, type TArc } from '../hooks/useArcQueries'
 import type { TScreenWrapperProps } from '../screen-wrapper'
 import ScreenWrapper from '../screen-wrapper'
 
@@ -32,7 +31,7 @@ function Arc({ arc }: TArcProps) {
   }, 1000)
 
   return (
-    <div className='space-y-6 pr-6 md:pr-12'>
+    <div className='space-y-4 pr-6 md:pr-12'>
       <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
         <div>
           <h2 className='mb-2 flex items-center gap-2 text-2xl font-semibold'>
@@ -93,7 +92,6 @@ function Arc({ arc }: TArcProps) {
           />
         </div>
       </div>
-      <SearchBar />
     </div>
   )
 }

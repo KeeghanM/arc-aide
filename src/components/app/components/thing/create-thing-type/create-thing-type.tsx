@@ -10,8 +10,8 @@ import {
 } from '@components/ui/dialog'
 import { Input } from '@components/ui/input'
 import { useThingTypeQueries } from '@hooks/useThingTypeQueries'
+import { useAppStore } from '@stores/appStore'
 import { useState } from 'react'
-import { useAppStore } from '../../stores/appStore'
 
 export default function CreateThingType() {
   const { campaignSlug } = useAppStore()
