@@ -1,3 +1,4 @@
+import { properCase } from '@/lib/utils'
 import { useState } from 'react'
 import { useSearchQueries } from '../../hooks/useSearchQueries'
 import { useAppStore } from '../../stores/appStore'
@@ -36,21 +37,23 @@ export default function SearchBar() {
         className='border-border focus:border-primary mb-4 w-full rounded-md border p-2 focus:outline-none'
       />
 
-      {hasCorrections && correctedQuery && (
-        <div className='mb-3 text-sm text-orange-600'>
-          <span className='font-medium'>Did you mean:</span>{' '}
-          <em>"{correctedQuery}"</em>
-        </div>
-      )}
-
       {query.data && (
-        <ul className='max-h-60 space-y-2 overflow-y-auto'>
+        <ul className='absolute z-10 max-h-60 w-full max-w-md space-y-2 overflow-y-auto rounded-md border bg-white p-4 shadow-md'>
+          {hasCorrections && correctedQuery && (
+            <div className='mb-3 text-sm text-orange-600'>
+              <span className='font-medium'>Showing results for:</span>{' '}
+              <em>"{correctedQuery}"</em>
+            </div>
+          )}
+
           {query.data.map((result) => (
             <li
               key={result.entityId + result.type}
               className='border-border relative rounded-md border p-2'
             >
-              <div className='font-bold'>{result.title}</div>
+              <div className='font-bold'>
+                {properCase(result.type)}: {result.title}
+              </div>
               <div
                 className='text-sm text-gray-500'
                 dangerouslySetInnerHTML={{ __html: result.highlight }}

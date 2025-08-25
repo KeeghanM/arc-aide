@@ -1,8 +1,8 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "9ec7e64c-3fc1-4f81-abe7-5ccaac4f2019",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "1e34dc11-f783-4272-8dd5-57d93d39aa0d",
+  "prevId": "9ec7e64c-3fc1-4f81-abe7-5ccaac4f2019",
   "tables": {
     "account": {
       "name": "account",
@@ -144,42 +144,48 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false,
-          "autoincrement": false
+          "autoincrement": false,
+          "default": "'[]'"
         },
         "protagonist": {
           "name": "protagonist",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
-          "autoincrement": false
+          "autoincrement": false,
+          "default": "'[]'"
         },
         "antagonist": {
           "name": "antagonist",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
-          "autoincrement": false
+          "autoincrement": false,
+          "default": "'[]'"
         },
         "problem": {
           "name": "problem",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
-          "autoincrement": false
+          "autoincrement": false,
+          "default": "'[]'"
         },
         "key": {
           "name": "key",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
-          "autoincrement": false
+          "autoincrement": false,
+          "default": "'[]'"
         },
         "outcome": {
           "name": "outcome",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
-          "autoincrement": false
+          "autoincrement": false,
+          "default": "'[]'"
         },
         "hook_text": {
           "name": "hook_text",
@@ -340,7 +346,8 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false,
-          "autoincrement": false
+          "autoincrement": false,
+          "default": "'[]'"
         },
         "created_at": {
           "name": "created_at",
@@ -504,7 +511,8 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false,
-          "autoincrement": false
+          "autoincrement": false,
+          "default": "'[]'"
         },
         "description_text": {
           "name": "description_text",

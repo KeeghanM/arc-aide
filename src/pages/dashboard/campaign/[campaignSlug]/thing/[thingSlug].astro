@@ -1,0 +1,85 @@
+---
+import { db } from '@lib/db/db'
+import {
+  thing as thingSchema,
+  arcThing,
+  campaign,
+  arc,
+  thingType,
+} from '@lib/db/schema'
+import { eq } from 'drizzle-orm'
+import ThingScreen from '@components/app/screens/thing'
+import MainLayout from '@layouts/main-layout.astro'
+
+const { campaignSlug, thingSlug } = Astro.params
+
+if (!campaignSlug || !thingSlug) {
+  return Astro.redirect('/404')
+}
+
+const ThingData = await db
+  .select({
+    thing: thingSchema,
+    campaignName: campaign.name,
+    type: thingType.name,
+  })
+  .from(thingSchema)
+  .fullJoin(campaign, eq(thingSchema.campaignId, campaign.id))
+  .fullJoin(thingType, eq(thingSchema.typeId, thingType.id))
+  .where(eq(thingSchema.slug, thingSlug))
+  .limit(1)
+
+if (!ThingData[0]?.thing) {
+  return Astro.redirect('/404')
+}
+
+const thing = ThingData[0].thing
+const campaignName = ThingData[0].campaignName
+const type = ThingData[0].type
+
+const arcs = await db
+  .select({ name: arc.name, slug: arc.slug })
+  .from(arcThing)
+  .fullJoin(arc, eq(arc.id, arcThing.arcId))
+  .where(eq(arcThing.thingId, thing.id))
+---
+
+<MainLayout title={thing.name}>
+  <main class='space-y-6 p-4 md:p-8 lg:p-12'>
+    <h1 class='text-primary text-4xl font-bold md:text-5xl'>
+      {campaignName}: {thing.name}
+      <a
+        href={`/dashboard/campaign/${campaignSlug}/`}
+        class='text-accent ml-4 text-lg font-normal hover:italic'
+      >
+        (Back to Campaign)</a
+      >
+    </h1>
+    <h2>{type}</h2>
+    <div class='grid grid-cols-1 md:grid-cols-[1fr_300px]'>
+      <ThingScreen
+        thing={thing}
+        user={Astro.locals.user}
+        campaignSlug={campaignSlug}
+        client:load
+      />
+      <div class='border-border overflow-y-auto border-l pl-6 md:pl-12'>
+        <h2 class='mb-4 text-2xl font-semibold'>Arcs this features in</h2>
+        <div class='space-y-4'>
+          {
+            arcs.map((arc) => (
+              <div class='border-border bg-primary/5 rounded-lg border p-4'>
+                <a
+                  href={`/dashboard/campaigns/${campaignSlug}/arc/${arc.slug}`}
+                  class='text-lg font-semibold'
+                >
+                  {arc.name}
+                </a>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </main>
+</MainLayout>

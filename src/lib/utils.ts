@@ -24,3 +24,7 @@ export function slugify(string: string) {
     .replace(/^-+|-+$/g, '') // Trim leading/trailing dashes
     .replace(/--+/g, '-') // Replace multiple dashes with single dash
 }
+
+export function properCase(string: string) {
+  return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase()
+}

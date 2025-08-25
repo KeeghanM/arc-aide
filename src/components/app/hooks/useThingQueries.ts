@@ -12,12 +12,14 @@ export function useThingQueries() {
 
   const { campaignSlug } = useAppStore()
 
-  const thingsQuery = () =>
+  const createThingsQuery = (count: number) =>
     useQuery({
-      queryKey: ['things', campaignSlug],
+      queryKey: ['things', campaignSlug, count],
       queryFn: async ({ queryKey }): Promise<TThing[]> => {
         const [_key, slug] = queryKey
-        const response = await fetch(`/api/campaigns/${slug}/things`)
+        const response = await fetch(
+          `/api/campaigns/${slug}/things?count=${count}`
+        )
         return response.json()
       },
     })
@@ -113,7 +115,7 @@ export function useThingQueries() {
   })
 
   return {
-    thingsQuery,
+    createThingsQuery,
     thingQuery,
     createThing,
     deleteThing,

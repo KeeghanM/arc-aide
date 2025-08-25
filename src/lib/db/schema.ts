@@ -8,7 +8,7 @@ export const campaign = sqliteTable(
     id: integer('id').primaryKey(),
     slug: text('slug').notNull(),
     name: text('name').notNull(),
-    description: text('description', { mode: 'json' }).default('[]'),
+    description: text('description', { mode: 'json' }),
     createdAt: integer('created_at', {
       mode: 'timestamp',
     }).notNull(),
@@ -28,12 +28,12 @@ export const arc = sqliteTable(
     id: integer('id').primaryKey(),
     slug: text('slug').notNull(),
     name: text('name').notNull(),
-    hook: text('hook', { mode: 'json' }).default('[]'),
-    protagonist: text('protagonist', { mode: 'json' }).default('[]'),
-    antagonist: text('antagonist', { mode: 'json' }).default('[]'),
-    problem: text('problem', { mode: 'json' }).default('[]'),
-    key: text('key', { mode: 'json' }).default('[]'),
-    outcome: text('outcome', { mode: 'json' }).default('[]'),
+    hook: text('hook', { mode: 'json' }),
+    protagonist: text('protagonist', { mode: 'json' }),
+    antagonist: text('antagonist', { mode: 'json' }),
+    problem: text('problem', { mode: 'json' }),
+    key: text('key', { mode: 'json' }),
+    outcome: text('outcome', { mode: 'json' }),
     // Plain text versions for search indexing
     hookText: text('hook_text').default(''),
     protagonistText: text('protagonist_text').default(''),
@@ -69,7 +69,7 @@ export const thing = sqliteTable(
       .notNull()
       .references(() => thingType.id, { onDelete: 'cascade' }),
     name: text('name').notNull(),
-    description: text('description', { mode: 'json' }).default('[]'),
+    description: text('description', { mode: 'json' }),
     // Plain text version for search indexing
     descriptionText: text('description_text').default(''),
     campaignId: integer('campaign_id').notNull(),

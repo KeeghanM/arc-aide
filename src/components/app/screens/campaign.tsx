@@ -1,7 +1,10 @@
 import Arc from '../components/arc/arc'
 import CreateArc from '../components/create-arc/create-arc'
+import CreateThing from '../components/create-thing/create-thing'
+import SearchBar from '../components/search-bar/search-bar'
+import Thing from '../components/thing/thing'
 import { useArcQueries, type TArc } from '../hooks/useArcQueries'
-import type { TThing } from '../hooks/useThingQueries'
+import { useThingQueries, type TThing } from '../hooks/useThingQueries'
 import ScreenWrapper, { type TScreenWrapperProps } from '../screen-wrapper'
 
 type TCampaignProps = {
@@ -9,11 +12,15 @@ type TCampaignProps = {
   latestThings: TThing[]
 }
 
-function Campaign({ initialArcs }: TCampaignProps) {
+function Campaign({ initialArcs, latestThings }: TCampaignProps) {
   const { arcsQuery } = useArcQueries()
+  const { createThingsQuery } = useThingQueries()
+
+  const thingsQuery = createThingsQuery(20)
 
   return (
     <div>
+      <SearchBar />
       <h2 className='mb-4 flex items-center gap-4 text-2xl font-semibold'>
         Arcs <CreateArc />
       </h2>
@@ -27,6 +34,22 @@ function Campaign({ initialArcs }: TCampaignProps) {
             <Arc
               arc={a}
               key={a.id}
+            />
+          ))}
+      </div>
+      <h2 className='mt-8 mb-4 text-2xl font-semibold'>
+        Latest Things <CreateThing />
+      </h2>
+      <div className='border-border bg-primary/5 grid gap-4 rounded-lg border p-4 md:grid-cols-2 lg:grid-cols-3'>
+        {(thingsQuery.isPending || thingsQuery.data === undefined
+          ? latestThings
+          : thingsQuery.data
+        )
+          .slice(0, 5)
+          .map((thing) => (
+            <Thing
+              key={thing.id}
+              thing={thing}
             />
           ))}
       </div>
