@@ -7,12 +7,21 @@ import type { TArc } from './useArcQueries'
 
 export type TThing = typeof thing.$inferSelect
 
+/**
+ * Thing Data Management Hook
+ *
+ * Manages CRUD operations for campaign "Things" - entities like characters,
+ * locations, items, NPCs, etc. Things are categorized by type and can be
+ * associated with multiple arcs through many-to-many relationships.
+ */
 export function useThingQueries() {
   const posthog = usePostHog()
   const queryClient = useQueryClient()
 
   const { campaignSlug } = useAppStore()
 
+  // --- Data fetching ---
+  // Paginated things query for dashboard displays
   const useThingsQuery = (count: number) =>
     useQuery({
       queryKey: ['things', campaignSlug, count],
@@ -25,6 +34,7 @@ export function useThingQueries() {
       },
     })
 
+  // Individual thing query factory
   const useThingQuery = (thingSlug: string) =>
     useQuery({
       queryKey: ['thing', campaignSlug, thingSlug],
@@ -37,6 +47,7 @@ export function useThingQueries() {
       },
     })
 
+  // Get all arcs that contain a specific thing (many-to-many relationship)
   const useArcsWithThingQuery = (thingSlug: string) => {
     return useQuery({
       queryKey: ['arcs-with-thing', campaignSlug, thingSlug],
@@ -49,6 +60,9 @@ export function useThingQueries() {
       },
     })
   }
+
+  // --- Mutations ---
+  // Associate a thing with an arc (many-to-many relationship)
 
   const addThingToArc = useSyncMutation({
     mutationFn: async ({

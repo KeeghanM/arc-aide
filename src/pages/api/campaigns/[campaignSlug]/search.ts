@@ -6,18 +6,24 @@ import type { APIRoute } from 'astro'
 import { and, eq } from 'drizzle-orm'
 
 /**
+ * Campaign Search API Endpoint
+ *
  * GET /api/campaigns/[campaignSlug]/search
- * Search for content within a specific campaign
  *
- * @param searchParams.q - Search query string
- * @param searchParams.type - Content type filter ('any', 'arc', 'thing') - defaults to 'any'
- * @param searchParams.fuzzy - Enable fuzzy search ('true' or 'false') - defaults to 'false'
+ * Provides full-text search capabilities within a specific D&D campaign.
+ * Supports both exact and fuzzy matching with content type filtering.
+ * Returns highlighted search results with spell correction suggestions.
  *
- * @example
- * GET /api/campaigns/my-campaign/search?q=goblin&type=arc&fuzzy=true
+ * Query Parameters:
+ * - q: Search query string (required)
+ * - type: Content filter ('any', 'arc', 'thing') - defaults to 'any'
+ * - fuzzy: Enable fuzzy/spell-corrected search ('true'/'false') - defaults to 'false'
+ *
+ * Security: Validates user ownership of campaign before allowing search
  */
 export const GET: APIRoute = async ({ request, params }) => {
   try {
+    // --- Authentication check ---
     const session = await auth.api.getSession({
       headers: request.headers,
     })
@@ -30,7 +36,7 @@ export const GET: APIRoute = async ({ request, params }) => {
 
     const { campaignSlug } = params
 
-    // First verify the campaign exists and belongs to the user
+    // --- Authorization: verify campaign ownership ---
     const campaignResult = await db
       .select({ id: campaign.id })
       .from(campaign)
@@ -47,14 +53,15 @@ export const GET: APIRoute = async ({ request, params }) => {
       })
     }
 
+    // --- Parse search parameters ---
     const url = new URL(request.url)
     const searchParams = url.searchParams
     const query = searchParams.get('query') || ''
-    const type = searchParams.get('type') || 'any' // 'any', 'arc', 'thing', etc.
+    const type = searchParams.get('type') || 'any' // Content type filter
     const fuzzy =
       searchParams.get('fuzzy') === 'true' || searchParams.get('fuzzy') === '1'
 
-    // Use fuzzy search if enabled, otherwise fall back to exact search
+    // --- Execute search with appropriate strategy ---
     const results = fuzzy
       ? await fuzzySearchWithHighlight(query, campaignResult[0].id, type, true)
       : await searchWithHighlight(query, campaignResult[0].id, type)

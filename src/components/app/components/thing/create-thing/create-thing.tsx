@@ -22,6 +22,13 @@ import { useAppStore } from '@stores/appStore'
 import { useState } from 'react'
 import CreateThingType from '../create-thing-type/create-thing-type'
 
+/**
+ * Create Thing Dialog Component
+ *
+ * Modal for creating new campaign "Things" (characters, locations, items, etc.).
+ * Requires selecting a Thing Type first, which categorizes the entity.
+ * Includes inline Thing Type creation for better UX flow.
+ */
 export default function CreateThing() {
   const { campaignSlug } = useAppStore()
   const { useThingTypesQuery } = useThingTypeQueries()
@@ -33,7 +40,9 @@ export default function CreateThing() {
   const [typeId, setTypeId] = useState<number | null>(null)
   const [open, setOpen] = useState(false)
 
+  // --- Form validation and submission ---
   const handleCreate = async () => {
+    // Both name and type are required for Thing creation
     if (!thingName || typeId === null) return
 
     await createThing.mutateAsync({ newThing: { name: thingName, typeId } })
@@ -60,6 +69,10 @@ export default function CreateThing() {
         <DialogHeader>
           <DialogTitle>Create a new Thing</DialogTitle>
         </DialogHeader>
+        {/* 
+          Thing Type selection with inline creation option.
+          Users can create new types without leaving this dialog.
+        */}
         <div className='flex items-center gap-2'>
           <Select
             disabled={

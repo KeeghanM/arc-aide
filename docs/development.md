@@ -155,6 +155,36 @@ const debouncedSave = useMemo(() => debounce(handleSave, 1000), [])
 setLoading(true)
 ```
 
+Some code can be quite long, and comments can help break it up into logical sections. But, avoid over-commenting & self-descriptive code is preferred.
+
+```tsx
+// Good: Section comments
+// --- Form validation ---
+const isValid = validateForm(data)
+if (!isValid) {
+  setError('Invalid form data')
+  return
+}
+
+// --- API call ---
+const response = await api.submitForm(data)
+if (response.error) {
+  setError(response.error)
+  return
+}
+
+// --- Success handling ---
+setSuccess(true)
+```
+
+### Component Size && DRY Code
+
+Dry is good, but we like DRY-3. AKA, once you go to write something for the 3rd time, consider refactoring it into a reusable function or component.
+
+File size is not always a good indicator of complexity, some files are just long and that's that.
+
+However, as a general rule of thumb, try to keep components under 300 lines. If you find yourself going over this, consider breaking it down into smaller sub-components or extracting logic into custom hooks.
+
 ### Guard Clauses
 
 Prefer early returns to reduce nesting:

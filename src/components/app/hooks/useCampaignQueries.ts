@@ -5,10 +5,18 @@ import { useSyncMutation } from './useSyncMutation'
 
 export type TCampaign = typeof campaign.$inferSelect
 
+/**
+ * Campaign Data Management Hook
+ *
+ * Provides CRUD operations for D&D campaigns with React Query caching
+ * and PostHog analytics tracking. Campaigns are the top-level organization
+ * unit that contain all arcs, things, and game content.
+ */
 export function useCampaignQueries() {
   const posthog = usePostHog()
   const queryClient = useQueryClient()
 
+  // --- Data fetching ---
   const campaignsQuery = useQuery({
     queryKey: ['campaigns'],
     queryFn: async (): Promise<TCampaign[]> => {
@@ -17,6 +25,7 @@ export function useCampaignQueries() {
     },
   })
 
+  // Factory function for individual campaign queries
   const useCampaignQuery = (slug: string) =>
     useQuery({
       queryKey: ['campaign', slug],
@@ -27,6 +36,7 @@ export function useCampaignQueries() {
       },
     })
 
+  // --- Mutations ---
   const createCampaign = useSyncMutation({
     mutationFn: async (newCampaign: { name: string }) => {
       await fetch('/api/campaigns', {
@@ -39,6 +49,7 @@ export function useCampaignQueries() {
         name: newCampaign.name,
       })
     },
+    // Invalidate campaigns list to trigger refetch
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['campaigns'] })
     },

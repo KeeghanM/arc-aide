@@ -1,10 +1,9 @@
 import type { TArc } from '@components/app/hooks/useArcQueries'
+import { useThingQueries } from '@components/app/hooks/useThingQueries'
 import ScreenWrapper, {
   type TScreenWrapperProps,
 } from '@components/app/screen-wrapper'
-import { useEffect } from 'react'
 import AddThingToArc from '../add-thing-to-arc/add-thing-to-arc'
-import { useThingQueries } from '@/components/app/hooks/useThingQueries'
 
 type TArcListProps = {
   initialArcs: TArc[]
@@ -16,13 +15,6 @@ function ArcList({ initialArcs, campaignSlug, thingSlug }: TArcListProps) {
   const { useArcsWithThingQuery } = useThingQueries()
   const arcsWithThingQuery = useArcsWithThingQuery(thingSlug)
 
-  useEffect(() => {
-    console.log('Data', {
-      initialArcs,
-      arcsWithThingData: arcsWithThingQuery.data,
-    })
-  }, [arcsWithThingQuery.data])
-
   return (
     <div>
       <AddThingToArc thingSlug={thingSlug} />
@@ -31,6 +23,7 @@ function ArcList({ initialArcs, campaignSlug, thingSlug }: TArcListProps) {
         : arcsWithThingQuery.data
       ).map((arc) => (
         <a
+          key={arc.id}
           href={`/dashboard/campaign/${campaignSlug}/arc/${arc.slug}/`}
           className='border-border bg-primary/5 flex rounded-lg border p-4 text-lg font-semibold'
         >

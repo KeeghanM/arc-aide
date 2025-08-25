@@ -17,13 +17,21 @@ type TAddThingToArcProps = {
   thingSlug: string
 }
 
+/**
+ * Add Thing to Arc Dialog Component
+ *
+ * Allows users to associate a Thing with an Arc through a searchable dialog.
+ * Uses the search component for arc discovery, creating a many-to-many
+ * relationship between Things and Arcs. This enables Things to appear
+ * in multiple story arcs throughout the campaign.
+ */
 export default function AddThingToArc({ thingSlug }: TAddThingToArcProps) {
   const { campaignSlug } = useAppStore()
   const { addThingToArc } = useThingQueries()
   const [arc, setArc] = useState<{ slug: string; name: string } | null>(null)
-
   const [open, setOpen] = useState(false)
 
+  // --- Handle arc association ---
   const handleAdd = async () => {
     if (!campaignSlug || !arc?.slug) return
 

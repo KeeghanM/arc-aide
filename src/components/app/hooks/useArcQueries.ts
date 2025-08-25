@@ -12,6 +12,7 @@ export function useArcQueries() {
 
   const { campaignSlug } = useAppStore()
 
+  // --- Data fetching ---
   const arcsQuery = useQuery({
     queryKey: ['arcs', campaignSlug],
     queryFn: async ({ queryKey }): Promise<TArc[]> => {
@@ -21,6 +22,7 @@ export function useArcQueries() {
     },
   })
 
+  // Factory function for individual arc queries
   const useArcQuery = (arcSlug: string) =>
     useQuery({
       queryKey: ['arc', campaignSlug, arcSlug],
@@ -33,6 +35,7 @@ export function useArcQueries() {
       },
     })
 
+  // --- Mutations ---
   const createArc = useSyncMutation({
     mutationFn: async ({ newArc }: { newArc: { name: string } }) => {
       await fetch(`/api/campaigns/${campaignSlug}/arcs`, {

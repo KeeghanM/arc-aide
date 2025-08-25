@@ -12,13 +12,22 @@ import { Input } from '@components/ui/input'
 import { useCampaignQueries } from '@hooks/useCampaignQueries'
 import { useState } from 'react'
 
+/**
+ * Create Campaign Dialog Component
+ *
+ * Modal dialog for creating new D&D campaigns. Uses optimistic updates
+ * and automatically closes on successful creation. The campaign name
+ * becomes the primary identifier and navigation slug.
+ */
 export default function CreateCampaign() {
   const { createCampaign } = useCampaignQueries()
   const [campaignName, setCampaignName] = useState('')
   const [open, setOpen] = useState(false)
 
+  // --- Form submission ---
   const handleCreate = async () => {
     await createCampaign.mutateAsync({ name: campaignName })
+    // Only clear form and close dialog on success
     if (!createCampaign.error) {
       setCampaignName('')
       setOpen(false)
@@ -47,6 +56,7 @@ export default function CreateCampaign() {
           value={campaignName}
           onChange={(e) => setCampaignName(e.target.value)}
           onKeyDown={(e) => {
+            // Allow Enter key submission when form is valid
             if (
               e.key === 'Enter' &&
               !createCampaign.isPending &&
@@ -56,6 +66,7 @@ export default function CreateCampaign() {
             }
           }}
         />
+        {/* Display mutation errors to user */}
         {createCampaign.error && (
           <div className='mt-2 text-sm text-red-500'>
             {createCampaign.error.message}

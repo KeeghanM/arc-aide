@@ -33,18 +33,12 @@ export default function SearchBar({
 }: TSearchBarProps) {
   const [value, setValue] = useState('')
   const { campaignSlug } = useAppStore()
-  // // WE MIGHT WANT TO DEBOUNCE THIS LATER
-  // const [debouncedValue, setDebouncedValue] = useState('')
-
-  // const debouncedSetDebouncedValue = useMemo(
-  //   () => debounce(setDebouncedValue, 300),
-  //   []
-  // )
 
   const { useSearchQuery } = useSearchQueries()
   const query = useSearchQuery(value, searchType)
 
-  // Check if any results have spell corrections
+  // --- Spell correction detection ---
+  // Check if any search results include spell corrections
   const hasCorrections = query.data?.some(
     (result) =>
       result.correctedQuery && result.correctedQuery !== result.originalQuery
@@ -141,8 +135,9 @@ export function SearchBarWrapper({
     >
       <SearchBar
         searchType={searchType}
-        returnType={returnType}
-        onSelect={onSelect}
+        {...(returnType === 'function' && onSelect
+          ? { returnType: 'function', onSelect }
+          : { returnType: 'link' })}
         showTitle={showTitle}
         title={title}
       />

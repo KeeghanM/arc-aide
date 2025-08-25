@@ -11,6 +11,10 @@ type TArcProps = {
 
 function Arc({ arc }: TArcProps) {
   const { modifyArc } = useArcQueries()
+
+  // --- Auto-save handlers ---
+  // Debounce saves to avoid excessive API calls while user types
+  // 1000ms delay balances UX (not losing work) with server load
   const handleHookChange = pDebounce(async (value: Descendant[]) => {
     modifyArc.mutate({ updatedArc: { slug: arc.slug, hook: value } })
   }, 1000)
@@ -32,6 +36,14 @@ function Arc({ arc }: TArcProps) {
 
   return (
     <div className='space-y-4 pr-6 md:pr-12'>
+      {/* 
+        Arc Structure follows the D&D narrative framework:
+        - Hook: What draws players in
+        - Protagonist/Antagonist: Key characters driving conflict
+        - Problem: Central challenge to resolve
+        - Key: How players can solve it
+        - Outcome: Resolution and consequences
+      */}
       <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
         <div>
           <h2 className='mb-2 flex items-center gap-2 text-2xl font-semibold'>
@@ -86,6 +98,12 @@ function Arc({ arc }: TArcProps) {
           <h2 className='mb-2 flex items-center gap-2 text-2xl font-semibold'>
             Outcome
           </h2>
+          {/* 
+            Type casting to Descendant[] is safe here because:
+            1. Database stores JSON as TEXT, so TypeScript sees it as unknown
+            2. Our schema validation ensures it's always a valid Slate AST
+            3. defaultEditorValue provides fallback for null/undefined
+          */}
           <MarkdownEditor
             initialValue={(arc.outcome as Descendant[]) ?? defaultEditorValue}
             onChange={handleOutcomeChange}
@@ -96,6 +114,14 @@ function Arc({ arc }: TArcProps) {
   )
 }
 
+/**
+ * Arc Screen Wrapper Component
+ *
+ * Provides the React Query context and user/campaign state needed
+ * for the Arc component to function properly. This separation allows
+ * the Arc component to be used in different contexts (testing, etc.)
+ * while keeping the data dependencies clear.
+ */
 export default function ArcScreen({
   arc,
   campaignSlug,

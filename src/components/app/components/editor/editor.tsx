@@ -37,6 +37,7 @@ export default function MarkdownEditor({
   )
 
   const handleChange = useCallback((nextValue: Descendant[]) => {
+    // Prevent empty editor state by ensuring we always have at least one paragraph
     const newValue =
       nextValue.length === 1 &&
       Text.isText(nextValue[0]) &&
@@ -63,6 +64,8 @@ export default function MarkdownEditor({
       return ranges
     }
 
+    // --- Syntax highlighting with Prism.js ---
+    // Calculate token lengths for accurate range positioning
     const getLength = (token: string | Prism.Token): number => {
       if (typeof token === 'string') {
         return token.length

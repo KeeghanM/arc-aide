@@ -11,6 +11,16 @@ type TCampaignProps = {
   latestThings: TThing[]
 }
 
+/**
+ * Campaign Dashboard Component
+ *
+ * Main dashboard view for a D&D campaign showing:
+ * - Top-level arcs (nested arcs are hidden to reduce clutter)
+ * - Recent things (limited to 5 for performance)
+ * - Creation buttons for quick content addition
+ *
+ * Uses initial data from SSR as fallback while React Query loads fresh data.
+ */
 function Campaign({ initialArcs, latestThings }: TCampaignProps) {
   const { arcsQuery } = useArcQueries()
   const { useThingsQuery } = useThingQueries()
@@ -19,10 +29,15 @@ function Campaign({ initialArcs, latestThings }: TCampaignProps) {
 
   return (
     <div>
+      {/* --- Arcs Section --- */}
       <h2 className='mb-4 flex items-center gap-4 text-2xl font-semibold'>
         Arcs <CreateArc />
       </h2>
       <div className='border-border bg-primary/5 grid gap-4 rounded-lg border p-4 md:grid-cols-2 lg:grid-cols-3'>
+        {/* 
+          Use SSR data as fallback while React Query loads.
+          Filter to show only top-level arcs to avoid nested complexity.
+        */}
         {(arcsQuery.isPending || arcsQuery.data === undefined
           ? initialArcs
           : arcsQuery.data
@@ -35,10 +50,13 @@ function Campaign({ initialArcs, latestThings }: TCampaignProps) {
             />
           ))}
       </div>
+
+      {/* --- Things Section --- */}
       <h2 className='mt-8 mb-4 text-2xl font-semibold'>
         Latest Things <CreateThing />
       </h2>
       <div className='border-border bg-primary/5 grid gap-4 rounded-lg border p-4 md:grid-cols-2 lg:grid-cols-3'>
+        {/* Limit to 5 most recent things for dashboard performance */}
         {(thingsQuery.isPending || thingsQuery.data === undefined
           ? latestThings
           : thingsQuery.data

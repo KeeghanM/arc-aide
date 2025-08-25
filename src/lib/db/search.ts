@@ -1,6 +1,14 @@
 import { sql } from 'drizzle-orm'
 import { db } from './db'
 
+/**
+ * Search System for ArcAide
+ *
+ * Implements full-text search with fuzzy matching and spell correction
+ * for D&D campaign content. Uses SQLite FTS5 for fast searching with
+ * highlighting and ranking capabilities.
+ */
+
 export interface SearchResult {
   type: 'arc' | 'thing'
   entityId: number
@@ -8,15 +16,21 @@ export interface SearchResult {
   title: string
   content: string
   slug: string
-  rank: number
+  rank: number // BM25 relevance score
 }
 
 export interface FuzzySearchResult extends SearchResult {
-  highlight: string
-  correctedQuery?: string
-  originalQuery: string
+  highlight: string // HTML with <mark> tags for highlighting
+  correctedQuery?: string // Spell-corrected version of query
+  originalQuery: string // User's original search input
 }
 
+/**
+ * Performs full-text search with result highlighting
+ *
+ * Uses SQLite FTS5 with BM25 ranking for relevance scoring.
+ * Generates HTML snippets with <mark> tags for search term highlighting.
+ */
 export async function searchWithHighlight(
   query: string,
   campaignId: number,
@@ -44,7 +58,10 @@ export async function searchWithHighlight(
 
 /**
  * Spell-corrects individual search terms using fuzzy string matching
- * Uses Turso's fuzzy extension with Levenshtein distance
+ *
+ * Uses Turso's fuzzy extension with Levenshtein distance to find the closest
+ * matching terms from the search vocabulary. Helps users find content even
+ * with typos or slight misspellings.
  */
 export async function spellCorrectTerms(
   terms: string[]
@@ -54,12 +71,11 @@ export async function spellCorrectTerms(
   try {
     const corrections = new Map<string, string>()
 
-    // Query each term individually using fuzzy extension functions
+    // --- Process each search term individually ---
     for (const term of terms) {
       const lowercaseTerm = term.toLowerCase()
 
-      // Find the best match using Levenshtein distance
-      // First try exact match, then fuzzy match with distance <= 2
+      // Find best match using Levenshtein distance (max 2 character differences)
       const result = (await db.all(sql`
         SELECT term, levenshtein(term, ${lowercaseTerm}) as distance
         FROM search_vocabulary 
@@ -71,7 +87,7 @@ export async function spellCorrectTerms(
       if (result.length > 0) {
         corrections.set(lowercaseTerm, result[0].term)
       } else {
-        // If no fuzzy match found, use original term
+        // No fuzzy match found, keep original term
         corrections.set(lowercaseTerm, lowercaseTerm)
       }
     }
@@ -82,7 +98,7 @@ export async function spellCorrectTerms(
       'Fuzzy extension not available, falling back to original terms:',
       error
     )
-    // Fallback to original terms if fuzzy extension isn't available
+    // Graceful fallback when fuzzy extension is not installed
     return new Map(terms.map((term) => [term.toLowerCase(), term]))
   }
 }
