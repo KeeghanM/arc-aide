@@ -135,7 +135,8 @@ PUBLIC_POSTHOG_HOST=""
 - **[Architecture Overview](./docs/architecture.md)** - System design and technical decisions
 - **[Database Schema](./docs/database.md)** - Database structure and relationships
 - **[API Reference](./docs/api.md)** - Complete API endpoint documentation
-- **[Deployment Guide](./docs/deployment.md)** - Production deployment instructions
+- **[Search Functionality](./docs/search.md)** - How search and fuzzy matching works
+- **[Environment Variables](./docs/environment.md)** - Configuration and setup guide
 
 ## Project Structure
 

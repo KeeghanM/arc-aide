@@ -1,4 +1,4 @@
-import { properCase } from '@/lib/utils'
+import { properCase } from '@utils/string'
 import { useState } from 'react'
 import { useSearchQueries } from '../../hooks/useSearchQueries'
 import { useAppStore } from '../../stores/appStore'

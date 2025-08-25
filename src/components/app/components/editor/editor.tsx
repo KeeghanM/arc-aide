@@ -5,7 +5,7 @@ import { useCallback, useMemo, useState } from 'react'
 import {
   type Descendant,
   type NodeEntry,
-  Range,
+  type Range,
   Text,
   createEditor,
 } from 'slate'

@@ -2,12 +2,16 @@ import { auth } from '@/lib/auth/auth'
 import { db } from '@/lib/db/db'
 import { campaign, thing } from '@/lib/db/schema'
 import { extractPlainTextFromSlate } from '@/lib/slate-text-extractor'
-import { slugify } from '@/lib/utils'
 import Honeybadger from '@honeybadger-io/js'
+import { slugify } from '@utils/string'
 import type { APIRoute } from 'astro'
 import { and, eq } from 'drizzle-orm'
 import * as z from 'zod'
 
+/**
+ * GET /api/campaigns/[campaignSlug]/things/[thingSlug]
+ * Retrieves a specific thing (entity) from a campaign
+ */
 export const GET: APIRoute = async ({ request, params }) => {
   try {
     const session = await auth.api.getSession({
@@ -65,6 +69,28 @@ export const GET: APIRoute = async ({ request, params }) => {
   }
 }
 
+/**
+ * PUT /api/campaigns/[campaignSlug]/things/[thingSlug]
+ * Updates a specific thing (entity) in a campaign
+ *
+ * @param request.body.updatedThing - Thing update data
+ * @param request.body.updatedThing.slug - Thing slug (required)
+ * @param request.body.updatedThing.name - Thing name (optional, 1-255 characters)
+ * @param request.body.updatedThing.typeId - Thing type ID (optional, positive integer)
+ * @param request.body.updatedThing.description - Description content (optional, Slate.js format)
+ *
+ * @example
+ * ```json
+ * {
+ *   "updatedThing": {
+ *     "slug": "goblin-chief-klarg",
+ *     "name": "Goblin Chief Klarg - Updated",
+ *     "typeId": 1,
+ *     "description": [{"type": "paragraph", "children": [{"text": "A fierce goblin leader..."}]}]
+ *   }
+ * }
+ * ```
+ */
 export const PUT: APIRoute = async ({ request, params }) => {
   try {
     const session = await auth.api.getSession({

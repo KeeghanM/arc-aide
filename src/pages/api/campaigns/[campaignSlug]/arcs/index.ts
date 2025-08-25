@@ -1,12 +1,16 @@
 import { auth } from '@/lib/auth/auth'
 import { db } from '@/lib/db/db'
 import { arc, campaign } from '@/lib/db/schema'
-import { slugify } from '@/lib/utils'
 import Honeybadger from '@honeybadger-io/js'
+import { slugify } from '@utils/string'
 import type { APIRoute } from 'astro'
 import { and, eq } from 'drizzle-orm'
 import * as z from 'zod'
 
+/**
+ * GET /api/campaigns/[campaignSlug]/arcs
+ * Retrieves all arcs for a specific campaign
+ */
 export const GET: APIRoute = async ({ request, params }) => {
   try {
     const session = await auth.api.getSession({
@@ -53,6 +57,22 @@ export const GET: APIRoute = async ({ request, params }) => {
   }
 }
 
+/**
+ * POST /api/campaigns/[campaignSlug]/arcs
+ * Creates a new arc within a specific campaign
+ *
+ * @param request.body.newArc - Arc data
+ * @param request.body.newArc.name - Arc name (1-255 characters)
+ *
+ * @example
+ * ```json
+ * {
+ *   "newArc": {
+ *     "name": "The Goblin Ambush"
+ *   }
+ * }
+ * ```
+ */
 export const POST: APIRoute = async ({ request, params }) => {
   try {
     const session = await auth.api.getSession({

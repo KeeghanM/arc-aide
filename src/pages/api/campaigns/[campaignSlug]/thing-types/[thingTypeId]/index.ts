@@ -6,6 +6,10 @@ import type { APIRoute } from 'astro'
 import { and, eq } from 'drizzle-orm'
 import * as z from 'zod'
 
+/**
+ * GET /api/campaigns/[campaignSlug]/thing-types/[thingTypeId]
+ * Retrieves a specific thing type from a campaign
+ */
 export const GET: APIRoute = async ({ request, params }) => {
   try {
     const session = await auth.api.getSession({
@@ -63,6 +67,22 @@ export const GET: APIRoute = async ({ request, params }) => {
   }
 }
 
+/**
+ * PUT /api/campaigns/[campaignSlug]/thing-types/[thingTypeId]
+ * Updates a specific thing type in a campaign
+ *
+ * @param request.body.updatedThingType - Thing type update data
+ * @param request.body.updatedThingType.name - Thing type name (1-255 characters)
+ *
+ * @example
+ * ```json
+ * {
+ *   "updatedThingType": {
+ *     "name": "Non-Player Characters"
+ *   }
+ * }
+ * ```
+ */
 export const PUT: APIRoute = async ({ request, params }) => {
   try {
     const session = await auth.api.getSession({
@@ -146,6 +166,11 @@ export const PUT: APIRoute = async ({ request, params }) => {
   }
 }
 
+/**
+ * DELETE /api/campaigns/[campaignSlug]/thing-types/[thingTypeId]
+ * Deletes a specific thing type from a campaign
+ * Note: This will cascade delete all things of this type
+ */
 export const DELETE: APIRoute = async ({ request, params }) => {
   try {
     const session = await auth.api.getSession({

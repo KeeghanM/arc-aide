@@ -1,12 +1,16 @@
 import { auth } from '@/lib/auth/auth'
 import { db } from '@/lib/db/db'
 import { campaign, thing } from '@/lib/db/schema'
-import { slugify } from '@/lib/utils'
 import Honeybadger from '@honeybadger-io/js'
+import { slugify } from '@utils/string'
 import type { APIRoute } from 'astro'
 import { and, desc, eq } from 'drizzle-orm'
 import * as z from 'zod'
 
+/**
+ * GET /api/campaigns/[campaignSlug]/things
+ * Retrieves all things (entities) for a specific campaign
+ */
 export const GET: APIRoute = async ({ request, params }) => {
   try {
     const session = await auth.api.getSession({
@@ -59,6 +63,24 @@ export const GET: APIRoute = async ({ request, params }) => {
   }
 }
 
+/**
+ * POST /api/campaigns/[campaignSlug]/things
+ * Creates a new thing (entity) within a specific campaign
+ *
+ * @param request.body.newThing - Thing data
+ * @param request.body.newThing.name - Thing name (1-255 characters)
+ * @param request.body.newThing.typeId - Thing type ID (positive integer)
+ *
+ * @example
+ * ```json
+ * {
+ *   "newThing": {
+ *     "name": "Goblin Chief Klarg",
+ *     "typeId": 1
+ *   }
+ * }
+ * ```
+ */
 export const POST: APIRoute = async ({ request, params }) => {
   try {
     const session = await auth.api.getSession({

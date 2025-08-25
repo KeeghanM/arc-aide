@@ -17,4 +17,6 @@ We write documentation not for ourselves or our current team, but for future dev
 - **[Database Schema](./database.md)** - Database structure and relationships
 - **[Development Setup](./development.md)** - Getting started with local development
 - **[Architecture](./architecture.md)** - System design and component overview
-- **[Deployment](./deployment.md)** - Production deployment guide
+- **[Search Functionality](./search.md)** - How search and fuzzy matching works
+- **[Environment Variables](./environment.md)** - Configuration and setup guide
+- **[Contributing](../CONTRIBUTING.md)** - How to contribute to the project

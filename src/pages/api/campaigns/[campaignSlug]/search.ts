@@ -5,6 +5,17 @@ import { fuzzySearchWithHighlight, searchWithHighlight } from '@/lib/db/search'
 import type { APIRoute } from 'astro'
 import { and, eq } from 'drizzle-orm'
 
+/**
+ * GET /api/campaigns/[campaignSlug]/search
+ * Search for content within a specific campaign
+ *
+ * @param searchParams.q - Search query string
+ * @param searchParams.type - Content type filter ('any', 'arc', 'thing') - defaults to 'any'
+ * @param searchParams.fuzzy - Enable fuzzy search ('true' or 'false') - defaults to 'false'
+ *
+ * @example
+ * GET /api/campaigns/my-campaign/search?q=goblin&type=arc&fuzzy=true
+ */
 export const GET: APIRoute = async ({ request, params }) => {
   try {
     const session = await auth.api.getSession({

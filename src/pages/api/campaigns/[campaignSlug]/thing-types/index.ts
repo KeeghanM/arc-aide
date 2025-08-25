@@ -6,6 +6,10 @@ import type { APIRoute } from 'astro'
 import { and, eq } from 'drizzle-orm'
 import * as z from 'zod'
 
+/**
+ * GET /api/campaigns/[campaignSlug]/thing-types
+ * Retrieves all thing types for a specific campaign
+ */
 export const GET: APIRoute = async ({ request, params }) => {
   try {
     const session = await auth.api.getSession({
@@ -52,6 +56,22 @@ export const GET: APIRoute = async ({ request, params }) => {
   }
 }
 
+/**
+ * POST /api/campaigns/[campaignSlug]/thing-types
+ * Creates a new thing type within a specific campaign
+ *
+ * @param request.body.newThingType - Thing type data
+ * @param request.body.newThingType.name - Thing type name (1-255 characters)
+ *
+ * @example
+ * ```json
+ * {
+ *   "newThingType": {
+ *     "name": "NPCs"
+ *   }
+ * }
+ * ```
+ */
 export const POST: APIRoute = async ({ request, params }) => {
   try {
     const session = await auth.api.getSession({

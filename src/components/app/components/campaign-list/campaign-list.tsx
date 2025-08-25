@@ -1,5 +1,5 @@
-import { slugify } from '@/lib/utils'
 import { useCampaignQueries, type TCampaign } from '@hooks/useCampaignQueries'
+import { slugify } from '@utils/string'
 
 type TCampaignList = {
   initialCampaigns: TCampaign[]

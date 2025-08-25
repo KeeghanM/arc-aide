@@ -2,13 +2,17 @@ import { auth } from '@/lib/auth/auth'
 import { db } from '@/lib/db/db'
 import { arc, campaign } from '@/lib/db/schema'
 import { extractPlainTextFromSlate } from '@/lib/slate-text-extractor'
-import { slugify } from '@/lib/utils'
 import Honeybadger from '@honeybadger-io/js'
+import { slugify } from '@utils/string'
 import type { APIRoute } from 'astro'
 import { and, eq } from 'drizzle-orm'
 import type { Descendant } from 'slate'
 import * as z from 'zod'
 
+/**
+ * GET /api/campaigns/[campaignSlug]/arcs/[arcSlug]
+ * Retrieves a specific arc within a campaign
+ */
 export const GET: APIRoute = async ({ request, params }) => {
   try {
     const session = await auth.api.getSession({
@@ -66,6 +70,31 @@ export const GET: APIRoute = async ({ request, params }) => {
   }
 }
 
+/**
+ * PUT /api/campaigns/[campaignSlug]/arcs/[arcSlug]
+ * Updates an existing arc within a campaign
+ *
+ * @param request.body.updatedArc - Arc update data
+ * @param request.body.updatedArc.slug - Arc slug (required)
+ * @param request.body.updatedArc.name - Arc name (optional, 1-255 characters)
+ * @param request.body.updatedArc.hook - Hook content (optional, Slate.js format)
+ * @param request.body.updatedArc.protagonist - Protagonist content (optional, Slate.js format)
+ * @param request.body.updatedArc.antagonist - Antagonist content (optional, Slate.js format)
+ * @param request.body.updatedArc.problem - Problem content (optional, Slate.js format)
+ * @param request.body.updatedArc.key - Key content (optional, Slate.js format)
+ * @param request.body.updatedArc.outcome - Outcome content (optional, Slate.js format)
+ *
+ * @example
+ * ```json
+ * {
+ *   "updatedArc": {
+ *     "slug": "goblin-ambush",
+ *     "name": "The Goblin Ambush - Updated",
+ *     "hook": [{"type": "paragraph", "children": [{"text": "The party encounters goblins..."}]}]
+ *   }
+ * }
+ * ```
+ */
 export const PUT: APIRoute = async ({ request, params }) => {
   try {
     const session = await auth.api.getSession({
@@ -193,6 +222,10 @@ export const PUT: APIRoute = async ({ request, params }) => {
   }
 }
 
+/**
+ * DELETE /api/campaigns/[campaignSlug]/arcs/[arcSlug]
+ * Deletes an existing arc from a campaign
+ */
 export const DELETE: APIRoute = async ({ request, params }) => {
   try {
     const session = await auth.api.getSession({
