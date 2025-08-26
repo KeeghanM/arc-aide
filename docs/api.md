@@ -181,10 +181,18 @@ Get all arcs for a campaign.
         "children": [{ "text": "Rescue Gundren and learn about the mine" }]
       }
     ],
+    "notes": [
+      {
+        "type": "paragraph",
+        "children": [{ "text": "Additional notes about the arc..." }]
+      }
+    ],
     "createdAt": "2024-01-15T11:00:00Z",
     "updatedAt": "2024-01-16T09:30:00Z",
     "campaignId": 1,
-    "parentArcId": null
+    "parentArcId": null,
+    "parentArc": null,
+    "childArcs": []
   }
 ]
 ```
@@ -207,9 +215,50 @@ Create a new arc in a campaign.
 
 Get a specific arc by slug.
 
+**Parameters:**
+
+- `campaignSlug` (string) - URL-safe campaign identifier
+- `arcSlug` (string) - URL-safe arc identifier
+
+**Response:**
+
+```json
+{
+  "id": 1,
+  "slug": "goblin-ambush",
+  "name": "Goblin Ambush",
+  "hook": [...],
+  "protagonist": [...],
+  "antagonist": [...],
+  "problem": [...],
+  "key": [...],
+  "outcome": [...],
+  "notes": [...],
+  "createdAt": "2024-01-15T11:00:00Z",
+  "updatedAt": "2024-01-16T09:30:00Z",
+  "campaignId": 1,
+  "parentArcId": null,
+  "parentArc": null,
+  "childArcs": [
+    {
+      "id": 2,
+      "slug": "goblin-hideout-infiltration",
+      "name": "Goblin Hideout Infiltration",
+      "createdAt": "2024-01-16T10:00:00Z",
+      "updatedAt": "2024-01-16T10:00:00Z"
+    }
+  ]
+}
+```
+
 ### PUT /api/campaigns/[campaignSlug]/arcs/[arcSlug]
 
-Update an existing arc.
+Update an existing arc and returns the full updated arc object.
+
+**Parameters:**
+
+- `campaignSlug` (string) - URL-safe campaign identifier
+- `arcSlug` (string) - URL-safe arc identifier
 
 **Request Body:**
 
@@ -218,6 +267,7 @@ Update an existing arc.
   "updatedArc": {
     "slug": "goblin-ambush",
     "name": "Goblin Ambush - Updated",
+    "parentArcId": 5,
     "hook": [
       {
         "type": "paragraph",
@@ -228,8 +278,40 @@ Update an existing arc.
     "antagonist": [...],
     "problem": [...],
     "key": [...],
-    "outcome": [...]
+    "outcome": [...],
+    "notes": [
+      {
+        "type": "paragraph",
+        "children": [{ "text": "Additional notes..." }]
+      }
+    ]
   }
+}
+```
+
+**Response:**
+
+```json
+{
+  "id": 1,
+  "slug": "goblin-ambush",
+  "name": "Goblin Ambush - Updated",
+  "parentArcId": 5,
+  "parentArc": {
+    "id": 5,
+    "slug": "chapter-one",
+    "name": "Chapter One"
+  },
+  "hook": [...],
+  "protagonist": [...],
+  "antagonist": [...],
+  "problem": [...],
+  "key": [...],
+  "outcome": [...],
+  "notes": [...],
+  "createdAt": "2024-01-15T11:00:00Z",
+  "updatedAt": "2024-01-21T14:30:00Z",
+  "campaignId": 1
 }
 ```
 

@@ -108,6 +108,7 @@ Your application will be available at `http://localhost:4321`
 | `yarn qa`         | Run all quality checks (lint, style, format) |
 | `yarn qa:fix`     | Auto-fix quality issues                      |
 | `yarn migrate:db` | Run database migrations                      |
+| `yarn docs`       | Generate git diff for documentation updates  |
 
 ## Project Structure
 

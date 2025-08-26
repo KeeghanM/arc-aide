@@ -16,6 +16,7 @@
     "qa": "yarn qa:stylelint && yarn qa:prettier && yarn qa:eslint",
     "qa:fix": "yarn qa:stylelint:fix && yarn qa:prettier:fix && yarn qa:eslint:fix",
     "prepare": "husky",
+    "docs": "git diff --color ':!*.lock' > git-diff.txt",
     "generate:migration:hygraph": "node --import 'data:text/javascript,import { register } from \"node:module\"; import { pathToFileUrl } from \"node:url\"; register(\"ts-node/esm\", pathToFileUrl(\"./\"));' src/lib/hygraph/generate-migration.ts",
     "push:migration:hygraph": "node --import 'data:text/javascript,import { register } from \"node:module\"; import { pathToFileUrl } from \"node:url\"; register(\"ts-node/esm\", pathToFileUrl(\"./\"));' src/lib/hygraph/migration-runner.ts",
     "pull:graphql-schema": "npx graphql-codegen --config codegen.ts",

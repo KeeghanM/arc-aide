@@ -1,6 +1,8 @@
 import { type TArc, useArcQueries } from '@hooks/useArcQueries'
 import pDebounce from 'p-debounce'
 import type { Descendant } from 'slate'
+import ArcItem from '../components/arc/arc'
+import ParentArc from '../components/arc/parent-arc/parent-arc'
 import MarkdownEditor, { defaultEditorValue } from '../components/editor/editor'
 import type { TScreenWrapperProps } from '../screen-wrapper'
 import ScreenWrapper from '../screen-wrapper'
@@ -36,7 +38,9 @@ function Arc({ arc }: TArcProps) {
 
   return (
     <div className='space-y-4 pr-6 md:pr-12'>
-      {/* 
+      <ParentArc arc={arc} />
+      <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
+        {/* 
         Arc Structure follows the D&D narrative framework:
         - Hook: What draws players in
         - Protagonist/Antagonist: Key characters driving conflict
@@ -44,7 +48,6 @@ function Arc({ arc }: TArcProps) {
         - Key: How players can solve it
         - Outcome: Resolution and consequences
       */}
-      <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
         <div>
           <h2 className='mb-2 flex items-center gap-2 text-2xl font-semibold'>
             Hook
@@ -108,6 +111,25 @@ function Arc({ arc }: TArcProps) {
             initialValue={(arc.outcome as Descendant[]) ?? defaultEditorValue}
             onChange={handleOutcomeChange}
           />
+        </div>
+      </div>
+      <div>
+        <h2 className='mb-2 flex items-center gap-2 text-2xl font-semibold'>
+          Children
+        </h2>
+        <div className='space-y-4'>
+          {arc.childArcs && arc.childArcs.length > 0 ? (
+            arc.childArcs.map((childArc) => (
+              <ArcItem
+                key={childArc.id}
+                arc={childArc}
+              />
+            ))
+          ) : (
+            <p className='text-muted-foreground text-sm'>
+              No child arcs. Create some to expand your story!
+            </p>
+          )}
         </div>
       </div>
     </div>

@@ -1,4 +1,5 @@
 import { auth } from '@auth/auth'
+import type { TArc } from '@components/app/hooks/useArcQueries'
 import { db } from '@db/db'
 import { arc, campaign } from '@db/schema'
 import Honeybadger from '@honeybadger-io/js'
@@ -6,6 +7,7 @@ import { slateToPlainText } from '@utils/slate-text-extractor'
 import { slugify } from '@utils/string'
 import type { APIRoute } from 'astro'
 import { and, eq } from 'drizzle-orm'
+import { alias } from 'drizzle-orm/sqlite-core'
 import type { Descendant } from 'slate'
 import * as z from 'zod'
 
@@ -44,9 +46,17 @@ export const GET: APIRoute = async ({ request, params }) => {
       })
     }
 
+    const parent = alias(arc, 'parent')
+
     const arcResult = await db
-      .select()
+      .select({
+        arc: {
+          ...arc,
+          parentArc: parent,
+        },
+      })
       .from(arc)
+      .fullJoin(parent, eq(arc.parentArcId, parent.id))
       .where(
         and(
           eq(arc.slug, arcSlug as string),
@@ -54,13 +64,23 @@ export const GET: APIRoute = async ({ request, params }) => {
         )
       )
 
-    if (arcResult.length === 0) {
+    const arcData = arcResult[0]?.arc as TArc
+
+    if (!arcData) {
       return new Response(JSON.stringify({ error: 'Arc not found' }), {
         status: 404,
       })
     }
 
-    return new Response(JSON.stringify(arcResult[0]), { status: 200 })
+    const childArcs = await db
+      .select()
+      .from(arc)
+      .where(eq(arc.parentArcId, arcData.id))
+
+    arcData.childArcs = childArcs
+    arcData.parentArc = arcData.parentArcId ? arcData.parentArc : undefined
+
+    return new Response(JSON.stringify(arcData), { status: 200 })
   } catch (error) {
     console.error('Error fetching arc:', error)
     Honeybadger.notify(error as Error)
@@ -72,7 +92,7 @@ export const GET: APIRoute = async ({ request, params }) => {
 
 /**
  * PUT /api/campaigns/[campaignSlug]/arcs/[arcSlug]
- * Updates an existing arc within a campaign
+ * Updates an existing arc within a campaign and returns the full updated arc
  *
  * @param request.body.updatedArc - Arc update data
  * @param request.body.updatedArc.slug - Arc slug (required)
@@ -83,6 +103,7 @@ export const GET: APIRoute = async ({ request, params }) => {
  * @param request.body.updatedArc.problem - Problem content (optional, Slate.js format)
  * @param request.body.updatedArc.key - Key content (optional, Slate.js format)
  * @param request.body.updatedArc.outcome - Outcome content (optional, Slate.js format)
+ * @param request.body.updatedArc.parentArcId - Parent Arc ID (optional, can be null)
  *
  * @example
  * ```json
@@ -94,6 +115,8 @@ export const GET: APIRoute = async ({ request, params }) => {
  *   }
  * }
  * ```
+ *
+ * @returns {TArc} The full updated arc object
  */
 export const PUT: APIRoute = async ({ request, params }) => {
   try {
@@ -152,6 +175,7 @@ export const PUT: APIRoute = async ({ request, params }) => {
       problem: z.array(z.unknown()).optional() as z.ZodType<Descendant[]>,
       key: z.array(z.unknown()).optional() as z.ZodType<Descendant[], any, any>,
       outcome: z.array(z.unknown()).optional() as z.ZodType<Descendant[]>,
+      parentArcId: z.number().nullable().optional(),
     })
 
     const { updatedArc } = await request.json()
@@ -175,6 +199,8 @@ export const PUT: APIRoute = async ({ request, params }) => {
 
     // Add optional fields if provided
     if (parsedArc.data.name !== undefined) updateData.name = parsedArc.data.name
+    if (parsedArc.data.parentArcId !== undefined)
+      updateData.parentArcId = parsedArc.data.parentArcId
     if (parsedArc.data.hook !== undefined) {
       updateData.hook = parsedArc.data.hook
       updateData.hookText = slateToPlainText(parsedArc.data.hook)
@@ -191,7 +217,10 @@ export const PUT: APIRoute = async ({ request, params }) => {
       updateData.problem = parsedArc.data.problem
       updateData.problemText = slateToPlainText(parsedArc.data.problem)
     }
-    if (parsedArc.data.key !== undefined) updateData.key = parsedArc.data.key
+    if (parsedArc.data.key !== undefined) {
+      updateData.key = parsedArc.data.key
+      updateData.keyText = slateToPlainText(parsedArc.data.key)
+    }
     if (parsedArc.data.outcome !== undefined) {
       updateData.outcome = parsedArc.data.outcome
       updateData.outcomeText = slateToPlainText(parsedArc.data.outcome)
@@ -201,14 +230,27 @@ export const PUT: APIRoute = async ({ request, params }) => {
     if (Object.keys(updateData).length === 1) {
       return new Response(JSON.stringify(existingArc[0]), { status: 200 })
     }
-
-    const result = await db
+    // Update the arc and get the updated row
+    const [returnedArc] = await db
       .update(arc)
       .set(updateData)
       .where(eq(arc.id, existingArc[0].id))
       .returning()
 
-    return new Response(JSON.stringify(result[0]), { status: 200 })
+    // Fetch parent arc if parentArcId exists
+    let parentArc = null
+    if (returnedArc.parentArcId) {
+      const parentArcResult = await db
+        .select()
+        .from(arc)
+        .where(eq(arc.id, updatedArc.parentArcId))
+      parentArc = parentArcResult[0] ?? null
+    }
+
+    // Attach parentArc to result
+    const fullArc = { ...updatedArc, parentArc } as TArc
+
+    return new Response(JSON.stringify(fullArc), { status: 200 })
   } catch (error) {
     console.error('Error updating arc:', error)
     Honeybadger.notify(error as Error)

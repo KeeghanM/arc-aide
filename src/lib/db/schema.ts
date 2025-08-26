@@ -34,12 +34,14 @@ export const arc = sqliteTable(
     problem: text('problem', { mode: 'json' }),
     key: text('key', { mode: 'json' }),
     outcome: text('outcome', { mode: 'json' }),
+    notes: text('notes', { mode: 'json' }),
     // Plain text versions for search indexing
     hookText: text('hook_text').default(''),
     protagonistText: text('protagonist_text').default(''),
     antagonistText: text('antagonist_text').default(''),
     problemText: text('problem_text').default(''),
     outcomeText: text('outcome_text').default(''),
+    notesText: text('notes_text').default(''),
     createdAt: integer('created_at', {
       mode: 'timestamp',
     }).notNull(),

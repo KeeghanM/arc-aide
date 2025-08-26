@@ -41,7 +41,10 @@ Campaign
 │   ├── Antagonist (Opposition)
 │   ├── Problem (Central Conflict)
 │   ├── Key (Solution/Tool)
-│   └── Outcome (Resolution)
+│   ├── Outcome (Resolution)
+│   ├── Notes (Additional Information)
+│   ├── Parent/Child Relationships (Hierarchical Structure)
+│   └── Search Text Fields (Plain Text for FTS)
 ├── Things (Campaign Entities)
 │   ├── NPCs
 │   ├── Locations
@@ -55,7 +58,9 @@ Campaign
 ```sql
 -- Core campaign management
 campaigns (id, slug, name, description, user_id, created_at, updated_at)
-arcs (id, slug, name, hook, protagonist, antagonist, problem, key, outcome, campaign_id, parent_arc_id)
+arcs (id, slug, name, hook, protagonist, antagonist, problem, key, outcome, notes,
+      hook_text, protagonist_text, antagonist_text, problem_text, key_text, outcome_text, notes_text,
+      campaign_id, parent_arc_id, created_at, updated_at)
 thing_types (id, name, campaign_id)
 things (id, slug, name, description, type_id, campaign_id)
 arc_things (arc_id, thing_id) -- Many-to-many relationship
@@ -133,7 +138,6 @@ MainLayout (Global wrapper)
 - **Astro Islands**: React components only hydrate when needed
 - **Code Splitting**: Automatic component-level code splitting
 - **Image Optimization**: Built-in Astro image optimization
-- **Prefetching**: Intelligent link prefetching
 
 ### Backend Optimization
 
@@ -197,7 +201,9 @@ src/
 Components within `src/components/app/components/` are organized by domain:
 
 - **arc/** - Arc creation, editing, and display components
+  - `arc.tsx` - Individual arc display card (renamed from `Arc` to `ArcItem`)
   - `create-arc/` - Arc creation dialog with form validation
+  - `parent-arc/` - Component for displaying and managing parent arc relationships
 - **campaign/** - Campaign listing and creation components
   - `campaign-list/` - Campaign grid display with navigation
   - `create-campaign/` - Campaign creation dialog

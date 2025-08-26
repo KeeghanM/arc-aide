@@ -1,11 +1,13 @@
 ---
 import { SearchBarWrapper } from '@components/app/components/search-bar/search-bar'
+import type { TArc } from '@components/app/hooks/useArcQueries'
 import ArcScreen from '@components/app/screens/arc'
 import { db } from '@db/db'
 import { arc as arcSchema, arcThing, campaign, thing } from '@db/schema'
 import MainLayout from '@layouts/main-layout.astro'
 import { slateToHtml } from '@utils/slate-text-extractor'
-import { desc, eq } from 'drizzle-orm'
+import { and, desc, eq } from 'drizzle-orm'
+import { alias } from 'drizzle-orm/sqlite-core'
 import type { Descendant } from 'slate'
 
 const { campaignSlug, arcSlug } = Astro.params
@@ -14,25 +16,59 @@ if (!campaignSlug || !arcSlug) {
   return Astro.redirect('/404')
 }
 
-const arcData = await db
-  .select({ arc: arcSchema, campaignName: campaign.name })
-  .from(arcSchema)
-  .fullJoin(campaign, eq(arcSchema.campaignId, campaign.id))
-  .where(eq(arcSchema.slug, arcSlug))
+const campaignResult = await db
+  .select()
+  .from(campaign)
+  .where(eq(campaign.slug, campaignSlug))
   .limit(1)
 
-if (!arcData[0]?.arc) {
+if (!campaignResult[0]) {
   return Astro.redirect('/404')
 }
 
-const arc = arcData[0].arc
-const campaignName = arcData[0].campaignName
+const parentArcSchema = alias(arcSchema, 'parentArcSchema')
+
+const arcResult = await db
+  .select({
+    arc: {
+      ...arcSchema,
+      parentArc: parentArcSchema,
+    },
+  })
+  .from(arcSchema)
+  .leftJoin(parentArcSchema, eq(arcSchema.parentArcId, parentArcSchema.id))
+  .where(
+    and(
+      eq(arcSchema.slug, arcSlug),
+      eq(arcSchema.campaignId, campaignResult[0].id)
+    )
+  )
+  .limit(1)
+
+const arcData = arcResult[0]?.arc as TArc
+
+if (!arcData.parentArcId) {
+  arcData.parentArc = undefined
+}
+
+if (!arcData) {
+  return Astro.redirect('/404')
+}
+
+const childArcs = await db
+  .select()
+  .from(arcSchema)
+  .where(eq(arcSchema.parentArcId, arcData.id))
+
+arcData.childArcs = childArcs
+const arc = arcData
+const campaignName = campaignResult[0].name
 
 const things = await db
   .select({ thing })
   .from(thing)
   .fullJoin(arcThing, eq(thing.id, arcThing.thingId))
-  .where(eq(arcThing.arcId, arc.id))
+  .where(eq(arcThing.arcId, arcData.id))
   .orderBy(desc(thing.updatedAt))
   .limit(10)
 ---
@@ -45,7 +81,7 @@ const things = await db
         <span class='text-lg font-normal'>(Arc)</span>
       </h1>
       <SearchBarWrapper
-        user={Astro.locals.user}
+        user={Astro.locals.user!}
         campaignSlug={campaignSlug}
         client:load
       />
@@ -61,11 +97,13 @@ const things = await db
     <div class='grid grid-cols-1 md:grid-cols-[1fr_300px]'>
       <ArcScreen
         arc={arc}
-        user={Astro.locals.user}
+        user={Astro.locals.user!}
         campaignSlug={campaignSlug}
         client:load
       />
-      <div class='border-border overflow-y-auto border-l pl-6 md:pl-12'>
+      <div
+        class='border-border mt-8 overflow-y-auto border-l pl-6 md:mt-0 md:pl-12'
+      >
         <h2 class='mb-4 text-2xl font-semibold'>Recently Updated Things</h2>
         <div class='space-y-4'>
           {

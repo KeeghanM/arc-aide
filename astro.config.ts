@@ -37,10 +37,6 @@ export default defineConfig({
     }), // Generate robots.txt file
     compress(), // Enable compression for assets to reduce size
   ],
-  prefetch: {
-    prefetchAll: true, // Prefetch all links by default
-    defaultStrategy: 'viewport', // Default prefetch strategy is to prefetch links in the viewport, this can be overridden per link
-  },
   vite: {
     plugins: [tailwindcss()], // Use Tailwind CSS for styling
   },

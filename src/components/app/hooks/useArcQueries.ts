@@ -4,7 +4,10 @@ import { useAppStore } from '@stores/appStore'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { usePostHog } from 'posthog-js/react'
 
-export type TArc = typeof arc.$inferSelect
+export type TArc = typeof arc.$inferSelect & {
+  parentArc?: TArc
+  childArcs?: TArc[]
+}
 
 export function useArcQueries() {
   const posthog = usePostHog()
@@ -79,17 +82,22 @@ export function useArcQueries() {
       updatedArc,
     }: {
       updatedArc: Partial<TArc> & { slug: string }
-    }) => {
-      await fetch(`/api/campaigns/${campaignSlug}/arcs/${updatedArc.slug}`, {
-        method: 'PUT',
-        body: JSON.stringify({ updatedArc }),
-        headers: { 'Content-Type': 'application/json' },
-      })
+    }): Promise<TArc> => {
+      const result = await fetch(
+        `/api/campaigns/${campaignSlug}/arcs/${updatedArc.slug}`,
+        {
+          method: 'PUT',
+          body: JSON.stringify({ updatedArc }),
+          headers: { 'Content-Type': 'application/json' },
+        }
+      )
 
       posthog?.capture('arc_modified', {
         arcSlug: updatedArc.slug,
         campaignSlug,
       })
+
+      return result.json()
     },
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({

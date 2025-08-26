@@ -61,6 +61,46 @@ The resolution and consequences of the arc's events.
 
 **Example:** _"Gundren is rescued and reveals the location of Wave Echo Cave. The party learns about the Black Spider's involvement."_
 
+### 7. Notes
+
+Additional notes and supplementary information that doesn't fit into the other categories.
+
+**Example:** _"Player feedback: loved the goblin ambush tactics. Next time, add more environmental hazards to the hideout."_
+
+## Arc Hierarchies
+
+ArcAide supports nested arc structures to help organize complex campaigns:
+
+### Parent and Child Arcs
+
+- **Parent Arcs**: High-level campaign storylines or chapters
+- **Child Arcs**: Specific adventures, encounters, or side quests within a larger story
+- **Visual Navigation**: Easy navigation between related arcs using the parent/child display
+
+### Example Structure
+
+```
+Campaign: Lost Mine of Phandelver
+├── Chapter 1: Goblin Ambush (Parent Arc)
+│   ├── The Road to Phandalin (Child Arc)
+│   ├── Cragmaw Hideout Infiltration (Child Arc)
+│   └── Rescuing Sildar (Child Arc)
+├── Chapter 2: Phandalin (Parent Arc)
+│   ├── Redbrand Troubles (Child Arc)
+│   ├── Cragmaw Castle Assault (Child Arc)
+│   └── Sister Garaele's Quest (Child Arc)
+└── Chapter 3: Wave Echo Cave (Parent Arc)
+    ├── The Lost Mine (Child Arc)
+    └── Confronting the Black Spider (Child Arc)
+```
+
+### Creating Arc Hierarchies
+
+1. **Create a parent arc** with the overall storyline
+2. **Create child arcs** for specific encounters or sub-plots
+3. **Link child arcs** to their parent using the parentArcId field
+4. **Navigate easily** between related arcs using the interface
+
 ## Managing Campaign Entities
 
 ### Thing Types
@@ -203,11 +243,13 @@ Use the search bar to quickly find:
 
 ### Hierarchical Arcs
 
-Create nested storylines:
+Create nested storylines with enhanced parent-child relationships:
 
-- **Main Arc**: The overall campaign story
-- **Sub-arcs**: Individual adventures or side quests
-- **Connected outcomes** that feed into larger narratives
+- **Main Arcs**: The overall campaign story or major chapters
+- **Sub-arcs**: Individual adventures, encounters, or side quests
+- **Visual Hierarchy**: Parent arcs display their children, with easy navigation
+- **Flexible Organization**: Reorganize arcs by changing parent relationships
+- **Connected Outcomes**: Child arc outcomes feed into parent arc narratives
 
 ### Entity Relationships
 

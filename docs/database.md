@@ -49,6 +49,15 @@ CREATE TABLE arc (
   problem TEXT, -- JSON field for rich content
   key TEXT, -- JSON field for rich content
   outcome TEXT, -- JSON field for rich content
+  notes TEXT, -- JSON field for rich content
+  -- Plain text versions for search indexing
+  hook_text TEXT DEFAULT '',
+  protagonist_text TEXT DEFAULT '',
+  antagonist_text TEXT DEFAULT '',
+  problem_text TEXT DEFAULT '',
+  key_text TEXT DEFAULT '',
+  outcome_text TEXT DEFAULT '',
+  notes_text TEXT DEFAULT '',
   created_at INTEGER NOT NULL,
   updated_at INTEGER NOT NULL,
   campaign_id INTEGER NOT NULL,
@@ -65,6 +74,12 @@ CREATE TABLE arc (
 - `problem` - The central conflict or challenge
 - `key` - The solution, tool, or method
 - `outcome` - The resolution or consequence
+- `notes` - Additional notes and supplementary information
+
+**Search Optimization:**
+
+- Each rich text field has a corresponding `_text` field for full-text search
+- Plain text versions enable efficient search indexing and fuzzy matching
 
 **Relationships:**
 

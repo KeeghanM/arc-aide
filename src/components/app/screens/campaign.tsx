@@ -1,6 +1,6 @@
 import { type TArc, useArcQueries } from '@hooks/useArcQueries'
 import { type TThing, useThingQueries } from '@hooks/useThingQueries'
-import Arc from '../components/arc/arc'
+import ArcItem from '../components/arc/arc'
 import CreateArc from '../components/arc/create-arc/create-arc'
 import CampaignSettings from '../components/campaign/campaign-settings/campaign-settings'
 import CreateThing from '../components/thing/create-thing/create-thing'
@@ -46,7 +46,7 @@ function Campaign({ initialArcs, latestThings }: TCampaignProps) {
         )
           .filter((a) => !a.parentArcId)
           .map((a) => (
-            <Arc
+            <ArcItem
               arc={a}
               key={a.id}
             />
