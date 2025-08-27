@@ -209,6 +209,8 @@ Components within `src/components/app/components/` are organized by domain:
   - `create-campaign/` - Campaign creation dialog
 - **editor/** - Rich text editor using Slate.js with markdown support
   - Handles content conversion between Slate AST and plain text/HTML
+  - Implements internal linking system with `[[...]]` syntax
+  - Integrates SearchBar component for inline entity selection
 - **search-bar/** - Search functionality with auto-complete and spell correction
   - Supports different search types (thing, arc, any)
   - Configurable return modes (navigation vs. function callback)
@@ -249,3 +251,36 @@ const searchText = slateToPlainText(slateContent)
 // For display rendering
 const htmlContent = slateToHtml(slateContent)
 ```
+
+### Internal Linking System
+
+The rich text editor supports wiki-style internal linking using `[[...]]` syntax:
+
+#### Custom Slate Types
+
+```typescript
+interface CustomText {
+  text: string
+  // Existing formatting properties...
+
+  // Link properties
+  link?: true
+  linkSlug?: string | undefined
+  linkType?: 'arc' | 'thing' | undefined
+  linkSearch?: boolean
+  linkRange?: { path: number[]; offset: number; length: number }
+}
+```
+
+#### Link Detection and Rendering
+
+- **Regex Pattern**: `/\[\[([^\]]*)\]\]/g` detects link syntax during decoration
+- **Search Trigger**: Empty brackets `[[]]` activate SearchBar component
+- **Link Resolution**: Format `[[type#slug]]` creates navigational links
+- **Text Replacement**: Slate Transforms API updates content when links are selected
+
+#### Integration Points
+
+- **SearchBar Component**: Provides entity selection interface
+- **App Store**: Supplies campaign context for link generation
+- **Navigation**: Links route to appropriate campaign pages

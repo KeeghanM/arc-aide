@@ -1,5 +1,7 @@
+import SearchBar from '@components/app/components/search-bar/search-bar.tsx'
 import { css } from '@emotion/css'
 import { cn } from '@lib/utils/cn.ts'
+import { useAppStore } from '@stores/appStore.ts'
 import Prism from 'prismjs'
 import 'prismjs/components/prism-markdown'
 import { useCallback, useMemo, useState } from 'react'
@@ -9,9 +11,16 @@ import {
   type NodeEntry,
   type Range,
   Text,
+  Transforms,
 } from 'slate'
 import { withHistory } from 'slate-history'
-import { Editable, type RenderLeafProps, Slate, withReact } from 'slate-react'
+import {
+  Editable,
+  type RenderLeafProps,
+  Slate,
+  useSlate,
+  withReact,
+} from 'slate-react'
 import type { CustomEditor } from './custom-types.d.ts'
 
 export const defaultEditorValue: Descendant[] = [
@@ -62,6 +71,41 @@ export default function MarkdownEditor({
 
     if (!Text.isText(node)) {
       return ranges
+    }
+
+    // --- Link detection for [[...]] syntax ---
+    const linkRegex = /\[\[([^\]]*)\]\]/g
+    let match
+    while ((match = linkRegex.exec(node.text)) !== null) {
+      const content = match[1].trim()
+
+      if (!content || content === '') {
+        // Empty brackets - show search
+        ranges.push({
+          linkSearch: true,
+          linkRange: { path, offset: match.index, length: match[0].length },
+          anchor: { path, offset: match.index },
+          focus: { path, offset: match.index + match[0].length },
+        })
+      } else if (content.includes('#')) {
+        // Resolved link with type#slug format
+        const [type, slug] = content.split('#', 2)
+        ranges.push({
+          link: true,
+          linkType: type,
+          linkSlug: slug,
+          anchor: { path, offset: match.index },
+          focus: { path, offset: match.index + match[0].length },
+        })
+      } else {
+        // Invalid format - treat as search
+        ranges.push({
+          linkSearch: true,
+          linkRange: { path, offset: match.index, length: match[0].length },
+          anchor: { path, offset: match.index },
+          focus: { path, offset: match.index + match[0].length },
+        })
+      }
     }
 
     // --- Syntax highlighting with Prism.js ---
@@ -122,6 +166,78 @@ export default function MarkdownEditor({
 }
 
 const Leaf = ({ attributes, children, leaf }: RenderLeafProps) => {
+  const { campaignSlug } = useAppStore()
+  const editor = useSlate()
+
+  if (leaf.linkSearch && leaf.linkRange) {
+    return (
+      <span
+        {...attributes}
+        style={{
+          position: 'relative',
+          display: 'inline-block',
+        }}
+      >
+        <SearchBar
+          searchType='any'
+          returnType='function'
+          onSelect={(result) => {
+            if (!result) return
+            if (!leaf.linkRange) return
+            // Replace the [[]] with [[type#slug]]
+            const newText = `[[${result.type}#${result.entitySlug}]]`
+
+            // Create the range to replace
+            const range = {
+              anchor: {
+                path: leaf.linkRange.path,
+                offset: leaf.linkRange.offset,
+              },
+              focus: {
+                path: leaf.linkRange.path,
+                offset: leaf.linkRange.offset + leaf.linkRange.length,
+              },
+            }
+
+            // Select the range and replace with new text
+            Transforms.select(editor, range)
+            Transforms.insertText(editor, newText)
+          }}
+        />
+        {children}
+      </span>
+    )
+  }
+
+  if (leaf.link && leaf.linkSlug && leaf.linkType) {
+    const href =
+      leaf.linkType === 'arc'
+        ? `/dashboard/campaign/${campaignSlug}/arc/${leaf.linkSlug}`
+        : `/dashboard/campaign/${campaignSlug}/thing/${leaf.linkSlug}`
+
+    return (
+      <a
+        {...attributes}
+        href={href}
+        className='text-primary cursor-pointer underline'
+        onMouseDown={(e) => {
+          e.stopPropagation()
+        }}
+        onClick={(e) => {
+          e.preventDefault()
+          e.stopPropagation()
+          window.location.href = href
+        }}
+        style={{
+          position: 'relative',
+          zIndex: 1,
+        }}
+      >
+        {children}
+      </a>
+    )
+  }
+
   return (
     <span
       {...attributes}

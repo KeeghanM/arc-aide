@@ -2,6 +2,38 @@
 
 This document tracks significant changes and improvements to the ArcAide application.
 
+## Rich Text Editor Internal Linking 27/08/2025
+
+### New Feature: Wiki-Style Internal Linking
+
+**Interactive Link Creation**
+
+- Added support for internal links using `[[...]]` syntax within the rich text editor
+- Empty brackets `[[]]` trigger an interactive search interface for selecting entities
+- Resolved links display as `[[type#slug]]` format and render as clickable navigation links
+- Supports linking to both Arcs and Things within the current campaign
+
+**Technical Implementation**
+
+- Extended Slate.js custom types with new link properties:
+  - `link`: Boolean flag for resolved links
+  - `linkSlug`: Entity identifier for navigation
+  - `linkType`: Entity type ('arc' or 'thing')
+  - `linkSearch`: Boolean flag for search trigger
+  - `linkRange`: Position data for text replacement
+- Added real-time regex detection for `[[...]]` patterns during typing
+- Integrated SearchBar component directly within editor for inline entity selection
+- Automatic text replacement using Slate Transforms API
+
+**User Experience**
+
+- Type `[[]]` to open search interface within the editor
+- Search and select any Arc or Thing to create a link
+- Links automatically navigate to the correct campaign context
+- Visual styling distinguishes links from regular text
+
+**Impact:** Enables seamless cross-referencing between campaign content, improving content discoverability and narrative coherence.
+
 ## Authentication Route Fix 27/08/2025
 
 ### Middleware Bug Fix

@@ -410,6 +410,43 @@ import { SearchBarWrapper } from '@components/app/components/search-bar/search-b
 - **`link`** (default) - Navigate to the selected item
 - **`function`** - Execute a callback function with the selected item
 
+### Rich Text Editor Integration
+
+The SearchBar component is integrated into the rich text editor for internal linking functionality:
+
+```tsx
+// Within the Slate.js editor's Leaf component
+<SearchBar
+  searchType='any'
+  returnType='function'
+  onSelect={(result) => {
+    if (!result) return
+    // Replace [[]] with [[type#slug]]
+    const newText = `[[${result.type}#${result.entitySlug}]]`
+
+    // Use Slate Transforms to update the text
+    const range = {
+      anchor: { path: linkRange.path, offset: linkRange.offset },
+      focus: {
+        path: linkRange.path,
+        offset: linkRange.offset + linkRange.length,
+      },
+    }
+    Transforms.select(editor, range)
+    Transforms.insertText(editor, newText)
+  }}
+/>
+```
+
+This integration enables:
+
+- **Inline entity selection** when typing `[[]]` in the editor
+- **Automatic link creation** with proper formatting
+- **Seamless workflow** without leaving the editing context
+- **Type safety** ensuring only valid entities can be linked
+
+### Search Component Features
+
 The component automatically handles:
 
 - Real-time search as you type

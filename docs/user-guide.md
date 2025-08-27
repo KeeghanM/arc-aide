@@ -132,12 +132,45 @@ ArcAide features a powerful rich text editor for all your content:
 - Bullet points and numbered lists
 - Block quotes for important information
 
+### Internal Linking
+
+Create connections between your campaign content using wiki-style links:
+
+#### Creating Links
+
+1. **Type double brackets** `[[]]` anywhere in your text
+2. **Search interface appears** automatically within the editor
+3. **Search and select** any Arc or Thing from your campaign
+4. **Link is created** in the format `[[type#slug]]`
+
+#### Link Behavior
+
+- **Clickable navigation** - Links take you directly to the referenced content
+- **Visual distinction** - Links appear styled differently from regular text
+- **Campaign context** - Links always navigate within your current campaign
+- **Cross-references** - Create connections between related Arcs and Things
+
+#### Examples
+
+```
+The party meets [[thing#tavern-keeper-joe]] at [[thing#prancing-pony]].
+This connects to the main quest in [[arc#finding-the-lost-crown]].
+```
+
+#### Tips for Effective Linking
+
+- **Link important NPCs** when they're first mentioned
+- **Connect related locations** to show travel routes
+- **Reference previous arcs** to maintain story continuity
+- **Link items** to show their significance across storylines
+
 ### Writing Tips
 
 - Use **bold text** for important names and concepts
 - Create _italic emphasis_ for thoughts or whispered dialogue
 - Use `code formatting` for game mechanics or dice rolls
 - Add block quotes for player handouts or NPC dialogue
+- **Use internal links** to create rich interconnected content
 
 ## Search and Discovery
 

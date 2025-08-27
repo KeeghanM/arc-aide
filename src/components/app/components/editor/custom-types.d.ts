@@ -197,7 +197,13 @@ declare module 'slate' {
   interface CustomTypes {
     Editor: CustomEditor
     Element: CustomElement
-    Text: CustomText
+    Text: CustomText & {
+      link?: true
+      linkSlug?: string | undefined
+      linkType?: 'arc' | 'thing' | undefined
+      linkSearch?: boolean
+      linkRange?: { path: number[]; offset: number; length: number }
+    }
     Range: BaseRange & {
       [key: string]: unknown
     }
