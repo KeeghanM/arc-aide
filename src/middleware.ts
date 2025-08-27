@@ -33,6 +33,11 @@ export const onRequest = defineMiddleware(async (context, next) => {
   })
 
   // --- Route protection logic ---
+  // Allows unauthenticated access to auth routes
+  if (context.url.pathname.startsWith('/auth') && !isAuthed) {
+    return next()
+  }
+
   // Redirect unauthenticated users to login with return URL
   if (!isAuthed) {
     return new Response(null, {

@@ -2,6 +2,32 @@
 
 This document tracks significant changes and improvements to the ArcAide application.
 
+## Authentication Route Fix 27/08/2025
+
+### Middleware Bug Fix
+
+**Authentication Route Access**
+
+- Fixed issue where unauthenticated users couldn't access auth routes (`/auth/login`, `/auth/register`)
+- Added explicit check to allow unauthenticated access to auth routes before redirect logic
+- Improved middleware flow to handle edge case where users were redirected away from login page
+
+**Technical Details**
+
+- Added conditional check: `if (context.url.pathname.startsWith('/auth') && !isAuthed)`
+- This ensures users can reach login/register pages even when not authenticated
+- Fixes circular redirect issue that could occur in certain scenarios
+
+```typescript
+// Added to middleware.ts
+// Allows unauthenticated access to auth routes
+if (context.url.pathname.startsWith('/auth') && !isAuthed) {
+  return next()
+}
+```
+
+**Impact:** Resolves authentication flow issues and ensures proper access to login/registration pages.
+
 ## Sidebar Creation 27/08/2025
 
 ### Component Reorganization
