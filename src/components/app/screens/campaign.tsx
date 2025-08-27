@@ -1,6 +1,6 @@
 import { type TArc, useArcQueries } from '@hooks/useArcQueries'
 import { type TThing, useThingQueries } from '@hooks/useThingQueries'
-import ArcItem from '../components/arc/arc'
+import ArcItem from '../components/arc/arc-item'
 import CreateArc from '../components/arc/create-arc/create-arc'
 import CampaignSettings from '../components/campaign/campaign-settings/campaign-settings'
 import CreateThing from '../components/thing/create-thing/create-thing'
@@ -26,7 +26,9 @@ function Campaign({ initialArcs, latestThings }: TCampaignProps) {
   const { arcsQuery } = useArcQueries()
   const { useThingsQuery } = useThingQueries()
 
-  const thingsQuery = useThingsQuery(20)
+  const thingsQuery = useThingsQuery({
+    count: 20,
+  })
 
   return (
     <div>

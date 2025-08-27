@@ -18,5 +18,6 @@ We write documentation not for ourselves or our current team, but for future dev
 - **[Development Setup](./development.md)** - Getting started with local development
 - **[Architecture](./architecture.md)** - System design and component overview
 - **[Search Functionality](./search.md)** - How search and fuzzy matching works
+- **[Changelog](./changelog.md)** - Recent changes and improvements
 - **[Environment Variables](./environment.md)** - Configuration and setup guide
 - **[Contributing](../CONTRIBUTING.md)** - How to contribute to the project

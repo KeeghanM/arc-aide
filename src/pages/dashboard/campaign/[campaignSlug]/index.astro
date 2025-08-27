@@ -1,4 +1,5 @@
 ---
+import SideBarWrapper from '@components/app/components/side-bar/side-bar'
 import CampaignScreen from '@components/app/screens/campaign'
 import { db } from '@db/db'
 import { arc, campaign as campaignSchema, thing } from '@db/schema'
@@ -45,22 +46,30 @@ const thingData = await db
 ---
 
 <MainLayout title={campaign.name}>
-  <main class='space-y-6 p-4 md:p-8 lg:p-12'>
-    <h1 class='text-primary text-4xl font-bold md:text-5xl'>
-      {campaign.name}
-      <a
-        href={`/dashboard/`}
-        class='text-accent ml-4 text-lg font-normal hover:italic'
-      >
-        (Back to Dashboard)</a
-      >
-    </h1>
-    <CampaignScreen
+  <div class='flex'>
+    <SideBarWrapper
       user={user}
       campaignSlug={campaignSlug}
-      initialArcs={arcData}
-      latestThings={thingData}
       client:load
+      transition:persist
     />
-  </main>
+    <main class='space-y-6 p-4 md:p-8 lg:p-12'>
+      <h1 class='text-primary text-4xl font-bold md:text-5xl'>
+        {campaign.name}
+        <a
+          href={`/dashboard/`}
+          class='text-accent ml-4 text-lg font-normal hover:italic'
+        >
+          (Back to Dashboard)</a
+        >
+      </h1>
+      <CampaignScreen
+        user={user}
+        campaignSlug={campaignSlug}
+        initialArcs={arcData}
+        latestThings={thingData}
+        client:load
+      />
+    </main>
+  </div>
 </MainLayout>

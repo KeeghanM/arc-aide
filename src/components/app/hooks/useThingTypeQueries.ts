@@ -2,22 +2,23 @@ import type { thingType } from '@db/schema'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { usePostHog } from 'posthog-js/react'
 import { useSyncMutation } from './useSyncMutation'
+import { useAppStore } from '../stores/appStore'
 
 export type TThingType = typeof thingType.$inferSelect
 
 export function useThingTypeQueries() {
   const posthog = usePostHog()
   const queryClient = useQueryClient()
+  const { campaignSlug } = useAppStore()
 
-  const useThingTypesQuery = (campaignSlug: string) =>
-    useQuery({
-      queryKey: ['thingTypes', campaignSlug],
-      queryFn: async ({ queryKey }): Promise<TThingType[]> => {
-        const [_key, slug] = queryKey
-        const response = await fetch(`/api/campaigns/${slug}/thing-types`)
-        return response.json()
-      },
-    })
+  const thingTypesQuery = useQuery({
+    queryKey: ['thingTypes', campaignSlug],
+    queryFn: async ({ queryKey }): Promise<TThingType[]> => {
+      const [_key, slug] = queryKey
+      const response = await fetch(`/api/campaigns/${slug}/thing-types`)
+      return response.json()
+    },
+  })
 
   const useThingTypeQuery = (campaignSlug: string, thingTypeId: number) =>
     useQuery({
@@ -125,7 +126,7 @@ export function useThingTypeQueries() {
   })
 
   return {
-    useThingTypesQuery,
+    thingTypesQuery,
     useThingTypeQuery,
     createThingType,
     deleteThingType,

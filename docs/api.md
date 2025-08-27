@@ -135,7 +135,7 @@ Delete a campaign and all associated data.
 
 ### GET /api/campaigns/[campaignSlug]/arcs
 
-Get all arcs for a campaign.
+Get all arcs for a campaign with their associated things.
 
 **Response:**
 
@@ -192,10 +192,27 @@ Get all arcs for a campaign.
     "campaignId": 1,
     "parentArcId": null,
     "parentArc": null,
-    "childArcs": []
+    "childArcs": [],
+    "things": [
+      {
+        "id": 5,
+        "slug": "klarg",
+        "name": "Klarg",
+        "typeId": 1,
+        "description": [...],
+        "campaignId": 1,
+        "createdAt": "2024-01-15T12:30:00Z",
+        "updatedAt": "2024-01-15T12:30:00Z"
+      }
+    ]
   }
 ]
 ```
+
+**Notes:**
+
+- Each arc now includes a `things` array containing all things associated with that arc
+- The response includes the full thing objects, not just references
 
 ### POST /api/campaigns/[campaignSlug]/arcs
 
@@ -323,7 +340,20 @@ Delete an arc.
 
 ### GET /api/campaigns/[campaignSlug]/things
 
-Get all things (entities) in a campaign.
+Get all things (entities) in a campaign with optional pagination or fetch all.
+
+**Query Parameters:**
+
+- `count` (number, optional) - Number of things to return (default: 20)
+- `fetchAll` (boolean, optional) - If true, returns all things (up to 1000 limit)
+
+**Examples:**
+
+```
+GET /api/campaigns/my-campaign/things
+GET /api/campaigns/my-campaign/things?count=50
+GET /api/campaigns/my-campaign/things?fetchAll=true
+```
 
 **Response:**
 
@@ -346,6 +376,12 @@ Get all things (entities) in a campaign.
   }
 ]
 ```
+
+**Notes:**
+
+- Default behavior returns 20 most recently updated things
+- `fetchAll=true` has a hard limit of 1000 items to prevent server overload
+- For campaigns with more than 1000 things, pagination will be implemented in future updates
 
 ### POST /api/campaigns/[campaignSlug]/things
 

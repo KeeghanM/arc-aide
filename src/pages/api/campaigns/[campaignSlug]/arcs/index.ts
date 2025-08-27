@@ -1,6 +1,7 @@
 import { auth } from '@auth/auth'
+import type { TArc } from '@components/app/hooks/useArcQueries'
 import { db } from '@db/db'
-import { arc, campaign } from '@db/schema'
+import { arc, arcThing, campaign, thing } from '@db/schema'
 import Honeybadger from '@honeybadger-io/js'
 import { slugify } from '@utils/string'
 import type { APIRoute } from 'astro'
@@ -42,11 +43,31 @@ export const GET: APIRoute = async ({ request, params }) => {
       })
     }
 
-    const arcs = await db
+    const result = await db
       .select()
       .from(arc)
+      .leftJoin(arcThing, eq(arc.id, arcThing.arcId))
+      .leftJoin(thing, eq(arcThing.thingId, thing.id))
       .where(eq(arc.campaignId, campaignResult[0].id))
       .orderBy(desc(arc.createdAt))
+
+    const arcsMap: Record<number, TArc> = {}
+    result.forEach((row) => {
+      const arcData = row.arc
+      const arcThingData = row.thing
+      if (!arcsMap[arcData.id]) {
+        arcsMap[arcData.id] = {
+          ...arcData,
+          things: [],
+          childArcs: [],
+        }
+      }
+      if (arcThingData) {
+        arcsMap[arcData.id].things?.push(arcThingData)
+      }
+    })
+
+    const arcs = Object.values(arcsMap)
 
     return new Response(JSON.stringify(arcs), { status: 200 })
   } catch (error) {

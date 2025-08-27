@@ -3,10 +3,12 @@ import { useSyncMutation } from '@hooks/useSyncMutation'
 import { useAppStore } from '@stores/appStore'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { usePostHog } from 'posthog-js/react'
+import type { TThing } from './useThingQueries'
 
 export type TArc = typeof arc.$inferSelect & {
   parentArc?: TArc
   childArcs?: TArc[]
+  things?: TThing[]
 }
 
 export function useArcQueries() {

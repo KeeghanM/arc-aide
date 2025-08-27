@@ -21,15 +21,30 @@ export function useThingQueries() {
   const { campaignSlug } = useAppStore()
 
   // --- Data fetching ---
-  // Paginated things query for dashboard displays
-  const useThingsQuery = (count: number) =>
+  type TUseThingsQuery =
+    | { count: number; fetchAll?: undefined }
+    | { fetchAll: true; count?: undefined }
+
+  const useThingsQuery = (params: TUseThingsQuery) =>
     useQuery({
-      queryKey: ['things', campaignSlug, count],
+      queryKey: [
+        'things',
+        campaignSlug,
+        params.count ?? (params.fetchAll ? 'all' : undefined),
+      ],
       queryFn: async ({ queryKey }): Promise<TThing[]> => {
         const [_key, slug] = queryKey
-        const response = await fetch(
-          `/api/campaigns/${slug}/things?count=${count}`
+        const url = new URL(
+          `/api/campaigns/${slug}/things`,
+          window.location.origin
         )
+        if ('fetchAll' in params && params.fetchAll) {
+          url.searchParams.append('fetchAll', 'true')
+        } else if ('count' in params && params.count !== undefined) {
+          url.searchParams.append('count', params.count.toString())
+        }
+
+        const response = await fetch(url)
         return response.json()
       },
     })

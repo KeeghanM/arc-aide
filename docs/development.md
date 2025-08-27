@@ -323,16 +323,46 @@ For detailed component organization and architecture patterns, see [Architecture
 
 ### Data Fetching Hooks
 
-The project uses React Query for data fetching with custom hooks:
+The project uses React Query for data fetching with custom hooks. Recent updates have simplified and improved the hook APIs:
 
 ```tsx
 // Hook naming convention: use[Entity]Query or use[Entity]Queries
 const { useArcQuery, createArc, modifyArc } = useArcQueries()
 const { useSearchQuery } = useSearchQueries()
 
-// Usage in components
+// Updated Thing hooks - now with parameter object for better flexibility
+const { useThingsQuery } = useThingQueries()
+
+// Usage examples:
 const arcQuery = useArcQuery(arcSlug)
 const searchResults = useSearchQuery(searchTerm, 'thing')
+
+// Things query with new parameter object API
+const thingsQuery = useThingsQuery({ count: 20 }) // Paginated
+const allThingsQuery = useThingsQuery({ fetchAll: true }) // All things
+
+// Thing Types query - simplified API using campaign from store
+const { thingTypesQuery } = useThingTypeQueries()
+// No need to pass campaignSlug - automatically uses current campaign
+```
+
+**Hook API Improvements:**
+
+- **useThingsQuery**: Now accepts parameter object `{ count: number }` or `{ fetchAll: true }`
+- **useThingTypeQueries**: Simplified to return `thingTypesQuery` directly (no function call needed)
+- **Automatic Campaign Context**: Hooks now automatically use campaign from app store where applicable
+- **Better Type Safety**: Improved TypeScript types for all hook responses
+
+**Migration Notes:**
+
+```tsx
+// Before (deprecated)
+const thingTypes = useThingTypesQuery(campaignSlug!)
+const things = useThingsQuery(20)
+
+// After (current)
+const { thingTypesQuery } = useThingTypeQueries()
+const thingsQuery = useThingsQuery({ count: 20 })
 ```
 
 ### Rich Text Editor (Slate.js)

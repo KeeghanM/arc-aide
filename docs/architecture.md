@@ -201,7 +201,7 @@ src/
 Components within `src/components/app/components/` are organized by domain:
 
 - **arc/** - Arc creation, editing, and display components
-  - `arc.tsx` - Individual arc display card (renamed from `Arc` to `ArcItem`)
+  - `arc-item.tsx` - Individual arc display card component (renamed from `arc.tsx` for clarity)
   - `create-arc/` - Arc creation dialog with form validation
   - `parent-arc/` - Component for displaying and managing parent arc relationships
 - **campaign/** - Campaign listing and creation components

@@ -18,7 +18,6 @@ import {
 } from '@components/ui/select'
 import { useThingQueries } from '@hooks/useThingQueries'
 import { useThingTypeQueries } from '@hooks/useThingTypeQueries'
-import { useAppStore } from '@stores/appStore'
 import { useState } from 'react'
 import CreateThingType from '../create-thing-type/create-thing-type'
 
@@ -30,9 +29,7 @@ import CreateThingType from '../create-thing-type/create-thing-type'
  * Includes inline Thing Type creation for better UX flow.
  */
 export default function CreateThing() {
-  const { campaignSlug } = useAppStore()
-  const { useThingTypesQuery } = useThingTypeQueries()
-  const thingTypes = useThingTypesQuery(campaignSlug!)
+  const { thingTypesQuery } = useThingTypeQueries()
 
   const { createThing } = useThingQueries()
 
@@ -76,9 +73,9 @@ export default function CreateThing() {
         <div className='flex items-center gap-2'>
           <Select
             disabled={
-              thingTypes.isPending ||
-              thingTypes.data === undefined ||
-              thingTypes.data.length === 0
+              thingTypesQuery.isPending ||
+              thingTypesQuery.data === undefined ||
+              thingTypesQuery.data.length === 0
             }
             value={typeId?.toString() || ''}
             onValueChange={(value) => setTypeId(Number(value))}
@@ -87,7 +84,7 @@ export default function CreateThing() {
               <SelectValue placeholder='Select Type' />
             </SelectTrigger>
             <SelectContent>
-              {thingTypes.data?.map((type) => (
+              {thingTypesQuery.data?.map((type) => (
                 <SelectItem
                   key={type.id}
                   value={type.id.toString()}

@@ -32,10 +32,6 @@ export const onRequest = defineMiddleware(async (context, next) => {
     headers: context.request.headers,
   })
 
-  // Make user/session available to all pages via Astro locals
-  context.locals.user = isAuthed ? isAuthed.user : null
-  context.locals.session = isAuthed ? isAuthed.session : null
-
   // --- Route protection logic ---
   // Redirect unauthenticated users to login with return URL
   if (!isAuthed) {
@@ -58,5 +54,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
   }
 
   // Everything is good, proceed to route
+  context.locals.user = isAuthed.user
+  context.locals.session = isAuthed.session
   return next()
 })

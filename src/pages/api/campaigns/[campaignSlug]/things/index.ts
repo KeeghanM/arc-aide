@@ -42,16 +42,24 @@ export const GET: APIRoute = async ({ request, params }) => {
       })
     }
 
-    const countParam = new URL(request.url).searchParams.get('count')
-    const count = countParam ? parseInt(countParam, 10) : undefined
     const DEFAULT_COUNT = 20
+    const countParam = new URL(request.url).searchParams.get('count')
+    const fetchAllParam = new URL(request.url).searchParams.get('fetchAll')
+
+    const count =
+      fetchAllParam === 'true'
+        ? undefined
+        : countParam
+          ? parseInt(countParam, DEFAULT_COUNT)
+          : DEFAULT_COUNT
 
     const things = await db
       .select()
       .from(thing)
       .where(eq(thing.campaignId, campaignResult[0].id))
       .orderBy(desc(thing.updatedAt))
-      .limit(count ?? DEFAULT_COUNT)
+      .limit(count ?? 1000) // Hard limit to prevent overload if fetchAll is used
+    // TODO: Implement pagination for large datasets
 
     return new Response(JSON.stringify(things), { status: 200 })
   } catch (error) {
