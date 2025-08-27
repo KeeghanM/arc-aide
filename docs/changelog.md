@@ -2,6 +2,172 @@
 
 This document tracks significant changes and improvements to the ArcAide application.
 
+## Major UI/UX Overhaul and Content Management Enhancement 27/08/2025
+
+### 🎨 D&D Theme System Implementation
+
+**Complete Theme Redesign**
+
+- Removed dark mode support in favor of dedicated D&D 5e aesthetic
+- Implemented Homebrewery-inspired color palette and typography
+- Added support for official D&D fonts (Bookinsanity, Zatanna Misdirection, Nodesto Caps, etc.)
+- Created comprehensive D&D-styled component library with stat blocks, spell descriptions, and parchment backgrounds
+- Added CSS custom properties for D&D color scheme (parchment backgrounds, accent colors, etc.)
+
+**Typography System**
+
+- **Bookinsanity**: Primary content font (serif)
+- **Mr Eaves Small Caps**: Headers and titles
+- **Zatanna Misdirection**: Spell names and magical content
+- **Nodesto Caps Condensed**: Stat block headers
+- **Scaly Sans**: Tables and compact information
+- **Solbera Imitation** & **Dungeon Drop Case**: Drop cap styling
+
+### 📝 Content Management Mode System
+
+**View/Edit Mode Toggle**
+
+- Added global mode toggle between "Edit" and "View" modes across the application
+- **Edit Mode**: Traditional editor interface with full editing capabilities
+- **View Mode**: Clean, D&D-styled content presentation with minimal UI
+- Mode state persists across navigation and is managed globally via app store
+
+**Enhanced Content Presentation**
+
+- **View Mode Features**:
+  - D&D-themed content rendering with parchment backgrounds
+  - Consolidated single-column layout for narrative flow
+  - Automatic section headers (Hook, Protagonist, Antagonist, etc.)
+  - Seamless content integration for better reading experience
+- **Edit Mode Features**:
+  - Maintains existing multi-column editor layout
+  - Individual section editing with real-time auto-save
+  - Full toolbar and formatting capabilities
+
+### 🔧 Editor Architecture Refactoring
+
+**Component Reorganization**
+
+- Moved editor components from `/components/editor/` to `/components/slate-handling/`
+- Split functionality into specialized components:
+  - `editor.tsx`: Interactive editing interface
+  - `viewer.tsx`: Read-only content presentation
+  - `custom-types.d.ts`: Shared type definitions
+- Updated all import paths throughout the application
+
+**New SlateViewer Component**
+
+- Purpose-built component for read-only content display
+- Optimized for D&D theme styling and typography
+- Supports all Slate.js content types with proper rendering
+- Integrated with link resolution and navigation
+
+### 📖 Arc Data Model Enhancement
+
+**Notes Field Addition**
+
+- Added `notes` field to Arc data model for additional campaign information
+- Extended database schema with `notes` and `notesText` columns
+- Added auto-save functionality for notes editing
+- Full-width notes section spans both columns in edit mode
+- Integrated notes into view mode presentation
+
+**API Enhancements**
+
+- Updated Arc PUT endpoint to handle notes field updates
+- Added notes text extraction for search functionality
+- Maintained backward compatibility with existing arc data
+
+### 🎛️ UI Component Updates
+
+**Mode Toggle Integration**
+
+- Replaced theme toggle component with mode toggle (Edit/View)
+- Added ModeToggle component to all dashboard pages
+- Positioned as floating action button for easy access
+- Consistent placement across Arc, Thing, and Campaign pages
+
+**Layout Improvements**
+
+- Dynamic grid system that adapts to current mode
+- View mode uses single-column layout for better reading flow
+- Edit mode maintains responsive multi-column layout
+- Improved spacing and typography across all content areas
+
+**Removed Components**
+
+- Eliminated theme toggle components (`RThemeToggle.tsx`, `theme-toggle.astro`)
+- Removed dark mode CSS variables and styling
+- Simplified global CSS structure
+
+### 🔗 Content Integration Enhancements
+
+**Cross-Content Navigation**
+
+- Enhanced link resolution between Arcs and Things
+- Improved query integration for real-time content updates
+- Better data synchronization between edit and view modes
+
+**Thing Component Updates**
+
+- Added view/edit mode support to Thing pages
+- Integrated SlateViewer for consistent content presentation
+- Maintained full editing capabilities in edit mode
+
+### 🎯 User Experience Improvements
+
+**Simplified Interface**
+
+- Single theme reduces cognitive load and decision fatigue
+- Mode toggle provides clear context switch between editing and reading
+- Consistent D&D aesthetic creates immersive campaign management experience
+
+**Enhanced Readability**
+
+- D&D typography optimized for long-form content reading
+- Parchment backgrounds and appropriate color contrast
+- Professional TTRPG presentation suitable for player-facing content
+
+**Workflow Optimization**
+
+- Quick mode switching enables seamless transition between content creation and review
+- View mode presentation suitable for sharing with players
+- Edit mode maintains all power-user functionality
+
+### 🚀 Technical Improvements
+
+**Performance Optimizations**
+
+- Reduced CSS bundle size by removing unused dark mode styles
+- Optimized font loading with local and CDN fallbacks
+- Improved component lazy loading and code splitting
+
+**Type Safety Enhancements**
+
+- Consolidated Slate.js type definitions in dedicated module
+- Improved type safety across editor and viewer components
+- Better IntelliSense support for content editing
+
+**Maintainability**
+
+- Cleaner component architecture with clear separation of concerns
+- Reduced complexity by focusing on single theme system
+- Better code organization with logical component grouping
+
+### 🎲 D&D-Specific Features
+
+**Stat Block Support**
+
+- Ready-to-use CSS classes for D&D 5e stat blocks
+- Proper formatting for monster/NPC statistics
+- Spell description styling with appropriate typography
+
+**Campaign Documentation**
+
+- Professional presentation suitable for campaign handouts
+- Print-friendly styling with appropriate margins and typography
+- Consistent visual language matching official D&D materials
+
 ## Rich Text Editor Internal Linking 27/08/2025
 
 ### New Feature: Wiki-Style Internal Linking

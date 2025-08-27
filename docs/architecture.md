@@ -42,7 +42,7 @@ Campaign
 │   ├── Problem (Central Conflict)
 │   ├── Key (Solution/Tool)
 │   ├── Outcome (Resolution)
-│   ├── Notes (Additional Information)
+│   ├── Notes (Additional Information & Campaign Context)
 │   ├── Parent/Child Relationships (Hierarchical Structure)
 │   └── Search Text Fields (Plain Text for FTS)
 ├── Things (Campaign Entities)
@@ -87,8 +87,11 @@ MainLayout (Global wrapper)
 **Global State (Zustand)**
 
 - Current campaign context
-- User preferences
+- User preferences and settings
 - UI state (modals, navigation)
+- **View/Edit Mode**: Global mode toggle between editing and reading modes
+  - Edit Mode: Full editing interface with toolbars and multi-column layout
+  - View Mode: Clean D&D-themed presentation optimized for reading/sharing
 
 **Server State (TanStack Query)**
 
@@ -207,13 +210,19 @@ Components within `src/components/app/components/` are organized by domain:
 - **campaign/** - Campaign listing and creation components
   - `campaign-list/` - Campaign grid display with navigation
   - `create-campaign/` - Campaign creation dialog
-- **editor/** - Rich text editor using Slate.js with markdown support
+  - `campaign-settings/` - Campaign configuration and management
+- **slate-handling/** - Rich text editor and viewer components using Slate.js
+  - `editor.tsx` - Interactive editing interface with markdown support and internal linking
+  - `viewer.tsx` - Read-only content presentation with D&D theming
+  - `custom-types.d.ts` - Shared TypeScript definitions for Slate content
   - Handles content conversion between Slate AST and plain text/HTML
   - Implements internal linking system with `[[...]]` syntax
   - Integrates SearchBar component for inline entity selection
 - **search-bar/** - Search functionality with auto-complete and spell correction
   - Supports different search types (thing, arc, any)
   - Configurable return modes (navigation vs. function callback)
+- **side-bar/** - Navigation sidebar component for dashboard pages
+  - Persistent navigation across campaign, arc, and thing pages
 - **thing/** - Thing management, creation, and arc association
   - `create-thing/` - Thing creation dialog with type selection
   - `create-thing-type/` - Thing type creation dialog
@@ -240,17 +249,32 @@ components/thing/
 
 ### Rich Text Content Management
 
-Content is stored as Slate.js AST and converted using utilities:
+Content is stored as Slate.js AST and rendered using specialized components:
 
 ```tsx
+import MarkdownEditor from '@components/app/components/slate-handling/editor'
+import SlateViewer from '@components/app/components/slate-handling/viewer'
 import { slateToPlainText, slateToHtml } from '@utils/slate-text-extractor'
+
+// For editing
+<MarkdownEditor
+  initialValue={content}
+  onChange={handleChange}
+  height="lg"
+/>
+
+// For display
+<SlateViewer content={content} />
 
 // For search indexing
 const searchText = slateToPlainText(slateContent)
-
-// For display rendering
-const htmlContent = slateToHtml(slateContent)
 ```
+
+#### Content Presentation Modes
+
+- **Editor Mode**: Interactive Slate.js editor with full formatting capabilities
+- **Viewer Mode**: Read-only presentation with D&D theming and typography
+- **Mode Toggle**: Global state controls which interface users see
 
 ### Internal Linking System
 
@@ -284,3 +308,93 @@ interface CustomText {
 - **SearchBar Component**: Provides entity selection interface
 - **App Store**: Supplies campaign context for link generation
 - **Navigation**: Links route to appropriate campaign pages
+
+## Theme and Design System
+
+### D&D 5e Visual Design
+
+ArcAide uses a dedicated D&D 5e-inspired theme system designed for tabletop RPG content:
+
+#### Typography Hierarchy
+
+- **Bookinsanity**: Primary serif font for body content and narratives
+- **Mr Eaves Small Caps**: Headers, titles, and section dividers
+- **Zatanna Misdirection**: Spell names and magical content styling
+- **Nodesto Caps Condensed**: Stat block headers and monster names
+- **Scaly Sans**: Tables, stats, and compact information display
+- **Solbera Imitation**: Drop cap styling for special content
+- **Dungeon Drop Case**: Alternative drop cap styling
+
+#### Color Palette (Homebrewery-inspired)
+
+```css
+:root {
+  --HB_Color_Background: #eee5ce; /* Parchment base */
+  --HB_Color_Accent: #e0e5c1; /* Subtle highlights */
+  --HB_Color_HeaderUnderline: #c0ad6a; /* Section dividers */
+  --HB_Color_HorizontalRule: #9c2b1b; /* Strong dividers */
+  --HB_Color_HeaderText: #58180d; /* Headers and titles */
+  --HB_Color_MonsterStatBackground: #f2e5b5; /* Stat blocks */
+  --HB_Color_CaptionText: #766649; /* Subtle text */
+  --HB_Color_WatercolorStain: #bbad82; /* Decorative elements */
+  --HB_Color_Footnotes: #c9ad6a; /* Footer content */
+}
+```
+
+#### Component Styling
+
+**Content Areas**
+
+- Parchment background textures from `/images/parchmentBackground.jpg`
+- Proper padding and margins for print-like appearance
+- Rounded corners with subtle shadows
+
+**Stat Blocks**
+
+- Bordered containers with appropriate spacing
+- Monster stat formatting with official D&D styling
+- Table layouts for ability scores and stats
+
+**Typography Elements**
+
+- Section headers with underline styling
+- Blockquotes with accent backgrounds
+- Code blocks with subtle background highlighting
+
+### UI/UX Patterns
+
+#### Mode System
+
+- **Edit Mode**: Traditional interface optimized for content creation
+  - Multi-column layouts for efficiency
+  - Full toolbar access and formatting options
+  - Real-time auto-save functionality
+- **View Mode**: Presentation interface optimized for reading/sharing
+  - Single-column narrative flow
+  - D&D-themed styling throughout
+  - Minimal UI chrome for distraction-free reading
+
+#### Layout Adaptation
+
+```tsx
+const { mode } = useAppStore()
+
+<div className={cn(
+  'grid grid-cols-1 gap-4',
+  mode === 'edit' && 'md:grid-cols-2'
+)}>
+  {mode === 'view' ? (
+    <SlateViewer content={consolidatedContent} />
+  ) : (
+    <EditingSections />
+  )}
+</div>
+```
+
+#### Design Principles
+
+1. **Authenticity**: Visual design matches official D&D 5e materials
+2. **Functionality**: Mode system serves both creators and consumers
+3. **Accessibility**: Proper contrast ratios and readable typography
+4. **Performance**: Optimized font loading and minimal CSS overhead
+5. **Consistency**: Unified visual language across all content types

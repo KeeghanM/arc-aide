@@ -1,7 +1,9 @@
 ---
 import { SearchBarWrapper } from '@components/app/components/search-bar/search-bar'
+import SideBarWrapper from '@components/app/components/side-bar/side-bar'
 import type { TArc } from '@components/app/hooks/useArcQueries'
 import ArcScreen from '@components/app/screens/arc'
+import { ModeToggle } from '@components/ui/mode-toggle'
 import { db } from '@db/db'
 import { arc as arcSchema, arcThing, campaign, thing } from '@db/schema'
 import MainLayout from '@layouts/main-layout.astro'
@@ -9,7 +11,6 @@ import { slateToHtml } from '@utils/slate-text-extractor'
 import { and, desc, eq } from 'drizzle-orm'
 import { alias } from 'drizzle-orm/sqlite-core'
 import type { Descendant } from 'slate'
-import SideBarWrapper from '@/components/app/components/side-bar/side-bar'
 
 const { campaignSlug, arcSlug } = Astro.params
 
@@ -139,6 +140,7 @@ const things = await db
       </div>
     </main>
   </div>
+  <ModeToggle client:visible />
 </MainLayout>
 
 <style is:global>

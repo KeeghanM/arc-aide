@@ -1,7 +1,9 @@
 ---
 import { SearchBarWrapper } from '@components/app/components/search-bar/search-bar'
+import SideBarWrapper from '@components/app/components/side-bar/side-bar'
 import ArcListWrapper from '@components/app/components/thing/arc-list/arc-list'
 import ThingScreen from '@components/app/screens/thing'
+import { ModeToggle } from '@components/ui/mode-toggle'
 import { db } from '@db/db'
 import {
   arc,
@@ -12,7 +14,6 @@ import {
 } from '@db/schema'
 import MainLayout from '@layouts/main-layout.astro'
 import { eq } from 'drizzle-orm'
-import SideBarWrapper from '@/components/app/components/side-bar/side-bar'
 
 const { campaignSlug, thingSlug } = Astro.params
 
@@ -99,4 +100,5 @@ const arcs = (await db
       </div>
     </main>
   </div>
+  <ModeToggle client:visible />
 </MainLayout>

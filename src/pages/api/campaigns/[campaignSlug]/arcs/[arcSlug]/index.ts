@@ -103,6 +103,7 @@ export const GET: APIRoute = async ({ request, params }) => {
  * @param request.body.updatedArc.problem - Problem content (optional, Slate.js format)
  * @param request.body.updatedArc.key - Key content (optional, Slate.js format)
  * @param request.body.updatedArc.outcome - Outcome content (optional, Slate.js format)
+ * @param request.body.updatedArc.notes - Notes content (optional, Slate.js format)
  * @param request.body.updatedArc.parentArcId - Parent Arc ID (optional, can be null)
  *
  * @example
@@ -112,6 +113,7 @@ export const GET: APIRoute = async ({ request, params }) => {
  *     "slug": "goblin-ambush",
  *     "name": "The Goblin Ambush - Updated",
  *     "hook": [{"type": "paragraph", "children": [{"text": "The party encounters goblins..."}]}]
+ *     "protagonist": [{"type": "paragraph", "children": [{"text": "A brave knight..."}]}],
  *   }
  * }
  * ```
@@ -175,6 +177,7 @@ export const PUT: APIRoute = async ({ request, params }) => {
       problem: z.array(z.unknown()).optional() as z.ZodType<Descendant[]>,
       key: z.array(z.unknown()).optional() as z.ZodType<Descendant[], any, any>,
       outcome: z.array(z.unknown()).optional() as z.ZodType<Descendant[]>,
+      notes: z.array(z.unknown()).optional() as z.ZodType<Descendant[]>,
       parentArcId: z.number().nullable().optional(),
     })
 
@@ -224,6 +227,10 @@ export const PUT: APIRoute = async ({ request, params }) => {
     if (parsedArc.data.outcome !== undefined) {
       updateData.outcome = parsedArc.data.outcome
       updateData.outcomeText = slateToPlainText(parsedArc.data.outcome)
+    }
+    if (parsedArc.data.notes !== undefined) {
+      updateData.notes = parsedArc.data.notes
+      updateData.notesText = slateToPlainText(parsedArc.data.notes)
     }
 
     // If no fields to update, return early

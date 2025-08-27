@@ -1,9 +1,13 @@
 import { type TThing, useThingQueries } from '@hooks/useThingQueries'
 import pDebounce from 'p-debounce'
 import type { Descendant } from 'slate'
-import MarkdownEditor, { defaultEditorValue } from '../components/editor/editor'
+import MarkdownEditor, {
+  defaultEditorValue,
+} from '../components/slate-handling/editor'
+import SlateViewer from '../components/slate-handling/viewer'
 import type { TScreenWrapperProps } from '../screen-wrapper'
 import ScreenWrapper from '../screen-wrapper'
+import { useAppStore } from '../stores/appStore'
 
 type TThingProps = {
   thing: TThing
@@ -11,6 +15,7 @@ type TThingProps = {
 
 function Thing({ thing }: TThingProps) {
   const { modifyThing } = useThingQueries()
+  const { mode } = useAppStore()
   const handleDescriptionChange = pDebounce(async (value: Descendant[]) => {
     modifyThing.mutate({
       updatedThing: { slug: thing.slug, description: value },
@@ -23,13 +28,17 @@ function Thing({ thing }: TThingProps) {
         <h2 className='mb-2 flex items-center gap-2 text-2xl font-semibold'>
           Description
         </h2>
-        <MarkdownEditor
-          initialValue={
-            (thing.description as Descendant[]) ?? defaultEditorValue
-          }
-          onChange={handleDescriptionChange}
-          height='lg'
-        />
+        {mode === 'view' ? (
+          <SlateViewer content={(thing.description as Descendant[]) ?? []} />
+        ) : (
+          <MarkdownEditor
+            initialValue={
+              (thing.description as Descendant[]) ?? defaultEditorValue
+            }
+            onChange={handleDescriptionChange}
+            height='lg'
+          />
+        )}
       </div>
     </div>
   )

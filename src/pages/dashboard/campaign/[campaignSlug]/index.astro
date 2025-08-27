@@ -1,6 +1,7 @@
 ---
 import SideBarWrapper from '@components/app/components/side-bar/side-bar'
 import CampaignScreen from '@components/app/screens/campaign'
+import { ModeToggle } from '@components/ui/mode-toggle'
 import { db } from '@db/db'
 import { arc, campaign as campaignSchema, thing } from '@db/schema'
 import MainLayout from '@layouts/main-layout.astro'
@@ -72,4 +73,5 @@ const thingData = await db
       />
     </main>
   </div>
+  <ModeToggle client:visible />
 </MainLayout>

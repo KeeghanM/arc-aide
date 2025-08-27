@@ -21,7 +21,7 @@ import {
   useSlate,
   withReact,
 } from 'slate-react'
-import type { CustomEditor } from './custom-types.d.ts'
+import type { CustomEditor } from './custom-types'
 
 export const defaultEditorValue: Descendant[] = [
   {

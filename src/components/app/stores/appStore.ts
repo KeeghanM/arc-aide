@@ -15,6 +15,8 @@ interface IAppState {
   // --- UI State ---
   sidebarIsOpen: boolean
   setSidebarIsOpen: (isOpen: boolean) => void
+  mode: 'edit' | 'view'
+  setMode: (mode: 'edit' | 'view') => void
 
   // --- User Context ---
   user: {
@@ -31,6 +33,8 @@ interface IAppState {
 export const useAppStore = create<IAppState>()((set) => ({
   sidebarIsOpen: false,
   setSidebarIsOpen: (isOpen) => set({ sidebarIsOpen: isOpen }),
+  mode: 'edit',
+  setMode: (mode) => set({ mode }),
   user: null,
   setUser: (user) => set({ user }),
   campaignSlug: undefined,

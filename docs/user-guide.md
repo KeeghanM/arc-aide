@@ -121,7 +121,180 @@ Create custom categories to organize your campaign entities:
 4. **Write rich descriptions** using the built-in editor
 5. **Link Things to Arcs** to show their involvement in storylines
 
-## Rich Text Editing
+## View and Edit Modes
+
+ArcAide features a dual-mode interface designed to optimize your workflow between content creation and content consumption:
+
+### Understanding the Modes
+
+#### Edit Mode (Default)
+
+**Purpose**: Content creation and modification
+
+**Features**:
+
+- Multi-column layout for efficient editing
+- Full toolbar access and formatting options
+- Individual section editors for each arc component
+- Real-time auto-save functionality
+- Complete editing capabilities for all content types
+
+**Best for**:
+
+- Campaign planning and preparation
+- Creating new arcs and entities
+- Updating content during sessions
+- Detailed content organization
+
+#### View Mode
+
+**Purpose**: Clean content presentation optimized for reading and sharing
+
+**Features**:
+
+- Single-column narrative flow
+- D&D-themed styling with parchment backgrounds
+- Consolidated content with automatic section headers
+- Minimal UI chrome for distraction-free reading
+- Professional presentation suitable for players
+
+**Best for**:
+
+- Reading through campaign content
+- Sharing content with players
+- Reviewing completed arcs
+- Print-friendly campaign handouts
+
+### Switching Between Modes
+
+**Mode Toggle Location**: Floating action button in the bottom-right corner of dashboard pages
+
+**How to Switch**:
+
+1. Look for the mode toggle button (appears on Arc, Thing, and Campaign pages)
+2. Click to switch between "Edit" and "View" modes
+3. Mode preference persists across navigation
+4. Current mode applies to all content pages
+
+### Content Presentation Differences
+
+#### Arc Pages
+
+**Edit Mode Layout**:
+
+```
+┌─────────────┬─────────────┐
+│    Hook     │ Protagonist │
+├─────────────┼─────────────┤
+│ Antagonist  │   Problem   │
+├─────────────┼─────────────┤
+│     Key     │   Outcome   │
+├─────────────┴─────────────┤
+│          Notes            │
+└───────────────────────────┘
+```
+
+**View Mode Layout**:
+
+```
+┌───────────────────────────┐
+│         # Hook            │
+│    (hook content)         │
+│                           │
+│      # Protagonist        │
+│  (protagonist content)    │
+│                           │
+│      # Antagonist         │
+│   (antagonist content)    │
+│                           │
+│       # Problem           │
+│    (problem content)      │
+│                           │
+│         # Key             │
+│     (key content)         │
+│                           │
+│       # Outcome           │
+│    (outcome content)      │
+│                           │
+│        # Notes            │
+│     (notes content)       │
+└───────────────────────────┘
+```
+
+#### Thing Pages
+
+**Edit Mode**: Traditional editor interface with full toolbar
+
+**View Mode**: Clean D&D-styled presentation with parchment backgrounds
+
+### D&D Theme Elements (View Mode)
+
+When in View Mode, content is styled with authentic D&D 5e visual elements:
+
+#### Typography
+
+- **Bookinsanity**: Primary content font
+- **Mr Eaves Small Caps**: Section headers
+- **Parchment backgrounds**: Authentic medieval appearance
+- **Proper spacing**: Print-friendly margins and line heights
+
+#### Visual Elements
+
+- **Section dividers**: Colored underlines for headers
+- **Stat blocks**: Properly formatted monster/NPC statistics
+- **Spell descriptions**: Appropriate magical content styling
+- **Tables**: Official-style ability scores and information
+
+#### Content Organization
+
+- **Automatic headers**: Section names added automatically
+- **Flowing narrative**: Single-column design promotes reading
+- **Connected content**: Internal links maintained and styled appropriately
+
+### Best Practices
+
+#### When to Use Edit Mode
+
+- **Active campaign preparation**: Creating and organizing new content
+- **Session updates**: Making changes during or after game sessions
+- **Complex editing**: When you need access to formatting tools
+- **Multi-section work**: When working on multiple arc components
+
+#### When to Use View Mode
+
+- **Content review**: Reading through existing campaign material
+- **Player sharing**: When showing content to players at the table
+- **Campaign handouts**: For printing or sharing reference material
+- **Immersive reading**: When you want to experience content as a narrative
+
+#### Mode Workflow Tips
+
+1. **Plan in Edit Mode**: Create and organize content using the multi-column interface
+2. **Review in View Mode**: Switch to view mode to read content as a flowing narrative
+3. **Share in View Mode**: Use view mode when showing content to others
+4. **Quick edits**: Switch back to edit mode for immediate changes
+
+### Technical Notes
+
+#### Performance
+
+- Mode switching is instant with no page reload
+- Content is the same in both modes, only presentation changes
+- Auto-save continues to work in both modes
+
+#### Data Consistency
+
+- All content remains fully editable regardless of current mode
+- Mode preference is stored locally and persists between sessions
+- No data loss occurs when switching modes
+
+#### Mobile Considerations
+
+- View mode is optimized for mobile reading
+- Edit mode maintains functionality on mobile devices
+- Mode toggle remains accessible on all screen sizes
+
+This dual-mode system allows you to optimize your interface for the task at hand—whether you're creating epic adventures or immersing yourself in the worlds you've built.
 
 ArcAide features a powerful rich text editor for all your content:
 

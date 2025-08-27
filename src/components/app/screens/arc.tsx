@@ -1,9 +1,14 @@
 import { type TArc, useArcQueries } from '@hooks/useArcQueries'
+import { cn } from '@lib/utils/cn'
+import { useAppStore } from '@stores/appStore'
 import pDebounce from 'p-debounce'
 import type { Descendant } from 'slate'
 import ArcItem from '../components/arc/arc-item'
 import ParentArc from '../components/arc/parent-arc/parent-arc'
-import MarkdownEditor, { defaultEditorValue } from '../components/editor/editor'
+import MarkdownEditor, {
+  defaultEditorValue,
+} from '../components/slate-handling/editor'
+import SlateViewer from '../components/slate-handling/viewer'
 import type { TScreenWrapperProps } from '../screen-wrapper'
 import ScreenWrapper from '../screen-wrapper'
 
@@ -12,7 +17,9 @@ type TArcProps = {
 }
 
 function Arc({ arc }: TArcProps) {
-  const { modifyArc } = useArcQueries()
+  const { modifyArc, useArcQuery } = useArcQueries()
+  const { mode } = useAppStore()
+  const arcQuery = useArcQuery(arc.slug)
 
   // --- Auto-save handlers ---
   // Debounce saves to avoid excessive API calls while user types
@@ -35,11 +42,19 @@ function Arc({ arc }: TArcProps) {
   const handleOutcomeChange = pDebounce(async (value: Descendant[]) => {
     modifyArc.mutate({ updatedArc: { slug: arc.slug, outcome: value } })
   }, 1000)
+  const handleNotesChange = pDebounce(async (value: Descendant[]) => {
+    modifyArc.mutate({ updatedArc: { slug: arc.slug, notes: value } })
+  }, 1000)
 
   return (
     <div className='space-y-4 pr-6 md:pr-12'>
       <ParentArc arc={arc} />
-      <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
+      <div
+        className={cn(
+          'grid grid-cols-1 gap-4',
+          mode === 'edit' && 'md:grid-cols-2'
+        )}
+      >
         {/* 
         Arc Structure follows the D&D narrative framework:
         - Hook: What draws players in
@@ -48,70 +63,138 @@ function Arc({ arc }: TArcProps) {
         - Key: How players can solve it
         - Outcome: Resolution and consequences
       */}
-        <div>
-          <h2 className='mb-2 flex items-center gap-2 text-2xl font-semibold'>
-            Hook
-          </h2>
-          <MarkdownEditor
-            initialValue={(arc.hook as Descendant[]) ?? defaultEditorValue}
-            onChange={handleHookChange}
+        {mode === 'view' ? (
+          <SlateViewer
+            content={[
+              {
+                type: 'paragraph',
+                children: [{ text: '# Hook' }],
+              },
+              ...(((arcQuery.data?.hook ?? arc.hook) as Descendant[]) ??
+                defaultEditorValue),
+              {
+                type: 'paragraph',
+                children: [{ text: '# Protagonist' }],
+              },
+              ...(((arcQuery.data?.protagonist ??
+                arc.protagonist) as Descendant[]) ?? defaultEditorValue),
+              {
+                type: 'paragraph',
+                children: [{ text: '# Antagonist' }],
+              },
+              ...(((arcQuery.data?.antagonist ??
+                arc.antagonist) as Descendant[]) ?? defaultEditorValue),
+              {
+                type: 'paragraph',
+                children: [{ text: '# Problem' }],
+              },
+              ...(((arcQuery.data?.problem ?? arc.problem) as Descendant[]) ??
+                defaultEditorValue),
+              {
+                type: 'paragraph',
+                children: [{ text: '# Key' }],
+              },
+              ...(((arcQuery.data?.key ?? arc.key) as Descendant[]) ??
+                defaultEditorValue),
+              {
+                type: 'paragraph',
+                children: [{ text: '# Outcome' }],
+              },
+              ...(((arcQuery.data?.outcome ?? arc.outcome) as Descendant[]) ??
+                defaultEditorValue),
+              { type: 'paragraph', children: [{ text: '# Notes' }] },
+              ...(((arcQuery.data?.notes ?? arc.notes) as Descendant[]) ??
+                defaultEditorValue),
+            ]}
           />
-        </div>
-        <div>
-          <h2 className='mb-2 flex items-center gap-2 text-2xl font-semibold'>
-            Protagonist
-          </h2>
-          <MarkdownEditor
-            initialValue={
-              (arc.protagonist as Descendant[]) ?? defaultEditorValue
-            }
-            onChange={handleProtagonistChange}
-          />
-        </div>
-        <div>
-          <h2 className='mb-2 flex items-center gap-2 text-2xl font-semibold'>
-            Antagonist
-          </h2>
-          <MarkdownEditor
-            initialValue={
-              (arc.antagonist as Descendant[]) ?? defaultEditorValue
-            }
-            onChange={handleAntagonistChange}
-          />
-        </div>
-        <div>
-          <h2 className='mb-2 flex items-center gap-2 text-2xl font-semibold'>
-            Problem
-          </h2>
-          <MarkdownEditor
-            initialValue={(arc.problem as Descendant[]) ?? defaultEditorValue}
-            onChange={handleProblemChange}
-          />
-        </div>
-        <div>
-          <h2 className='mb-2 flex items-center gap-2 text-2xl font-semibold'>
-            Key
-          </h2>
-          <MarkdownEditor
-            initialValue={(arc.key as Descendant[]) ?? defaultEditorValue}
-            onChange={handleKeyChange}
-          />
-        </div>
-        <div>
-          <h2 className='mb-2 flex items-center gap-2 text-2xl font-semibold'>
-            Outcome
-          </h2>
-          {/* 
-            Type casting to Descendant[] is safe here because:
-            1. Database stores JSON as TEXT, so TypeScript sees it as unknown
-            2. Our schema validation ensures it's always a valid Slate AST
-            3. defaultEditorValue provides fallback for null/undefined
-          */}
-          <MarkdownEditor
-            initialValue={(arc.outcome as Descendant[]) ?? defaultEditorValue}
-            onChange={handleOutcomeChange}
-          />
-        </div>
+        ) : (
+          <>
+            <div>
+              <h2 className='mb-2 flex items-center gap-2 text-2xl font-semibold'>
+                Hook
+              </h2>
+              <MarkdownEditor
+                initialValue={
+                  ((arcQuery.data?.hook ?? arc.hook) as Descendant[]) ??
+                  defaultEditorValue
+                }
+                onChange={handleHookChange}
+              />
+            </div>
+            <div>
+              <h2 className='mb-2 flex items-center gap-2 text-2xl font-semibold'>
+                Protagonist
+              </h2>
+              <MarkdownEditor
+                initialValue={
+                  ((arcQuery.data?.protagonist ??
+                    arc.protagonist) as Descendant[]) ?? defaultEditorValue
+                }
+                onChange={handleProtagonistChange}
+              />
+            </div>
+            <div>
+              <h2 className='mb-2 flex items-center gap-2 text-2xl font-semibold'>
+                Antagonist
+              </h2>
+              <MarkdownEditor
+                initialValue={
+                  ((arcQuery.data?.antagonist ??
+                    arc.antagonist) as Descendant[]) ?? defaultEditorValue
+                }
+                onChange={handleAntagonistChange}
+              />
+            </div>
+            <div>
+              <h2 className='mb-2 flex items-center gap-2 text-2xl font-semibold'>
+                Problem
+              </h2>
+              <MarkdownEditor
+                initialValue={
+                  ((arcQuery.data?.problem ?? arc.problem) as Descendant[]) ??
+                  defaultEditorValue
+                }
+                onChange={handleProblemChange}
+              />
+            </div>
+            <div>
+              <h2 className='mb-2 flex items-center gap-2 text-2xl font-semibold'>
+                Key
+              </h2>
+              <MarkdownEditor
+                initialValue={
+                  ((arcQuery.data?.key ?? arc.key) as Descendant[]) ??
+                  defaultEditorValue
+                }
+                onChange={handleKeyChange}
+              />
+            </div>
+            <div>
+              <h2 className='mb-2 flex items-center gap-2 text-2xl font-semibold'>
+                Outcome
+              </h2>
+              <MarkdownEditor
+                initialValue={
+                  ((arcQuery.data?.outcome ?? arc.outcome) as Descendant[]) ??
+                  defaultEditorValue
+                }
+                onChange={handleOutcomeChange}
+              />
+            </div>
+            <div className='md:col-span-2'>
+              <h2 className='mb-2 flex items-center gap-2 text-2xl font-semibold'>
+                Notes
+              </h2>
+              <MarkdownEditor
+                initialValue={
+                  ((arcQuery.data?.notes ?? arc.notes) as Descendant[]) ??
+                  defaultEditorValue
+                }
+                onChange={handleNotesChange}
+              />
+            </div>
+          </>
+        )}
       </div>
       <div>
         <h2 className='mb-2 flex items-center gap-2 text-2xl font-semibold'>

@@ -1,6 +1,3 @@
-import MarkdownEditor, {
-  defaultEditorValue,
-} from '@components/app/components/editor/editor'
 import { useAppStore } from '@components/app/stores/appStore'
 import { Button } from '@components/ui/button'
 import {
@@ -17,6 +14,9 @@ import { useCampaignQueries } from '@hooks/useCampaignQueries'
 import { useEffect, useState } from 'react'
 import type { Descendant } from 'slate'
 import DeleteCampaign from './delete-campaign'
+import MarkdownEditor, {
+  defaultEditorValue,
+} from '@/components/app/components/slate-handling/editor'
 
 /**
  * Delete Campaign Component

@@ -2,8 +2,6 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
-@custom-variant dark (&:where(.dark, .dark *));
-
 :root {
   --radius: 0.5rem;
   --background: oklch(95% 0.01 0deg);
@@ -13,6 +11,19 @@
   --popover: oklch(97.74% 0.003 48.72deg);
   --popover-foreground: oklch(19.18% 0.01 52.85deg);
   --primary: oklch(70.63% 0.186 48.09deg);
+
+  /* Homebrewery D&D Colors */
+  --hb-color-background: #eee5ce;
+  --hb-color-accent: #e0e5c1;
+  --hb-color-header-underline: #c0ad6a;
+  --hb-color-horizontal-rule: #9c2b1b;
+  --hb-color-header-text: #58180d;
+  --hb-color-monster-stat-background: #f2e5b5;
+  --hb-color-caption-text: #766649;
+  --hb-color-watercolor-stain: #bbad82;
+  --hb-color-footnotes: #c9ad6a;
+
+  /* Theme Colors */
   --primary-foreground: oklch(19.18% 0.01 52.85deg);
   --secondary: oklch(52.69% 0.197 295.68deg);
   --secondary-foreground: oklch(97.74% 0.003 48.72deg);
@@ -38,41 +49,6 @@
   --sidebar-accent-foreground: oklch(97.74% 0.003 48.72deg);
   --sidebar-border: oklch(32.14% 0.023 49.83deg);
   --sidebar-ring: oklch(62.1% 0.048 217.89deg);
-}
-
-.dark {
-  --background: oklch(13.1% 0.005 51.38deg);
-  --foreground: oklch(94.01% 0.007 53.44deg);
-  --card: oklch(32.14% 0.023 49.83deg);
-  --card-foreground: oklch(94.01% 0.007 53.44deg);
-  --popover: oklch(41.72% 0.033 46.75deg);
-  --popover-foreground: oklch(94.01% 0.007 53.44deg);
-  --primary: oklch(66.28% 0.185 46deg);
-  --primary-foreground: oklch(13.1% 0.005 51.38deg);
-  --secondary: oklch(46.05% 0.197 293.95deg);
-  --secondary-foreground: oklch(94.01% 0.007 53.44deg);
-  --muted: oklch(41.72% 0.033 46.75deg);
-  --muted-foreground: oklch(60.18% 0.049 52.2deg);
-  --accent: oklch(66.65% 0.043 218.48deg);
-  --accent-foreground: oklch(13.1% 0.005 51.38deg);
-  --destructive: oklch(70.4% 0.191 22.216deg);
-  --destructive-foreground: oklch(94.01% 0.007 53.44deg);
-  --border: oklch(100% 0 0deg / 10%);
-  --input: oklch(100% 0 0deg / 15%);
-  --ring: oklch(69.81% 0.038 218.78deg);
-  --chart-1: oklch(74.14% 0.165 52.24deg);
-  --chart-2: oklch(58.43% 0.172 297.51deg);
-  --chart-3: oklch(69.81% 0.038 218.78deg);
-  --chart-4: oklch(86.09% 0.083 56.89deg);
-  --chart-5: oklch(79.17% 0.084 301.08deg);
-  --sidebar: oklch(32.14% 0.023 49.83deg);
-  --sidebar-foreground: oklch(94.01% 0.007 53.44deg);
-  --sidebar-primary: oklch(66.28% 0.185 46deg);
-  --sidebar-primary-foreground: oklch(13.1% 0.005 51.38deg);
-  --sidebar-accent: oklch(43.25% 0.033 219.65deg);
-  --sidebar-accent-foreground: oklch(13.1% 0.005 51.38deg);
-  --sidebar-border: oklch(100% 0 0deg / 10%);
-  --sidebar-ring: oklch(69.81% 0.038 218.78deg);
 }
 
 @theme inline {
@@ -108,4 +84,503 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@font-face {
+  font-family: Bookinsanity;
+  src:
+    local('Bookinsanity Remake'),
+    local('Bookinsanity'),
+    url('./fonts/Bookinsanity.otf'),
+    url('https://raw.githubusercontent.com/jonathonf/solbera-dnd-fonts/master/Bookinsanity/Bookinsanity.otf')
+      format('opentype');
+}
+
+@font-face {
+  font-family: Bookinsanity;
+  src:
+    local('Bookinsanity Remake'),
+    local('Bookinsanity'),
+    url('./fonts/Bookinsanity Bold Italic.otf'),
+    url('https://raw.githubusercontent.com/jonathonf/solbera-dnd-fonts/master/Bookinsanity/Bookinsanity%20Bold%20Italic.otf')
+      format('opentype');
+  font-weight: bold;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: Bookinsanity;
+  src:
+    local('Bookinsanity Remake'),
+    local('Bookinsanity'),
+    url('./fonts/Bookinsanity Bold.otf'),
+    url('https://raw.githubusercontent.com/jonathonf/solbera-dnd-fonts/master/Bookinsanity/Bookinsanity%20Bold.otf')
+      format('opentype');
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: Bookinsanity;
+  src:
+    local('Bookinsanity Remake'),
+    local('Bookinsanity'),
+    url('./fonts/Bookinsanity Italic.otf'),
+    url('https://raw.githubusercontent.com/jonathonf/solbera-dnd-fonts/master/Bookinsanity/Bookinsanity%20Italic.otf')
+      format('opentype');
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Zatanna Misdirection';
+  src:
+    local('Zatanna Misdirection Remake'),
+    local('Zatanna Misdirection'),
+    url('./fonts/Zatanna Misdirection.otf'),
+    url('https://raw.githubusercontent.com/jonathonf/solbera-dnd-fonts/master/Zatanna%20Misdirection/Zatanna%20Misdirection.otf')
+      format('opentype');
+}
+
+@font-face {
+  font-family: 'Zatanna Misdirection';
+  src:
+    local('Zatanna Misdirection Remake'),
+    local('Zatanna Misdirection'),
+    url('./fonts/Zatanna Misdirection Bold Italic.otf'),
+    url('https://raw.githubusercontent.com/jonathonf/solbera-dnd-fonts/master/Zatanna%20Misdirection/Zatanna%20Misdirection%20Bold%20Italic.otf')
+      format('opentype');
+  font-weight: bold;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Zatanna Misdirection';
+  src:
+    local('Zatanna Misdirection Remake'),
+    local('Zatanna Misdirection'),
+    url('./fonts/Zatanna Misdirection Bold.otf'),
+    url('https://raw.githubusercontent.com/jonathonf/solbera-dnd-fonts/master/Zatanna%20Misdirection/Zatanna%20Misdirection%20Bold.otf')
+      format('opentype');
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: 'Zatanna Misdirection';
+  src:
+    local('Zatanna Misdirection Remake'),
+    local('Zatanna Misdirection'),
+    url('./fonts/Zatanna Misdirection Italic.otf'),
+    url('https://raw.githubusercontent.com/jonathonf/solbera-dnd-fonts/master/Zatanna%20Misdirection/Zatanna%20Misdirection%20Italic.otf')
+      format('opentype');
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Nodesto Caps Condensed';
+  src:
+    local('Nodesto Caps Condensed'),
+    url('./fonts/Nodesto Caps Condensed.otf'),
+    url('https://raw.githubusercontent.com/jonathonf/solbera-dnd-fonts/master/Nodesto%20Caps%20Condensed/Nodesto%20Caps%20Condensed.otf')
+      format('opentype');
+}
+
+@font-face {
+  font-family: 'Nodesto Caps Condensed';
+  src:
+    local('Nodesto Caps Condensed'),
+    url('./fonts/NodestoCapsCondensed-Bold Italic.otf'),
+    url('https://raw.githubusercontent.com/jonathonf/solbera-dnd-fonts/master/Nodesto%20Caps%20Condensed/Nodesto%20Caps%20Condensed%20Bold%20Italic.otf')
+      format('opentype');
+  font-weight: bold;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Nodesto Caps Condensed';
+  src:
+    local('Nodesto Caps Condensed'),
+    url('./fonts/NodestoCapsCondensed-Bold.otf'),
+    url('https://raw.githubusercontent.com/jonathonf/solbera-dnd-fonts/master/Nodesto%20Caps%20Condensed/Nodesto%20Caps%20Condensed%20Bold.otf')
+      format('opentype');
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: 'Nodesto Caps Condensed';
+  src:
+    local('Nodesto Caps Condensed'),
+    url('./fonts/NodestoCapsCondensed-Italic.otf'),
+    url('https://raw.githubusercontent.com/jonathonf/solbera-dnd-fonts/master/Nodesto%20Caps%20Condensed/Nodesto%20Caps%20Condensed%20Italic.otf')
+      format('opentype');
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Mr Eaves Small Caps';
+  src:
+    local('Mr Eaves Small Caps'),
+    url('./fonts/Mr Eaves Small Caps.otf'),
+    url('https://raw.githubusercontent.com/jonathonf/solbera-dnd-fonts/master/Mr%20Eaves/Mr%20Eaves%20Small%20Caps.otf')
+      format('opentype');
+}
+
+@font-face {
+  font-family: 'Scaly Sans';
+  src:
+    local('Scaly Sans'),
+    url('./fonts/Scaly Sans.otf'),
+    url('https://raw.githubusercontent.com/jonathonf/solbera-dnd-fonts/master/Scaly%20Sans/Scaly%20Sans.otf')
+      format('opentype');
+}
+
+@font-face {
+  font-family: 'Scaly Sans';
+  src:
+    local('Scaly Sans'),
+    url('./fonts/Scaly Sans Bold Italic.otf'),
+    url('https://raw.githubusercontent.com/jonathonf/solbera-dnd-fonts/master/Scaly%20Sans/Scaly%20Sans%20Bold%20Italic.otf')
+      format('opentype');
+  font-weight: bold;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Scaly Sans';
+  src:
+    local('Scaly Sans'),
+    url('./fonts/Scaly Sans Bold.otf'),
+    url('https://raw.githubusercontent.com/jonathonf/solbera-dnd-fonts/master/Scaly%20Sans/Scaly%20Sans%20Bold.otf')
+      format('opentype');
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: 'Scaly Sans';
+  src:
+    local('Scaly Sans'),
+    url('./fonts/Scaly Sans Italic.otf'),
+    url('https://raw.githubusercontent.com/jonathonf/solbera-dnd-fonts/master/Scaly%20Sans/Scaly%20Sans%20Italic.otf')
+      format('opentype');
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Scaly Sans Caps';
+  src:
+    local('Scaly Sans Caps'),
+    url('./fonts/Scaly Sans Caps.otf'),
+    url('https://raw.githubusercontent.com/jonathonf/solbera-dnd-fonts/master/Scaly%20Sans%20Caps/Scaly%20Sans%20Caps.otf')
+      format('opentype');
+}
+
+@font-face {
+  font-family: 'Scaly Sans Caps';
+  src:
+    local('Scaly Sans Caps'),
+    url('./fonts/Scaly Sans Caps Bold Italic.otf'),
+    url('https://raw.githubusercontent.com/jonathonf/solbera-dnd-fonts/master/Scaly%20Sans%20Caps/Scaly%20Sans%20Caps%20Bold%20Italic.otf')
+      format('opentype');
+  font-weight: bold;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Scaly Sans Caps';
+  src:
+    local('Scaly Sans Caps'),
+    url('./fonts/Scaly Sans Caps Bold.otf'),
+    url('https://raw.githubusercontent.com/jonathonf/solbera-dnd-fonts/master/Scaly%20Sans%20Caps/Scaly%20Sans%20Caps%20Bold.otf')
+      format('opentype');
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: 'Scaly Sans Caps';
+  src:
+    local('Scaly Sans Caps'),
+    url('./fonts/Scaly Sans Caps Italic.otf'),
+    url('https://raw.githubusercontent.com/jonathonf/solbera-dnd-fonts/master/Scaly%20Sans%20Caps/Scaly%20Sans%20Caps%20Italic.otf')
+      format('opentype');
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Solbera Imitation';
+  src:
+    local('Solbera Imitation'),
+    url('./fonts/Solbera Imitation.otf'),
+    url('https://raw.githubusercontent.com/jonathonf/solbera-dnd-fonts/master/Solbera%20Imitation/Solbera%20Imitation.otf')
+      format('opentype');
+}
+
+@font-face {
+  font-family: 'Dungeon Drop Case';
+  src:
+    local('Dungeon Drop Case'),
+    url('./fonts/Dungeon Drop Case.otf'),
+    url('https://raw.githubusercontent.com/jonathonf/solbera-dnd-fonts/master/Dungeon%20Drop%20Case/Dungeon%20Drop%20Case.otf')
+      format('opentype');
+}
+
+/* D&D Typography Components */
+@layer components {
+  .dnd-content {
+    font-family: Bookinsanity, serif;
+    font-size: 1rem;
+    line-height: 1.4;
+    color: #000;
+    background-color: var(--hb-color-background);
+    background-image: url('/images/parchmentBackground.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    padding: 3.75rem;
+    border-radius: var(--radius);
+  }
+
+  .dnd-content h1 {
+    font-family: 'Mr Eaves Small Caps', serif;
+    font-weight: bold;
+    color: var(--hb-color-header-text);
+    margin-bottom: 0.45rem;
+    font-size: 2.25rem;
+    line-height: 1em;
+    column-span: all;
+  }
+
+  .dnd-content h2 {
+    font-family: 'Mr Eaves Small Caps', serif;
+    font-weight: bold;
+    color: var(--hb-color-header-text);
+    font-size: 1.75rem;
+    margin-top: 2rem;
+    margin-bottom: 0.375rem;
+    padding-bottom: 0.25rem;
+    border-bottom: 2px solid var(--hb-color-header-underline);
+  }
+
+  .dnd-content h3 {
+    font-family: 'Mr Eaves Small Caps', serif;
+    font-weight: bold;
+    color: var(--hb-color-header-text);
+    font-size: 1.375rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .dnd-content h4 {
+    font-family: 'Mr Eaves Small Caps', serif;
+    font-weight: bold;
+    color: var(--hb-color-header-text);
+    font-size: 1.125rem;
+    margin-top: 1.25rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .dnd-content h5,
+  .dnd-content h6 {
+    font-family: 'Mr Eaves Small Caps', serif;
+    font-weight: bold;
+    color: var(--hb-color-header-text);
+    font-size: 1rem;
+    margin-top: 1rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .dnd-content p {
+    margin-bottom: 1rem;
+  }
+
+  .dnd-content strong {
+    font-weight: bold;
+  }
+
+  .dnd-content em {
+    font-style: italic;
+  }
+
+  .dnd-content a {
+    color: var(--hb-color-header-text);
+    text-decoration: underline;
+  }
+
+  .dnd-content a:hover {
+    opacity: 0.8;
+  }
+
+  .dnd-content blockquote {
+    margin-top: 0.8rem;
+    display: inline-block;
+    width: 100%;
+    break-inside: avoid;
+    font-family: 'Scaly Sans', sans-serif;
+    font-size: 0.875rem;
+    padding: 0.3rem 0.4rem;
+    background-color: var(--hb-color-accent);
+    border-style: solid;
+    border-width: 1px;
+    border-color: var(--hb-color-header-underline);
+    box-shadow: 1px 4px 14px #888;
+    border-radius: 4px;
+  }
+
+  /* Stat Block Component */
+  .dnd-statblock {
+    font-family: 'Scaly Sans', sans-serif;
+    font-size: 1rem;
+    background-color: var(--hb-color-monster-stat-background);
+    border: 2px solid var(--hb-color-header-underline);
+    border-radius: 4px;
+    padding: 1.6rem;
+    margin: 1.6rem 0;
+    box-shadow: 1px 4px 14px #888;
+  }
+
+  .dnd-statblock h3 {
+    font-family: 'Nodesto Caps Condensed', sans-serif;
+    font-size: 2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 0.8rem;
+    color: var(--hb-color-header-text);
+  }
+
+  .dnd-statblock table {
+    width: 100%;
+    font-size: 0.88rem;
+  }
+
+  .dnd-statblock th,
+  .dnd-statblock td {
+    padding: 0.2rem 0.4rem;
+    text-align: left;
+    border: none;
+  }
+
+  .dnd-statblock th {
+    font-weight: bold;
+    color: var(--hb-color-header-text);
+  }
+
+  .dnd-content table {
+    font-family: 'Scaly Sans', sans-serif;
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    background-color: var(--hb-color-background);
+    font-size: 0.7rem;
+
+    thead th {
+      font-weight: bold;
+      background-color: var(--hb-color-monster-stat-background);
+      padding: 0.375rem 0.5rem;
+      font-size: 1rem;
+      text-align: center;
+      border: 1px solid var(--hb-color-header-underline);
+      color: var(--hb-color-header-text);
+    }
+
+    tbody td {
+      padding: 0.25rem 0.5rem;
+      border: 1px solid var(--hb-color-header-underline);
+      text-align: center;
+    }
+
+    tbody tr:nth-child(even) {
+      background-color: var(--hb-color-accent);
+    }
+  }
+
+  /* Lists */
+  .dnd-content ul,
+  .dnd-content ol {
+    margin-bottom: 1.6rem;
+    padding-left: 4rem;
+  }
+
+  .dnd-content li {
+    margin-bottom: 0.4rem;
+  }
+
+  /* Horizontal Rules */
+  .dnd-content hr {
+    margin: 3.2rem 0;
+    border: none;
+    border-top: 2px solid var(--hb-color-horizontal-rule);
+  }
+
+  /* Code styling */
+  .dnd-content code {
+    font-family: ui-monospace, monospace;
+    font-size: 1rem;
+    background-color: var(--hb-color-accent);
+    padding: 0.2rem 0.4rem;
+    border-radius: 2px;
+  }
+
+  .dnd-content pre {
+    background-color: var(--hb-color-accent);
+    padding: 1.2rem;
+    border-radius: 4px;
+    overflow-x: auto;
+    margin: 1.6rem 0;
+  }
+
+  .dnd-content pre code {
+    background: none;
+    padding: 0;
+  }
+
+  /* Spell Description Component */
+  .dnd-spell {
+    font-family: Bookinsanity, serif;
+  }
+
+  .dnd-spell h1,
+  .dnd-spell h2,
+  .dnd-spell h3 {
+    font-family: 'Zatanna Misdirection', serif;
+    font-weight: bold;
+    margin-bottom: 0.8rem;
+    color: var(--hb-color-header-text);
+  }
+
+  .dnd-spell h1 {
+    font-size: 2.4rem;
+    text-align: center;
+  }
+
+  .dnd-spell h2 {
+    font-size: 2rem;
+  }
+
+  .dnd-spell .spell-level {
+    font-family: 'Mr Eaves Small Caps', serif;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--hb-color-caption-text);
+    margin-bottom: 1.6rem;
+    text-align: center;
+  }
+
+  /* Drop Cap Styles */
+  .dnd-drop-cap::first-letter {
+    font-family: 'Solbera Imitation', serif;
+    font-size: 4em;
+    line-height: 1;
+    float: left;
+    margin-right: var(--spacing-2);
+    margin-top: var(--spacing-1);
+  }
+
+  .dnd-drop-cap-dungeon::first-letter {
+    font-family: 'Dungeon Drop Case', serif;
+    font-size: 4em;
+    line-height: 1;
+    float: left;
+    margin-right: var(--spacing-2);
+    margin-top: var(--spacing-1);
+  }
 }

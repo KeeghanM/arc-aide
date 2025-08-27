@@ -2,6 +2,95 @@
 
 This guide covers setting up your local development environment for ArcAide.
 
+## Recent Major Changes (August 27, 2025)
+
+### Component Architecture Updates
+
+**Slate Editor Refactoring**
+
+- Moved from `/components/editor/` to `/components/slate-handling/`
+- Split into `editor.tsx` (interactive) and `viewer.tsx` (read-only)
+- Updated all import paths throughout the application
+
+**UI Component Changes**
+
+- Removed theme toggle components in favor of mode toggle
+- Added `ModeToggle` component for Edit/View mode switching
+- Eliminated dark mode support for focused D&D theming
+
+### Database Schema Changes
+
+**Arc Model Enhancement**
+
+- Added `notes` field for additional campaign information
+- Added `notesText` field for search functionality
+- Updated API endpoints to handle notes CRUD operations
+
+### Global State Management
+
+**App Store Updates**
+
+```typescript
+// New mode state in appStore.ts
+interface IAppState {
+  // ... existing state
+  mode: 'edit' | 'view'
+  setMode: (mode: 'edit' | 'view') => void
+}
+```
+
+### Import Path Updates
+
+Update your imports when working with these components:
+
+```typescript
+// Old import paths
+import MarkdownEditor from '@components/app/components/editor/editor'
+import { CustomEditor } from '@components/app/components/editor/custom-types'
+
+// New import paths
+import MarkdownEditor from '@components/app/components/slate-handling/editor'
+import SlateViewer from '@components/app/components/slate-handling/viewer'
+import { CustomEditor } from '@components/app/components/slate-handling/custom-types'
+```
+
+### CSS and Theming Changes
+
+**Removed Dark Mode**
+
+- Eliminated `.dark` CSS classes and variables
+- Removed theme toggle functionality
+- Simplified CSS custom properties
+
+**Added D&D Theme System**
+
+- New CSS custom properties for D&D colors
+- Font declarations for official D&D typography
+- Component styling classes (`.dnd-content`, `.dnd-statblock`, etc.)
+
+### Migration Guide for Contributors
+
+1. **Update Import Statements**
+
+   ```bash
+   # Find and replace editor imports
+   find src -name "*.tsx" -o -name "*.ts" | xargs sed -i 's|@components/app/components/editor/|@components/app/components/slate-handling/|g'
+   ```
+
+2. **Remove Theme Toggle References**
+
+   - Remove any references to `RThemeToggle` or `theme-toggle.astro`
+   - Replace with `ModeToggle` component where appropriate
+
+3. **Update CSS Classes**
+
+   - Remove `.dark:` prefixed classes
+   - Use D&D theme classes for new components
+
+4. **Database Migrations**
+   - Run latest migrations to add `notes` and `notesText` fields
+   - Update any arc-related queries to handle new fields
+
 ## Prerequisites
 
 - **Node.js** (v18 or higher)
