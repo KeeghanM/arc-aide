@@ -19,7 +19,16 @@ export function slugify(string: string) {
  * Convert a string to proper case (first letter uppercase, rest lowercase)
  * @param string - The string to convert
  * @returns String in proper case
+ *
+ * @example properCase('hello_world') // 'Hello World'
+ * @example properCase('my-thing-name') // 'My Thing Name'
+ * @example properCase('ANOTHER example') // 'Another Example'
  */
 export function properCase(string: string) {
-  return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase()
+  return string
+    .replace(/_/g, ' ') // Replace underscores with spaces
+    .replace(/-/g, ' ') // Replace dashes with spaces
+    .split(' ')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ')
 }

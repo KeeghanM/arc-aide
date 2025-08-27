@@ -116,8 +116,8 @@ export function useThingQueries() {
       newThing,
     }: {
       newThing: { name: string; typeId: number }
-    }) => {
-      await fetch(`/api/campaigns/${campaignSlug}/things`, {
+    }): Promise<TThing> => {
+      const response = await fetch(`/api/campaigns/${campaignSlug}/things`, {
         method: 'POST',
         body: JSON.stringify({ newThing }),
         headers: { 'Content-Type': 'application/json' },
@@ -128,6 +128,8 @@ export function useThingQueries() {
         typeId: newThing.typeId,
         campaignSlug,
       })
+
+      return await response.json()
     },
     onSuccess: () => {
       queryClient.invalidateQueries({

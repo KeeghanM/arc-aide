@@ -6,6 +6,8 @@ import { useThingQueries } from '@hooks/useThingQueries'
 import { useThingTypeQueries } from '@hooks/useThingTypeQueries'
 import { useAppStore } from '@stores/appStore'
 import ArcItem from './arc-item'
+import CreateArc from '../arc/create-arc/create-arc'
+import CreateThing from '../thing/create-thing/create-thing'
 
 type TSideBarProps = {}
 
@@ -37,7 +39,10 @@ function SideBar() {
         <p>Error loading data</p>
       ) : (
         <div>
-          <h2 className='text-primary mb-4 text-lg font-bold'>Arcs</h2>
+          <h2 className='text-primary mb-4 flex items-center justify-between text-lg font-bold'>
+            Arcs
+            <CreateArc />
+          </h2>
           <ul>
             {arcsQuery.data?.map((arc) =>
               arc.parentArcId ? null : (
@@ -51,7 +56,11 @@ function SideBar() {
             )}
           </ul>
 
-          <h2 className='text-primary mt-8 mb-4 text-lg font-bold'>Things</h2>
+          <h2 className='text-primary mt-8 mb-4 flex items-center justify-between text-lg font-bold'>
+            Things
+            <CreateThing />
+          </h2>
+
           {thingTypesQuery.data?.map((type) => {
             const thingsOfType = thingsQuery.data?.filter(
               (thing) => thing.typeId === type.id

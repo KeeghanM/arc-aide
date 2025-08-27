@@ -33,7 +33,6 @@ export default function SearchBar({
 }: TSearchBarProps) {
   const [value, setValue] = useState('')
   const { campaignSlug } = useAppStore()
-
   const { useSearchQuery } = useSearchQueries()
   const query = useSearchQuery(value, searchType)
 

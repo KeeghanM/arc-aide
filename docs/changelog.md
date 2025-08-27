@@ -2,6 +2,187 @@
 
 This document tracks significant changes and improvements to the ArcAide application.
 
+## UI Polish and Component Architecture Improvements - 27/08/2025
+
+### 🎨 User Interface Enhancements
+
+**Sidebar Navigation Improvements**
+
+- Added inline creation buttons for Arcs and Things directly in the sidebar
+- Quick access to content creation without navigating away from current page
+- Improved visual hierarchy with better spacing and alignment
+- Enhanced user workflow for rapid content creation
+
+**Arc Display Logic Refinement**
+
+- Improved parent/child arc navigation with conditional link rendering
+- Collapsed parent arcs now display as non-clickable text to avoid confusion
+- Only expanded arcs or leaf nodes show clickable navigation links
+- Better visual distinction between expandable and terminal arc items
+
+**Search Integration Enhancement**
+
+- Added SearchBar component to main campaign dashboard
+- Positioned alongside campaign title for easy access during planning
+- Enables quick content discovery without sidebar navigation
+- Consistent search experience across all dashboard areas
+
+**Layout and Visual Polish**
+
+- Removed unnecessary spacing and improved component density
+- Better responsive design with flex-based layouts
+- Improved back navigation styling from campaigns to dashboard
+- Enhanced visual consistency across dashboard pages
+
+### 🔧 Component Architecture Refinements
+
+**Search Result Optimisation**
+
+- Improved search result ranking with title-first prioritisation
+- Results now show items with title matches before content matches
+- Better relevance scoring for more intuitive search behaviour
+- Limited content preview to 200 characters for better performance
+
+**Rich Text Link Resolution**
+
+- Enhanced internal linking system to pass campaign context to viewers
+- Fixed link rendering in SlateViewer components across arc and thing pages
+- Proper case conversion for linked entity names (handles underscores and hyphens)
+- Consistent link styling and navigation throughout the application
+
+**Theme System Cleanup**
+
+- Removed dark mode CSS properties from input and select components
+- Streamlined component styling for consistency with D&D theme
+- Eliminated redundant CSS classes and improved maintainability
+- Simplified theming system focused on single design language
+
+### 🚀 Development Experience Improvements
+
+**Hook API Enhancements**
+
+- Modified `createThing` mutation to return created entity for immediate navigation
+- Improved type safety with proper return type annotations
+- Better error handling and success flow for thing creation
+- Automatic navigation to newly created things for seamless workflow
+
+**Component Data Flow**
+
+- Enhanced Thing component to use real-time queries for up-to-date content
+- Improved data consistency between edit and view modes
+- Better state synchronisation across component updates
+- Reduced prop drilling with more intelligent data fetching
+
+**Code Quality and Maintenance**
+
+- Cleaned up unused imports and dead code across components
+- Improved component organisation and file structure
+- Better separation of concerns between presentation and business logic
+- Enhanced TypeScript usage for better development experience
+
+### 🎯 User Experience Improvements
+
+**Content Creation Workflow**
+
+- Streamlined thing creation with immediate redirect to new entity
+- Faster arc creation directly from sidebar without page navigation
+- Improved visual feedback during creation processes
+- Better integration between creation and navigation flows
+
+**Navigation and Discoverability**
+
+- Enhanced sidebar with persistent navigation across all dashboard pages
+- Quick creation buttons reduce friction for content authoring
+- Search integration at campaign level for better content discovery
+- Improved breadcrumb and back navigation consistency
+
+**Content Presentation**
+
+- Better text extraction and presentation in search results
+- Improved link rendering with proper case handling
+- Enhanced content display consistency across view and edit modes
+- Refined typography and spacing throughout the interface
+
+### 🔍 Technical Improvements
+
+**Search Functionality**
+
+- Optimised search indexing with content length limits for performance
+- Improved search result ranking algorithm with title-first logic
+- Better search result presentation with contextual snippets
+- Enhanced fuzzy search accuracy with refined term extraction
+
+**Data Fetching Optimisation**
+
+- Improved query efficiency with selective data loading
+- Better cache invalidation strategies for real-time updates
+- Enhanced error handling and loading states
+- Reduced unnecessary re-renders with optimised data flow
+
+**Performance Enhancements**
+
+- Reduced CSS bundle size through dark mode cleanup
+- Optimised component re-rendering with better state management
+- Improved search performance with result limiting
+- Better memory usage with selective data fetching
+
+### 🛠 Breaking Changes and Migrations
+
+**Component API Updates**
+
+- `createThing` mutation now returns the created entity object
+- Enhanced search result data structure with improved ranking
+- SlateViewer component now requires campaign context parameter
+- Updated string utility functions for better case handling
+
+### 🎲 D&D-Specific Enhancements
+
+**Content Linking Improvements**
+
+- Better entity name presentation in internal links
+- Improved cross-reference display for campaign continuity
+- Enhanced narrative flow with proper link styling
+- Better integration between story elements and game mechanics
+
+**Campaign Management**
+
+- Streamlined content creation workflow for session preparation
+- Improved organisation tools for complex campaign structures
+- Better visual hierarchy for campaign information architecture
+- Enhanced tools for maintaining narrative consistency
+
+## Migration Notes
+
+### For Users
+
+- No user-facing breaking changes
+- New sidebar creation buttons provide faster content authoring
+- Enhanced search functionality with better result relevance
+- Improved navigation between related campaign content
+
+### For Developers
+
+If working with the updated codebase:
+
+1. **Search Implementation**: New search ranking algorithm prioritises title matches
+2. **Component Updates**: SlateViewer requires campaign slug parameter
+3. **API Changes**: createThing mutation returns entity object for navigation
+4. **Styling**: Removed dark mode properties from form components
+
+### Performance Impact
+
+- Positive: Reduced CSS bundle size, improved search performance
+- Positive: Better component rendering with optimised data flow
+- Positive: Enhanced user workflow with reduced navigation overhead
+- Neutral: No significant performance regressions introduced
+
+### User Interface Changes
+
+- New creation buttons in sidebar for faster workflow
+- Search bar integrated into campaign dashboard header
+- Improved arc navigation logic for better user experience
+- Refined visual styling throughout the application
+
 ## Major UI/UX Overhaul and Content Management Enhancement 27/08/2025
 
 ### 🎨 D&D Theme System Implementation

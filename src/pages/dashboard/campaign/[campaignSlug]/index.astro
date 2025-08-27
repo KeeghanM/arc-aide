@@ -1,4 +1,5 @@
 ---
+import { SearchBarWrapper } from '@components/app/components/search-bar/search-bar'
 import SideBarWrapper from '@components/app/components/side-bar/side-bar'
 import CampaignScreen from '@components/app/screens/campaign'
 import { ModeToggle } from '@components/ui/mode-toggle'
@@ -43,7 +44,7 @@ const thingData = await db
   .from(thing)
   .where(eq(thing.campaignId, campaign.id))
   .orderBy(desc(thing.updatedAt))
-  .limit(10)
+  .limit(20)
 ---
 
 <MainLayout title={campaign.name}>
@@ -54,16 +55,25 @@ const thingData = await db
       client:load
       transition:persist
     />
-    <main class='space-y-6 p-4 md:p-8 lg:p-12'>
-      <h1 class='text-primary text-4xl font-bold md:text-5xl'>
-        {campaign.name}
+    <main class='flex-1 space-y-6 p-4 md:p-8 lg:p-12'>
+      <div>
         <a
           href={`/dashboard/`}
           class='text-accent ml-4 text-lg font-normal hover:italic'
         >
-          (Back to Dashboard)</a
+          Back to Dashboard</a
         >
-      </h1>
+      </div>
+      <div class='flex items-baseline gap-6'>
+        <h1 class='text-primary text-4xl font-bold md:text-5xl'>
+          {campaign.name}
+        </h1>
+        <SearchBarWrapper
+          user={Astro.locals.user}
+          campaignSlug={campaignSlug}
+          client:load
+        />
+      </div>
       <CampaignScreen
         user={user}
         campaignSlug={campaignSlug}

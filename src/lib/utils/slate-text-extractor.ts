@@ -1,5 +1,6 @@
 import showdown from 'showdown'
 import type { Descendant } from 'slate'
+import { properCase } from './string'
 
 /**
  * Slate.js Content Conversion Utilities
@@ -41,7 +42,7 @@ export function slateToPlainText(nodes: Descendant[]): string {
  * 2. Convert markdown to HTML using Showdown
  * 3. Return formatted HTML for browser display
  */
-export function slateToHtml(nodes: Descendant[]): string {
+export function slateToHtml(nodes: Descendant[], campaignSlug: string): string {
   if (!nodes) {
     return ''
   }
@@ -57,5 +58,18 @@ export function slateToHtml(nodes: Descendant[]): string {
     tasklists: true, // Checkbox lists for quest tracking
   })
 
-  return converter.makeHtml(markdown)
+  const html = converter.makeHtml(markdown)
+
+  // We need to replace any [[type#slug]] links with proper anchor tags.
+  const linkRegex = /\[\[([^\]]+)\]\]/g
+
+  return html.replace(linkRegex, (_, content) => {
+    const [type, slug] = content.split('#', 2)
+    if (type && slug) {
+      return `<a href="/dashboard/campaign/${campaignSlug}/${type}/${slug}">${properCase(slug)}</a>`
+    } else {
+      // If format is invalid, just return the raw text
+      return `[[${content}]]`
+    }
+  })
 }

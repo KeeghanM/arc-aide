@@ -18,6 +18,7 @@ import {
 } from '@components/ui/select'
 import { useThingQueries } from '@hooks/useThingQueries'
 import { useThingTypeQueries } from '@hooks/useThingTypeQueries'
+import { useAppStore } from '@stores/appStore'
 import { useState } from 'react'
 import CreateThingType from '../create-thing-type/create-thing-type'
 
@@ -30,6 +31,7 @@ import CreateThingType from '../create-thing-type/create-thing-type'
  */
 export default function CreateThing() {
   const { thingTypesQuery } = useThingTypeQueries()
+  const { campaignSlug } = useAppStore()
 
   const { createThing } = useThingQueries()
 
@@ -42,10 +44,13 @@ export default function CreateThing() {
     // Both name and type are required for Thing creation
     if (!thingName || typeId === null) return
 
-    await createThing.mutateAsync({ newThing: { name: thingName, typeId } })
+    const newThing = await createThing.mutateAsync({
+      newThing: { name: thingName, typeId },
+    })
     if (!createThing.error) {
       setThingName('')
       setOpen(false)
+      window.location.href = `/dashboard/campaign/${campaignSlug}/thing/${newThing.slug}/`
     }
   }
 

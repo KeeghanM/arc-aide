@@ -31,7 +31,7 @@ function Campaign({ initialArcs, latestThings }: TCampaignProps) {
   })
 
   return (
-    <div>
+    <>
       <CampaignSettings />
       {/* --- Arcs Section --- */}
       <h2 className='mb-4 flex items-center gap-4 text-2xl font-semibold'>
@@ -73,7 +73,7 @@ function Campaign({ initialArcs, latestThings }: TCampaignProps) {
             />
           ))}
       </div>
-    </div>
+    </>
   )
 }
 

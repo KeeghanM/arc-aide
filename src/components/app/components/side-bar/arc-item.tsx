@@ -57,12 +57,18 @@ export default function ArcItem({
         ) : (
           <span className='mr-2 w-4' />
         )}
-        <a
-          className='hover:text-primary underline'
-          href={`/dashboard/campaign/${campaignSlug}/arc/${arc.slug}/`}
-        >
-          <span>{arc.name}</span>
-        </a>
+        {isExpanded || !hasChildren ? (
+          <a
+            className='hover:text-primary underline'
+            href={`/dashboard/campaign/${campaignSlug}/arc/${arc.slug}/`}
+          >
+            <span>{arc.name}</span>
+          </a>
+        ) : (
+          <p>
+            <span>{arc.name}</span>
+          </p>
+        )}
       </button>
       {/* Child arcs - rendered recursively when expanded */}
       {hasChildren && isExpanded && (

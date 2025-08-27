@@ -25,36 +25,26 @@ export interface FuzzySearchResult extends SearchResult {
   originalQuery: string // User's original search input
 }
 
-/**
- * Performs full-text search with result highlighting
- *
- * Uses SQLite FTS5 with BM25 ranking for relevance scoring.
- * Generates HTML snippets with <mark> tags for search term highlighting.
- */
-export async function searchWithHighlight(
-  query: string,
-  campaignId: number,
-  type: string = 'any'
-): Promise<Array<SearchResult & { highlight: string }>> {
-  let searchQuery = sql`
-    SELECT 
-      type,
-      entity_id as entityId,
-      campaign_id as campaignId,
-      title,
-      content,
-      slug,
-      bm25(search_index_fts) as rank,
-      snippet(search_index_fts, 4, '<mark>', '</mark>', '...', 5) as highlight
-    FROM search_index_fts
-    WHERE search_index_fts MATCH ${query}
-    AND campaign_id = ${campaignId}
-    ${type !== 'any' ? sql`AND type = ${type}` : sql``}
-    ORDER BY rank`
+const sortResults = (
+  results: Array<SearchResult & { highlight: string }>,
+  searchTerms: string[]
+) =>
+  results.sort((a, b) => {
+    // First, if title contains search terms, put them first - sorted by rank
+    const aTitleMatch = searchTerms.some((term) =>
+      a.title.toLowerCase().includes(term)
+    )
+    const bTitleMatch = searchTerms.some((term) =>
+      b.title.toLowerCase().includes(term)
+    )
+    if (aTitleMatch && !bTitleMatch) return -1
+    if (!aTitleMatch && bTitleMatch) return 1
 
-  const results = await db.all(searchQuery)
-  return results as Array<SearchResult & { highlight: string }>
-}
+    // If both or neither match in title, sort by rank (lower is better)
+    const aScore = a.rank
+    const bScore = b.rank
+    return aScore - bScore
+  })
 
 /**
  * Spell-corrects individual search terms using fuzzy string matching
@@ -197,7 +187,7 @@ export async function fuzzySearchWithHighlight(
       entity_id as entityId,
       campaign_id as campaignId,
       title,
-      content,
+      LEFT(content, 200) as content,
       slug,
       bm25(search_index_fts) as rank,
       snippet(search_index_fts, 4, '<mark>', '</mark>', '...', 5) as highlight
@@ -211,7 +201,19 @@ export async function fuzzySearchWithHighlight(
     SearchResult & { highlight: string }
   >
 
-  return results.map((result) => ({
+  // Extract search terms for title matching
+  const searchTerms = finalQuery
+    .toLowerCase()
+    .split(/\s+/)
+    .filter(
+      (term) =>
+        term.length > 0 &&
+        !['AND', 'OR', 'NOT', 'NEAR'].includes(term.toUpperCase())
+    )
+
+  const sortedResults = sortResults(results, searchTerms)
+
+  return sortedResults.map((result) => ({
     ...result,
     originalQuery,
     correctedQuery,

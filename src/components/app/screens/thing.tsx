@@ -16,6 +16,9 @@ type TThingProps = {
 function Thing({ thing }: TThingProps) {
   const { modifyThing } = useThingQueries()
   const { mode } = useAppStore()
+  const { useThingQuery } = useThingQueries()
+  const thingQuery = useThingQuery(thing.slug)
+
   const handleDescriptionChange = pDebounce(async (value: Descendant[]) => {
     modifyThing.mutate({
       updatedThing: { slug: thing.slug, description: value },
@@ -29,11 +32,17 @@ function Thing({ thing }: TThingProps) {
           Description
         </h2>
         {mode === 'view' ? (
-          <SlateViewer content={(thing.description as Descendant[]) ?? []} />
+          <SlateViewer
+            content={
+              ((thingQuery.data?.description ??
+                thing.description) as Descendant[]) ?? []
+            }
+          />
         ) : (
           <MarkdownEditor
             initialValue={
-              (thing.description as Descendant[]) ?? defaultEditorValue
+              ((thingQuery.data?.description ??
+                thing.description) as Descendant[]) ?? defaultEditorValue
             }
             onChange={handleDescriptionChange}
             height='lg'
