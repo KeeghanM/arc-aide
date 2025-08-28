@@ -1,71 +1,11 @@
-# User Guide
+---
+title: 'Advanced Features'
+description: 'Advanced features including arc hierarchies, entity management, view modes, and linking system.'
+sidebar:
+  order: 2
+---
 
-Welcome to ArcAide! This guide will help you get started with managing your D&D campaigns using our arc-based storytelling approach.
-
-## Getting Started
-
-### Creating Your First Campaign
-
-1. **Sign up or log in** to your ArcAide account
-2. **Click "Get Started"** or navigate to the dashboard
-3. **Create a new campaign** by clicking the "+" button
-4. **Enter your campaign name** (e.g., "Lost Mine of Phandelver")
-5. **Start creating arcs** to structure your storylines
-
-### Understanding Campaigns
-
-Campaigns are the top-level containers for organizing your D&D adventures. Each campaign can contain:
-
-- Multiple story arcs
-- Campaign entities (NPCs, locations, items)
-- Custom entity types
-- Rich text descriptions and notes
-
-## The Arc Framework
-
-ArcAide uses a structured six-part framework to help you create compelling storylines:
-
-### 1. Hook
-
-The opening scene or inciting incident that draws your players into the story.
-
-**Example:** _"While traveling to Phandalin, the party discovers an abandoned wagon with signs of a struggle and goblin tracks leading into the woods."_
-
-### 2. Protagonist
-
-The main character(s) or heroes of this particular story arc.
-
-**Example:** _"The adventuring party, hired by Gundren Rockseeker to escort supplies to Phandalin."_
-
-### 3. Antagonist
-
-The opposition, conflict source, or "villain" of the arc.
-
-**Example:** _"Klarg, the bugbear leader of a goblin tribe that has captured Gundren and his escort."_
-
-### 4. Problem
-
-The central challenge or conflict that needs to be resolved.
-
-**Example:** _"Gundren has been captured and his location is unknown. The supplies he was expecting are crucial for the town's defense."_
-
-### 5. Key
-
-The solution, tool, method, or insight needed to resolve the problem.
-
-**Example:** _"Following the goblin tracks to their hideout, gathering information from captured goblins, and staging a rescue mission."_
-
-### 6. Outcome
-
-The resolution and consequences of the arc's events.
-
-**Example:** _"Gundren is rescued and reveals the location of Wave Echo Cave. The party learns about the Black Spider's involvement."_
-
-### 7. Notes
-
-Additional notes and supplementary information that doesn't fit into the other categories.
-
-**Example:** _"Player feedback: loved the goblin ambush tactics. Next time, add more environmental hazards to the hideout."_
+# Advanced Features
 
 ## Arc Hierarchies
 
@@ -251,50 +191,7 @@ When in View Mode, content is styled with authentic D&D 5e visual elements:
 - **Flowing narrative**: Single-column design promotes reading
 - **Connected content**: Internal links maintained and styled appropriately
 
-### Best Practices
-
-#### When to Use Edit Mode
-
-- **Active campaign preparation**: Creating and organizing new content
-- **Session updates**: Making changes during or after game sessions
-- **Complex editing**: When you need access to formatting tools
-- **Multi-section work**: When working on multiple arc components
-
-#### When to Use View Mode
-
-- **Content review**: Reading through existing campaign material
-- **Player sharing**: When showing content to players at the table
-- **Campaign handouts**: For printing or sharing reference material
-- **Immersive reading**: When you want to experience content as a narrative
-
-#### Mode Workflow Tips
-
-1. **Plan in Edit Mode**: Create and organize content using the multi-column interface
-2. **Review in View Mode**: Switch to view mode to read content as a flowing narrative
-3. **Share in View Mode**: Use view mode when showing content to others
-4. **Quick edits**: Switch back to edit mode for immediate changes
-
-### Technical Notes
-
-#### Performance
-
-- Mode switching is instant with no page reload
-- Content is the same in both modes, only presentation changes
-- Auto-save continues to work in both modes
-
-#### Data Consistency
-
-- All content remains fully editable regardless of current mode
-- Mode preference is stored locally and persists between sessions
-- No data loss occurs when switching modes
-
-#### Mobile Considerations
-
-- View mode is optimized for mobile reading
-- Edit mode maintains functionality on mobile devices
-- Mode toggle remains accessible on all screen sizes
-
-This dual-mode system allows you to optimize your interface for the task at hand—whether you're creating epic adventures or immersing yourself in the worlds you've built.
+## Rich Text Editor and Linking
 
 ArcAide features a powerful rich text editor for all your content:
 
@@ -378,21 +275,6 @@ Use the search bar to quickly find:
 - **Prepare multiple Keys** for different player approaches
 - **Consider Outcomes** that lead to future adventures
 
-## Collaboration Features
-
-### Sharing Content
-
-- **Export campaign data** for backup or sharing
-- **Print-friendly views** for table reference
-- **Mobile access** for on-the-go updates
-
-### Session Management
-
-- **Update arcs** during or after sessions
-- **Add new Things** discovered during play
-- **Track outcomes** and their consequences
-- **Plan future content** based on player decisions
-
 ## Tips for Dungeon Masters
 
 ### Effective Arc Creation
@@ -416,63 +298,3 @@ Use the search bar to quickly find:
 - **Plan multiple Outcomes** for player choices
 - **Create backup NPCs** in case players go off-script
 - **Use entity links** to show story connections
-
-## Troubleshooting
-
-### Common Issues
-
-**Can't find content?**
-
-- Use the search feature to locate items
-- Check if content is in the correct campaign
-- Verify spelling in search terms
-
-**Lost changes?**
-
-- Content auto-saves as you type
-- Refresh the page if changes aren't appearing
-- Check your internet connection
-
-**Formatting problems?**
-
-- Use the editor toolbar for consistent formatting
-- Copy and paste may lose some formatting
-- Re-apply formatting using editor tools
-
-### Getting Help
-
-- Check the documentation for detailed guides
-- Contact support for technical issues
-- Join the community for tips and inspiration
-
-## Advanced Features
-
-### Hierarchical Arcs
-
-Create nested storylines with enhanced parent-child relationships:
-
-- **Main Arcs**: The overall campaign story or major chapters
-- **Sub-arcs**: Individual adventures, encounters, or side quests
-- **Visual Hierarchy**: Parent arcs display their children, with easy navigation
-- **Flexible Organization**: Reorganize arcs by changing parent relationships
-- **Connected Outcomes**: Child arc outcomes feed into parent arc narratives
-
-### Entity Relationships
-
-Track complex connections:
-
-- **NPC relationships** - allies, enemies, family
-- **Location connections** - roads, political boundaries
-- **Item histories** - creators, previous owners
-
-### Campaign Analytics
-
-Track your campaign's growth:
-
-- **Content statistics** - arcs, entities, total content
-- **Recent activity** - what you've been working on
-- **Usage patterns** - most-referenced content
-
----
-
-_Happy adventuring! May your campaigns be epic and your players engaged._

@@ -1,7 +1,7 @@
 {
   "name": "arc-aide",
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.4.1",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
@@ -29,6 +29,7 @@
     "@astrojs/partytown": "^2.1.4",
     "@astrojs/react": "^4.3.0",
     "@astrojs/sitemap": "^3.4.1",
+    "@astrojs/starlight": "^0.35.2",
     "@emotion/css": "^11.13.5",
     "@honeybadger-io/js": "^6.11.2",
     "@libsql/client": "^0.15.9",
@@ -37,7 +38,6 @@
     "@radix-ui/react-label": "^2.1.7",
     "@radix-ui/react-select": "^2.2.6",
     "@radix-ui/react-slot": "^1.2.3",
-    "@slate-serializers/html": "^2.2.3",
     "@tailwindcss/vite": "^4.1.8",
     "@tanstack/react-query": "^5.85.5",
     "@types/react": "^19.1.6",
@@ -71,6 +71,7 @@
     "slate-dom": "^0.117.4",
     "slate-history": "^0.113.1",
     "slate-react": "^0.117.4",
+    "starlight-auto-sidebar": "^0.1.2",
     "tailwind-merge": "^3.3.0",
     "tailwindcss": "^4.1.8",
     "timeago.js": "^4.0.2",

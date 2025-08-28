@@ -1,159 +1,23 @@
-# Development Setup
+---
+title: 'Overview'
+description: 'Complete guide to on the project structure and coding standards.'
+sidebar:
+  order: 1
+---
 
-This guide covers setting up your local development environment for ArcAide.
+# Development Guide
 
-## Recent Major Changes (August 27, 2025)
+This document provides a comprehensive guide to understanding the project structure and coding standards.
 
-### Component Architecture Updates
+:::tip[Quick Navigation]
+New to the project? Start with the [Architecture Overview](./architecture) to understand the high-level system design.
+:::
 
-**Slate Editor Refactoring**
+## Tech Stack
 
-- Moved from `/components/editor/` to `/components/slate-handling/`
-- Split into `editor.tsx` (interactive) and `viewer.tsx` (read-only)
-- Updated all import paths throughout the application
-
-**UI Component Changes**
-
-- Removed theme toggle components in favor of mode toggle
-- Added `ModeToggle` component for Edit/View mode switching
-- Eliminated dark mode support for focused D&D theming
-
-### Database Schema Changes
-
-**Arc Model Enhancement**
-
-- Added `notes` field for additional campaign information
-- Added `notesText` field for search functionality
-- Updated API endpoints to handle notes CRUD operations
-
-### Global State Management
-
-**App Store Updates**
-
-```typescript
-// New mode state in appStore.ts
-interface IAppState {
-  // ... existing state
-  mode: 'edit' | 'view'
-  setMode: (mode: 'edit' | 'view') => void
-}
-```
-
-### Import Path Updates
-
-Update your imports when working with these components:
-
-```typescript
-// Old import paths
-import MarkdownEditor from '@components/app/components/editor/editor'
-import { CustomEditor } from '@components/app/components/editor/custom-types'
-
-// New import paths
-import MarkdownEditor from '@components/app/components/slate-handling/editor'
-import SlateViewer from '@components/app/components/slate-handling/viewer'
-import { CustomEditor } from '@components/app/components/slate-handling/custom-types'
-```
-
-### CSS and Theming Changes
-
-**Removed Dark Mode**
-
-- Eliminated `.dark` CSS classes and variables
-- Removed theme toggle functionality
-- Simplified CSS custom properties
-
-**Added D&D Theme System**
-
-- New CSS custom properties for D&D colors
-- Font declarations for official D&D typography
-- Component styling classes (`.dnd-content`, `.dnd-statblock`, etc.)
-
-### Migration Guide for Contributors
-
-1. **Update Import Statements**
-
-   ```bash
-   # Find and replace editor imports
-   find src -name "*.tsx" -o -name "*.ts" | xargs sed -i 's|@components/app/components/editor/|@components/app/components/slate-handling/|g'
-   ```
-
-2. **Remove Theme Toggle References**
-
-   - Remove any references to `RThemeToggle` or `theme-toggle.astro`
-   - Replace with `ModeToggle` component where appropriate
-
-3. **Update CSS Classes**
-
-   - Remove `.dark:` prefixed classes
-   - Use D&D theme classes for new components
-
-4. **Database Migrations**
-   - Run latest migrations to add `notes` and `notesText` fields
-   - Update any arc-related queries to handle new fields
-
-## Prerequisites
-
-- **Node.js** (v18 or higher)
-- **Yarn** (recommended) or npm
-- **Git**
-
-## Initial Setup
-
-1. **Clone the repository**
-
-   ```bash
-   git clone <repository-url>
-   cd arc-aide
-   ```
-
-2. **Install dependencies**
-
-   ```bash
-   yarn install
-   # or
-   npm install
-   ```
-
-3. **Environment setup**
-
-   ```bash
-   cp .env.example .env
-   ```
-
-   Configure the following environment variables:
-
-   ```bash
-   # Database
-   TURSO_DATABASE_URL="file:local.db"
-   TURSO_AUTH_TOKEN=""
-
-   # Authentication
-   BETTER_AUTH_SECRET="your-auth-secret"
-   BETTER_AUTH_URL="http://localhost:4321"
-
-   # Email (optional for local development)
-   RESEND_API_KEY=""
-
-   # Analytics & Monitoring (optional for local development)
-   PUBLIC_HONEYBADGER_KEY=""
-   PUBLIC_POSTHOG_KEY=""
-   PUBLIC_POSTHOG_HOST=""
-   ```
-
-4. **Database setup**
-
-   ```bash
-   yarn migrate:db
-   ```
-
-5. **Start development server**
-   ```bash
-   yarn dev
-   ```
-
-Your application will be available at `http://localhost:4321`
-
-## Key Dependencies
+:::note[Technology Choices]
+Our technology stack is carefully chosen to provide type safety, performance, and developer experience while building a scalable D&D campaign management platform.
+:::
 
 ### Core Framework
 
@@ -171,9 +35,8 @@ Your application will be available at `http://localhost:4321`
 ### Rich Text Editing
 
 - **Slate.js** - Highly customizable rich text editor framework
+- **Prism.js** - Markdown styling and syntax highlighting
 - **Showdown** - Markdown to HTML conversion
-- **@slate-serializers/html** - Slate.js HTML serialization
-- **Prism.js** - Syntax highlighting for code blocks
 
 ### UI Components
 
@@ -182,6 +45,10 @@ Your application will be available at `http://localhost:4321`
 - **Tailwind Merge** - Utility for merging Tailwind classes
 
 ### Authentication & Analytics
+
+:::caution[Third-Party Services]
+These services require proper configuration and API keys for full functionality.
+:::
 
 - **Better Auth** - Modern authentication library
 - **PostHog** - Product analytics and feature flags
@@ -215,6 +82,11 @@ src/
 │   │   ├── screens/     # Page-level components
 │   │   └── stores/      # Global state management
 │   └── ui/              # Reusable UI components
+├── docs/               # Documentation files
+│   ├── change-log/     # Change log entries
+|   |   ├── {yyyy-mm-dd-v0.0.0}/     # Individual change log files
+│   ├── developers/     # Developer guides and references
+│   ├── user-guide/     # User-facing documentation
 ├── layouts/             # Astro layouts
 ├── lib/                 # Utilities and configurations
 │   ├── auth/           # Authentication setup
@@ -225,6 +97,7 @@ src/
 ├── pages/              # Astro pages and API routes
 │   ├── api/            # API endpoints
 │   ├── auth/           # Authentication pages
+│   ├── docs/           # Public documentation pages
 │   └── dashboard/      # Dashboard pages
 └── styles/             # Global styles
 ```
@@ -359,7 +232,7 @@ While there a some exceptions, these should be rare and justified - using commen
 
 ### Naming Conventions
 
-- **Components**: PascalCase (`UserProfile.tsx`)
+- **Components**: PascalCase (`function UserProfile()`)
 - **Files**: kebab-case (`user-profile.tsx`)
 - **Variables/Functions**: camelCase (`getUserProfile`)
 - **Constants**: SCREAMING_SNAKE_CASE (`API_BASE_URL`)
@@ -408,58 +281,34 @@ The project uses several TypeScript path aliases for cleaner imports:
 - `@stores/*` - Global state management (Zustand stores)
 - `@utils/*` - Utility functions
 
-For detailed component organization and architecture patterns, see [Architecture documentation](./architecture.md).
-
 ### Data Fetching Hooks
 
-The project uses React Query for data fetching with custom hooks. Recent updates have simplified and improved the hook APIs:
+The project uses React Query for data fetching with custom hooks. Each different domain has its own hook file, which is imported from `@hooks/`. Within that file, you have some direct access functions, and some factory functions for creating hooks - this is for queries that need parameters, usually single-entity queries.
 
 ```tsx
-// Hook naming convention: use[Entity]Query or use[Entity]Queries
-const { useArcQuery, createArc, modifyArc } = useArcQueries()
-const { useSearchQuery } = useSearchQueries()
+// Hook naming convention: use[Entity]Queries()
+const { useArcQuery, createArc, arcsQuery } = useArcQueries()
+const { thingsQuery, modifyThing } = useThingQueries()
 
-// Updated Thing hooks - now with parameter object for better flexibility
-const { useThingsQuery } = useThingQueries()
+// For the factory functions, they should be used like this:
+const arcQuery = useArcQuery(arcId)
 
-// Usage examples:
-const arcQuery = useArcQuery(arcSlug)
-const searchResults = useSearchQuery(searchTerm, 'thing')
+// So now, we have access to all queries, and the now follow the same pattern.
+const { data: arc, isLoading: isArcLoading } = arcQuery
+const { data: arcs, isLoading: areArcsLoading } = arcsQuery
 
-// Things query with new parameter object API
-const thingsQuery = useThingsQuery({ count: 20 }) // Paginated
-const allThingsQuery = useThingsQuery({ fetchAll: true }) // All things
-
-// Thing Types query - simplified API using campaign from store
-const { thingTypesQuery } = useThingTypeQueries()
-// No need to pass campaignSlug - automatically uses current campaign
-```
-
-**Hook API Improvements:**
-
-- **useThingsQuery**: Now accepts parameter object `{ count: number }` or `{ fetchAll: true }`
-- **useThingTypeQueries**: Simplified to return `thingTypesQuery` directly (no function call needed)
-- **Automatic Campaign Context**: Hooks now automatically use campaign from app store where applicable
-- **Better Type Safety**: Improved TypeScript types for all hook responses
-
-**Migration Notes:**
-
-```tsx
-// Before (deprecated)
-const thingTypes = useThingTypesQuery(campaignSlug!)
-const things = useThingsQuery(20)
-
-// After (current)
-const { thingTypesQuery } = useThingTypeQueries()
-const thingsQuery = useThingsQuery({ count: 20 })
+// And we can use mutations like this:
+function handleUpdateArc(updatedArc: TArc) {
+  modifyArc.mutate(updatedArc)
+}
 ```
 
 ### Rich Text Editor (Slate.js)
 
-The project uses Slate.js for rich text editing with markdown support. See the [Architecture documentation](./architecture.md) for detailed component information and the [Search documentation](./search.md) for search-related functionality.
+The project uses Slate.js for rich text editing with markdown support:
 
 ```tsx
-import MarkdownEditor from '@components/app/components/editor/editor'
+import MarkdownEditor from '@components/app/components/slate-handling/editor'
 
 // Usage
 ;<MarkdownEditor
@@ -468,8 +317,6 @@ import MarkdownEditor from '@components/app/components/editor/editor'
   height='md' // 'sm' | 'md' | 'lg'
 />
 ```
-
-Content conversion utilities are documented in the [Architecture guide](./architecture.md#rich-text-content-management).
 
 ## Database Development
 
@@ -509,41 +356,3 @@ Run quality checks:
 yarn qa        # Check all
 yarn qa:fix    # Fix auto-fixable issues
 ```
-
-## Common Issues
-
-### Database Connection Issues
-
-- Ensure `TURSO_DATABASE_URL` is set correctly
-- For local development, use `file:local.db`
-- Run `yarn migrate:db` if tables are missing
-
-### Authentication Issues
-
-- Verify `BETTER_AUTH_SECRET` is set
-- Check `BETTER_AUTH_URL` matches your local URL
-- Clear browser cookies if login fails
-
-### Build Issues
-
-- Clear `.astro` directory: `rm -rf .astro`
-- Reinstall dependencies: `rm -rf node_modules && yarn install`
-- Check for TypeScript errors: `yarn build`
-
-### Rich Text Editor Issues
-
-- If Slate.js content appears malformed, check the initial value structure
-- Ensure `slateToPlainText` is used for search indexing, not raw JSON
-- For display purposes, use `slateToHtml` to properly render markdown content
-
-### Search Functionality Issues
-
-- Search results not appearing: Check that content has been properly indexed with `descriptionText`, `hookText`, etc.
-- Spell correction not working: Ensure the spellfix extension is properly loaded in your SQLite setup
-- Performance issues: Consider adding more specific search types (`thing`, `arc`) instead of using `any`
-
-### Component Import Issues
-
-- Use the TypeScript path aliases (`@stores/`, `@hooks/`, etc.) instead of relative imports
-- If imports fail, check that the alias is defined in `tsconfig.json`
-- Ensure component files follow the naming convention (kebab-case files, PascalCase exports)
