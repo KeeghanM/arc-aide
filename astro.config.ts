@@ -68,6 +68,9 @@ export default defineConfig({
   ],
   vite: {
     plugins: [tailwindcss()], // Use Tailwind CSS for styling
+    ssr: {
+      noExternal: ['zod'],
+    },
   },
   adapter: node({
     mode: 'standalone', // Run on a Node.js server, can be swapped to another adapter for different environments
