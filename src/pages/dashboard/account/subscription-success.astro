@@ -80,15 +80,23 @@ import MainLayout from '@layouts/main-layout.astro'
   function updateStatus(type: 'success' | 'error', message: string) {
     const statusEl = document.getElementById('activation-status')
     if (statusEl) {
+      // Remove all children
+      statusEl.textContent = '';
       if (type === 'success') {
-        statusEl.innerHTML =
-          '<p class="text-green-600 text-sm font-medium">' +
-          message +
-          '</p>' +
-          '<p class="text-muted-foreground text-sm">You should receive a confirmation email shortly.</p>'
+        const successMsg = document.createElement('p');
+        successMsg.className = 'text-green-600 text-sm font-medium';
+        successMsg.textContent = message;
+        statusEl.appendChild(successMsg);
+
+        const infoMsg = document.createElement('p');
+        infoMsg.className = 'text-muted-foreground text-sm';
+        infoMsg.textContent = 'You should receive a confirmation email shortly.';
+        statusEl.appendChild(infoMsg);
       } else {
-        statusEl.innerHTML =
-          '<p class="text-red-600 text-sm font-medium">' + message + '</p>'
+        const errorMsg = document.createElement('p');
+        errorMsg.className = 'text-red-600 text-sm font-medium';
+        errorMsg.textContent = message;
+        statusEl.appendChild(errorMsg);
       }
     }
   }
