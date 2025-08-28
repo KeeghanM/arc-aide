@@ -34,10 +34,7 @@ export const POST: APIRoute = async ({ request }) => {
     )
 
     // User must have an active premium subscription to add add-ons
-    if (
-      !subscriptionStatus.hasActiveSubscription ||
-      subscriptionStatus.baseTier !== 'premium'
-    ) {
+    if (!subscriptionStatus.hasActiveSubscription) {
       return new Response(
         'Must have active premium subscription to add add-ons',
         {
@@ -47,9 +44,14 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     // Check if they already have this add-on
-    const addonName = addonId.replace('-monthly', '')
-    if (subscriptionStatus.activeAddons.includes(addonName)) {
-      return new Response('Add-on already active', { status: 400 })
+    if (
+      (addonId === 'ai-monthly' && subscriptionStatus.features.hasAI) ||
+      (addonId === 'publishing-monthly' &&
+        subscriptionStatus.features.hasPublishing)
+    ) {
+      return new Response('Already has addon', {
+        status: 400,
+      })
     }
 
     // Add the add-on subscription
@@ -78,6 +80,52 @@ export const POST: APIRoute = async ({ request }) => {
       JSON.stringify({
         success: false,
         message: 'Failed to add add-on. Please try again.',
+      }),
+      {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' },
+      }
+    )
+  }
+}
+
+export const DELETE: APIRoute = async ({ request }) => {
+  try {
+    const session = await auth.api.getSession({ headers: request.headers })
+    if (!session?.user) {
+      return new Response('Unauthorized', { status: 401 })
+    }
+
+    const { addonId }: { addonId: TPlanId } = await request.json()
+
+    if (!addonId) {
+      return new Response('Missing addon ID', { status: 400 })
+    }
+
+    // Verify the addon is one we support
+    if (!['ai-monthly', 'publishing-monthly'].includes(addonId)) {
+      return new Response('Invalid addon ID', { status: 400 })
+    }
+
+    // Cancel the specific add-on subscription
+    await killBillClient.cancelSubscriptionByType(session.user.id, addonId)
+
+    return new Response(
+      JSON.stringify({
+        success: true,
+        message: `${addonId.replace('-monthly', '')} add-on canceled successfully`,
+      }),
+      {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      }
+    )
+  } catch (error) {
+    console.error('Add-on cancellation error:', error)
+    return new Response(
+      JSON.stringify({
+        success: false,
+        message: 'Failed to cancel add-on. Please try again.',
       }),
       {
         status: 500,

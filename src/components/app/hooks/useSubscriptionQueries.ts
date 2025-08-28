@@ -1,6 +1,6 @@
 import type { SubscriptionStatus } from '@lib/killbill/client'
-import { createFeatureManager } from '@lib/killbill/features'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { PUBLIC_STRIPE_PUBLISHABLE_KEY } from 'astro:env/client'
 import { usePostHog } from 'posthog-js/react'
 import { useSyncMutation } from './useSyncMutation'
 
@@ -63,17 +63,54 @@ export function useSubscriptionQueries() {
           }),
         })
 
-        return response.json()
+        const result = await response.json()
+
+        // The subscription endpoint gives us a Stripe SessionID
+        // Which we now need to manually redirect the user to
+        if (window.Stripe && PUBLIC_STRIPE_PUBLISHABLE_KEY) {
+          const stripe = window.Stripe(PUBLIC_STRIPE_PUBLISHABLE_KEY)
+          await stripe.redirectToCheckout({ sessionId: result.sessionId })
+        } else {
+          throw new Error('Stripe not loaded or publishable key missing')
+        }
+
+        return result
       },
       onSuccess: (data) => {
         posthog?.capture('subscription_checkout_created', {
           tier: 'premium-monthly',
           sessionId: data.sessionId,
         })
+        queryClient.invalidateQueries({ queryKey: ['subscription-status'] })
       },
       onError: (error) => {
         posthog?.capture('subscription_checkout_failed', {
           tier: 'premium-monthly',
+          error: error.message,
+        })
+      },
+    },
+    queryClient
+  )
+
+  const cancelPremium = useSyncMutation(
+    {
+      mutationFn: async (): Promise<{ success: boolean; message?: string }> => {
+        const response = await fetch('/api/account/subscription', {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+        })
+
+        return response.json()
+      },
+      onSuccess: (data) => {
+        posthog?.capture('subscription_cancelled', {
+          success: data.success,
+        })
+        queryClient.invalidateQueries({ queryKey: ['subscription-status'] })
+      },
+      onError: (error) => {
+        posthog?.capture('subscription_cancel_failed', {
           error: error.message,
         })
       },
@@ -108,6 +145,35 @@ export function useSubscriptionQueries() {
     },
     queryClient
   )
+
+  const cancelPublishingAddon = useSyncMutation(
+    {
+      mutationFn: async (): Promise<{ success: boolean; message?: string }> => {
+        const response = await fetch('/api/account/subscription-addon', {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ addonId: 'publishing-monthly' }),
+        })
+
+        return response.json()
+      },
+      onSuccess: (data) => {
+        posthog?.capture('subscription_addon_cancelled', {
+          addonId: 'publishing-monthly',
+          success: data.success,
+        })
+        queryClient.invalidateQueries({ queryKey: ['subscription-status'] })
+      },
+      onError: (error) => {
+        posthog?.capture('subscription_addon_cancel_failed', {
+          addonId: 'publishing-monthly',
+          error: error.message,
+        })
+      },
+    },
+    queryClient
+  )
+
   const addAiAddon = useSyncMutation(
     {
       mutationFn: async (): Promise<TAddAddonResponse> => {
@@ -136,11 +202,42 @@ export function useSubscriptionQueries() {
     queryClient
   )
 
+  const cancelAiAddon = useSyncMutation(
+    {
+      mutationFn: async (): Promise<{ success: boolean; message?: string }> => {
+        const response = await fetch('/api/account/subscription-addon', {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ addonId: 'ai-monthly' }),
+        })
+
+        return response.json()
+      },
+      onSuccess: (data) => {
+        posthog?.capture('subscription_addon_cancelled', {
+          addonId: 'ai-monthly',
+          success: data.success,
+        })
+        queryClient.invalidateQueries({ queryKey: ['subscription-status'] })
+      },
+      onError: (error) => {
+        posthog?.capture('subscription_addon_cancel_failed', {
+          addonId: 'ai-monthly',
+          error: error.message,
+        })
+      },
+    },
+    queryClient
+  )
+
   return {
     subscriptionStatusQuery,
     upgradeToPremium,
+    cancelPremium,
     addPublishingAddon,
+    cancelPublishingAddon,
     addAiAddon,
+    cancelAiAddon,
 
     // Computed values
     hasActiveSubscription:
@@ -154,8 +251,5 @@ export function useSubscriptionQueries() {
       hasPublishing: false,
       hasAI: false,
     },
-
-    // Feature manager for easy feature checking
-    featureManager: createFeatureManager(subscriptionStatusQuery.data),
   }
 }

@@ -8,8 +8,11 @@ function Manager() {
   const {
     subscriptionStatusQuery,
     upgradeToPremium,
+    cancelPremium,
     addPublishingAddon,
+    cancelPublishingAddon,
     addAiAddon,
+    cancelAiAddon,
     baseTier,
     activeAddons,
     features,
@@ -149,48 +152,61 @@ function Manager() {
           )}
 
           {/* Feature Summary */}
-          <div className='space-y-2'>
-            <h4 className='font-medium'>Your Features</h4>
-            <div className='grid gap-2 text-sm'>
-              <div
-                className={`flex items-center gap-2 ${features.hasPremium ? 'text-green-600' : 'text-muted-foreground'}`}
-              >
-                {features.hasPremium ? <CheckCircle /> : <CircleX />} Premium
-                Features
-              </div>
-              <div
-                className={`flex items-center gap-2 ${features.hasPublishing ? 'text-green-600' : 'text-muted-foreground'}`}
-              >
-                {features.hasPublishing ? <CheckCircle /> : <CircleX />}{' '}
-                Publishing Tools
-              </div>
-              <div
-                className={`flex items-center gap-2 ${features.hasAI ? 'text-green-600' : 'text-muted-foreground'}`}
-              >
-                {features.hasAI ? <CheckCircle /> : <CircleX />} AI-Powered
-                Features
+          <div className='grid grid-cols-1 md:grid-cols-2'>
+            <div className='space-y-2'>
+              <h4 className='font-medium'>Your Features</h4>
+              <div className='grid gap-2 text-sm'>
+                <div
+                  className={`flex items-center gap-2 ${features.hasPremium ? 'text-green-600' : 'text-muted-foreground'}`}
+                >
+                  {features.hasPremium ? <CheckCircle /> : <CircleX />} Premium
+                  Features
+                  {features.hasPremium && (
+                    <Button
+                      variant='link'
+                      size='sm'
+                      className='m-0 ml-auto p-0 text-red-500'
+                      onClick={() => cancelPremium.mutate()}
+                    >
+                      Cancel
+                    </Button>
+                  )}
+                </div>
+                <div
+                  className={`flex items-center gap-2 ${features.hasPublishing ? 'text-green-600' : 'text-muted-foreground'}`}
+                >
+                  {features.hasPublishing ? <CheckCircle /> : <CircleX />}{' '}
+                  Publishing Tools
+                  {features.hasPublishing && (
+                    <Button
+                      variant='link'
+                      size='sm'
+                      className='m-0 ml-auto p-0 text-red-500'
+                      onClick={() => cancelPublishingAddon.mutate()}
+                    >
+                      Cancel
+                    </Button>
+                  )}
+                </div>
+                <div
+                  className={`flex items-center gap-2 ${features.hasAI ? 'text-green-600' : 'text-muted-foreground'}`}
+                >
+                  {features.hasAI ? <CheckCircle /> : <CircleX />} AI-Powered
+                  Features
+                  {features.hasAI && (
+                    <Button
+                      variant='link'
+                      size='sm'
+                      className='m-0 ml-auto p-0 text-red-500'
+                      onClick={() => cancelAiAddon.mutate()}
+                    >
+                      Cancel
+                    </Button>
+                  )}
+                </div>
               </div>
             </div>
           </div>
-
-          {/* Show active subscriptions */}
-          {subscriptionStatusQuery.data?.subscriptions &&
-            subscriptionStatusQuery.data.subscriptions.length > 0 && (
-              <div className='space-y-2'>
-                <h4 className='font-medium'>Subscription Details</h4>
-                {subscriptionStatusQuery.data.subscriptions.map(
-                  (sub, index) => (
-                    <div
-                      key={index}
-                      className='text-muted-foreground text-sm'
-                    >
-                      {sub.productName} - {sub.state}
-                      {sub.phaseType === 'TRIAL' && ' (Trial)'}
-                    </div>
-                  )
-                )}
-              </div>
-            )}
         </div>
       </Card>
     </div>

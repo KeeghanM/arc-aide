@@ -294,6 +294,58 @@ class KillBillClient {
     return response.data
   }
 
+  // Cancel subscription by subscription ID
+  private async cancelSubscription(subscriptionId: string): Promise<void> {
+    await killBillSubscriptionApi.cancelSubscriptionPlan(
+      subscriptionId,
+      this.auditData.user,
+      undefined, // requestedDate
+      true, // callCompletion
+      20, // callTimeoutSec
+      'IMMEDIATE', // entitlementPolicy
+      'IMMEDIATE', // billingPolicy
+      undefined, // useRequestedDateForBilling
+      undefined, // pluginProperty
+      this.auditData.reason, // xKillbillReason
+      this.auditData.comment // xKillbillComment
+    )
+  }
+
+  // Cancel specific add-on subscription
+  async cancelSubscriptionByType(
+    userExternalKey: string,
+    planId: TPlanId
+  ): Promise<void> {
+    const account = await this.findAccountByExternalKey(userExternalKey)
+    if (!account) {
+      throw new Error('Account not found')
+    }
+
+    const bundlesResponse = await killBillAccountApi.getAccountBundles(
+      account.accountId
+    )
+    const productName = PRODUCTS[planId as keyof typeof PRODUCTS]
+
+    for (const bundle of bundlesResponse.data) {
+      if (bundle.subscriptions) {
+        for (const sub of bundle.subscriptions) {
+          if (
+            sub.state === 'ACTIVE' &&
+            sub.productName
+              ?.toLowerCase()
+              .includes(productName.toLowerCase()) &&
+            sub.subscriptionId
+          ) {
+            await this.cancelSubscription(sub.subscriptionId)
+            return
+          }
+        }
+      }
+    }
+
+    throw new Error(`No active ${productName} subscription found`)
+  }
+
   // Complete charge process (equivalent to charge function in Ruby)
   async charge(
     accountId: string,

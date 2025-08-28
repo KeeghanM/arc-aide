@@ -9,7 +9,7 @@ export const POST: APIRoute = async ({ request }) => {
       return new Response('Unauthorized', { status: 401 })
     }
 
-    const { action, tier } = await request.json()
+    const { action } = await request.json()
 
     if (action === 'create_checkout') {
       // Check if user already has a subscription
@@ -17,35 +17,15 @@ export const POST: APIRoute = async ({ request }) => {
         session.user.id
       )
 
-      // If user has an active subscription and is trying to add an add-on,
-      // suggest using the direct add-on flow instead
-      if (
-        subscriptionStatus.hasActiveSubscription &&
-        subscriptionStatus.baseTier === 'premium' &&
-        ['ai-monthly', 'publishing-monthly'].includes(tier)
-      ) {
-        return new Response(
-          JSON.stringify({
-            error: 'USE_ADDON_FLOW',
-            message:
-              'You already have an active subscription. Add-ons can be added directly without checkout.',
-            addonId: tier,
-          }),
-          {
-            status: 400,
-            headers: { 'Content-Type': 'application/json' },
-          }
-        )
+      if (subscriptionStatus.hasActiveSubscription) {
+        return new Response('Account already subscribed', { status: 400 })
       }
 
-      // Find or create Kill Bill account (following Ruby example)
       const kbAccount = await killBillClient.findOrCreateAccount(
         session.user.id,
         session.user.name || 'User',
         session.user.email
       )
-
-      // Create Stripe session using KillBill plugin (following Ruby example)
       const baseUrl = new URL(request.url).origin
       const successUrl = `${baseUrl}/dashboard/account/subscription-success?kbAccountId=${kbAccount.accountId}&sessionId={CHECKOUT_SESSION_ID}`
 
@@ -69,5 +49,43 @@ export const POST: APIRoute = async ({ request }) => {
   } catch (error) {
     console.error('Subscription API error:', error)
     return new Response('Internal server error', { status: 500 })
+  }
+}
+
+export const DELETE: APIRoute = async ({ request }) => {
+  try {
+    const session = await auth.api.getSession({ headers: request.headers })
+    if (!session?.user) {
+      return new Response('Unauthorized', { status: 401 })
+    }
+
+    // This automatically also cancels the addons
+    await killBillClient.cancelSubscriptionByType(
+      session.user.id,
+      'premium-monthly'
+    )
+
+    return new Response(
+      JSON.stringify({
+        success: true,
+        message: 'All subscriptions canceled successfully',
+      }),
+      {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      }
+    )
+  } catch (error) {
+    console.error('Subscription cancellation error:', error)
+    return new Response(
+      JSON.stringify({
+        success: false,
+        message: 'Failed to cancel subscription. Please try again.',
+      }),
+      {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' },
+      }
+    )
   }
 }
