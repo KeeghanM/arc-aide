@@ -113,7 +113,8 @@ class KillBillClient {
         name: response.data.name!,
         email: response.data.email!,
       }
-    } catch {
+    } catch (error) {
+      console.error('Error in findAccountByExternalKey:', error)
       return null
     }
   }
