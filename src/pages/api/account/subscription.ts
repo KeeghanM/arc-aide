@@ -12,27 +12,25 @@ export const POST: APIRoute = async ({ request }) => {
     const { action, tier: _tier } = await request.json()
 
     if (action === 'create_checkout') {
-      // Find or create Kill Bill account
+      // Find or create Kill Bill account (following Ruby example)
       const kbAccount = await killBillClient.findOrCreateAccount(
         session.user.id,
         session.user.name || 'User',
         session.user.email
       )
 
-      // Create Stripe checkout session
+      // Create Stripe session using KillBill plugin (following Ruby example)
       const baseUrl = new URL(request.url).origin
       const successUrl = `${baseUrl}/dashboard/account/subscription-success?kbAccountId=${kbAccount.accountId}&sessionId={CHECKOUT_SESSION_ID}`
-      const cancelUrl = `${baseUrl}/dashboard/account`
 
-      const stripeSession = await killBillClient.createStripeCheckoutSession(
+      const sessionId = await killBillClient.createSession(
         kbAccount.accountId,
-        successUrl,
-        cancelUrl
+        successUrl
       )
 
       return new Response(
         JSON.stringify({
-          sessionId: stripeSession.sessionId,
+          sessionId: sessionId,
           accountId: kbAccount.accountId,
         }),
         {
