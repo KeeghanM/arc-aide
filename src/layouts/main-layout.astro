@@ -32,6 +32,7 @@ const { title, seo } = Astro.props as Props
     <SEO {...seo} />
     <PostHog />
     <HoneyBadger />
+    <script src='https://js.stripe.com/v3/'></script>
   </Head>
   <body class='bg-background text-foreground'>
     <slot />

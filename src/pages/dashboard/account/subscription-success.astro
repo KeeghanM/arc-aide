@@ -1,0 +1,106 @@
+---
+import MainLayout from '@layouts/main-layout.astro'
+---
+
+<MainLayout title='Subscription Success'>
+  <div class='container mx-auto py-8'>
+    <div class='mx-auto max-w-2xl space-y-6 text-center'>
+      <div
+        id='activation-status'
+        class='space-y-4'
+      >
+        <p class='text-muted-foreground text-sm'>
+          Processing your subscription...
+        </p>
+      </div>
+
+      <div class='flex justify-center gap-4'>
+        <a
+          href='/dashboard/account'
+          class='bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium'
+        >
+          View Account
+        </a>
+        <a
+          href='/dashboard'
+          class='border-input bg-background hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center rounded-md border px-4 py-2 text-sm font-medium'
+        >
+          Go to Dashboard
+        </a>
+      </div>
+    </div>
+  </div>
+</MainLayout>
+
+<script>
+  async function completeSubscription() {
+    const urlParams = new URLSearchParams(window.location.search)
+    const sessionId = urlParams.get('sessionId')
+    const kbAccountId = urlParams.get('kbAccountId')
+
+    if (!sessionId || !kbAccountId) {
+      console.error('Missing required parameters')
+      updateStatus(
+        'error',
+        'Missing subscription parameters. Please contact support.'
+      )
+      return
+    }
+
+    try {
+      const response = await fetch('/api/account/subscription-complete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId, kbAccountId }),
+      })
+
+      const result = await response.json()
+
+      if (response.ok) {
+        updateStatus(
+          'success',
+          'Your subscription has been activated successfully!'
+        )
+      } else {
+        updateStatus(
+          'error',
+          result.message ||
+            'Failed to activate subscription. Please contact support.'
+        )
+      }
+    } catch (error) {
+      console.error('Subscription completion error:', error)
+      updateStatus(
+        'error',
+        'Failed to activate subscription. Please contact support.'
+      )
+    }
+  }
+
+  function updateStatus(type: 'success' | 'error', message: string) {
+    const statusEl = document.getElementById('activation-status')
+    if (statusEl) {
+      // Remove all children
+      statusEl.textContent = '';
+      if (type === 'success') {
+        const successMsg = document.createElement('p');
+        successMsg.className = 'text-green-600 text-sm font-medium';
+        successMsg.textContent = message;
+        statusEl.appendChild(successMsg);
+
+        const infoMsg = document.createElement('p');
+        infoMsg.className = 'text-muted-foreground text-sm';
+        infoMsg.textContent = 'You should receive a confirmation email shortly.';
+        statusEl.appendChild(infoMsg);
+      } else {
+        const errorMsg = document.createElement('p');
+        errorMsg.className = 'text-red-600 text-sm font-medium';
+        errorMsg.textContent = message;
+        statusEl.appendChild(errorMsg);
+      }
+    }
+  }
+
+  // Run on page load
+  completeSubscription()
+</script>

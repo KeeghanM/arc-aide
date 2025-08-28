@@ -87,7 +87,6 @@ export const DELETE: APIRoute = async ({ request, params }) => {
       !campaignSlug ||
       !z.string().nonempty().safeParse(campaignSlug).success
     ) {
-      console.log('Invalid campaign slug:', campaignSlug)
       return new Response(JSON.stringify({ error: 'Invalid campaign slug' }), {
         status: 400,
       })

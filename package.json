@@ -1,7 +1,7 @@
 {
   "name": "arc-aide",
   "type": "module",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
@@ -16,13 +16,9 @@
     "qa": "yarn qa:stylelint && yarn qa:prettier && yarn qa:eslint",
     "qa:fix": "yarn qa:stylelint:fix && yarn qa:prettier:fix && yarn qa:eslint:fix",
     "prepare": "husky",
-    "docs": "git diff --color ':!*.lock' > git-diff.txt",
-    "generate:migration:hygraph": "node --import 'data:text/javascript,import { register } from \"node:module\"; import { pathToFileUrl } from \"node:url\"; register(\"ts-node/esm\", pathToFileUrl(\"./\"));' src/lib/hygraph/generate-migration.ts",
-    "push:migration:hygraph": "node --import 'data:text/javascript,import { register } from \"node:module\"; import { pathToFileUrl } from \"node:url\"; register(\"ts-node/esm\", pathToFileUrl(\"./\"));' src/lib/hygraph/migration-runner.ts",
+    "docs": "git log main..HEAD --pretty=format:'%ad:: %s' > git-diff.txt && echo '\n----------\n' >> git-diff.txt && git diff origin/main...HEAD --color ':!*.lock' >> git-diff.txt",
     "pull:graphql-schema": "npx graphql-codegen --config codegen.ts",
-    "generate:typed-graphql": "npx typed-graphql-builder --schema ./src/lib/hygraph/graphql/schema.graphql --output ./src/lib/graphql-api.ts",
-    "migrate:db": "drizzle-kit generate && drizzle-kit migrate",
-    "migrate:hygraph": "yarn push:migration:hygraph && yarn pull:graphql-schema && yarn generate:typed-graphql"
+    "migrate:db": "drizzle-kit generate && drizzle-kit migrate"
   },
   "dependencies": {
     "@astrojs/node": "^9.2.2",
@@ -50,11 +46,13 @@
     "astro-robots-txt": "^1.0.0",
     "astro-seo": "^0.8.4",
     "astro-seo-schema": "^5.0.0",
+    "axios": "^1.11.0",
     "better-auth": "^1.2.8",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "debounce": "^2.2.0",
     "drizzle-orm": "^0.44.2",
+    "killbill": "^0.24.0",
     "lucide-react": "^0.513.0",
     "p-debounce": "^4.0.0",
     "p-throttle": "^7.0.0",
@@ -87,7 +85,6 @@
     "@graphql-codegen/schema-ast": "^4.1.0",
     "@graphql-tools/url-loader": "^8.0.31",
     "@graphql-typed-document-node/core": "^3.2.0",
-    "@hygraph/management-sdk": "^1.4.0",
     "@iconify-json/lucide": "^1.2.47",
     "@types/jsdom": "^21.1.7",
     "@types/showdown": "^2.0.6",

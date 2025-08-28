@@ -52,4 +52,39 @@ export const envDefinition = {
     access: 'secret',
     optional: false,
   }),
+  KILLBILL_URL: envField.string({
+    context: 'server',
+    access: 'secret',
+    optional: false,
+  }),
+  KILLBILL_USERNAME: envField.string({
+    context: 'server',
+    access: 'secret',
+    optional: false,
+  }),
+  KILLBILL_PASSWORD: envField.string({
+    context: 'server',
+    access: 'secret',
+    optional: false,
+  }),
+  KILLBILL_API_KEY: envField.string({
+    context: 'server',
+    access: 'secret',
+    optional: false,
+  }),
+  KILLBILL_API_SECRET: envField.string({
+    context: 'server',
+    access: 'secret',
+    optional: false,
+  }),
+  STRIPE_SECRET_KEY: envField.string({
+    context: 'server',
+    access: 'secret',
+    optional: false,
+  }),
+  PUBLIC_STRIPE_PUBLISHABLE_KEY: envField.string({
+    context: 'client',
+    access: 'public',
+    optional: false,
+  }),
 }
