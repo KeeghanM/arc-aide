@@ -1,7 +1,6 @@
 import type { SubscriptionStatus } from '@lib/killbill/client'
 import { createFeatureManager } from '@lib/killbill/features'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { PUBLIC_STRIPE_PUBLISHABLE_KEY } from 'astro:env/client'
 import { usePostHog } from 'posthog-js/react'
 import { useSyncMutation } from './useSyncMutation'
 
@@ -14,14 +13,19 @@ declare global {
   }
 }
 
-export interface CreateCheckoutRequest {
-  action: 'create_checkout'
-  tier: string
-}
-
-export interface CreateCheckoutResponse {
+export type TUpgradeToPremiumResponse = {
   sessionId: string
   accountId: string
+}
+
+export type TAddAddonResponse = {
+  success: boolean
+  subscription?: {
+    subscriptionId: string
+    productName: string
+    state: string
+  }
+  message?: string
 }
 
 /**
@@ -39,11 +43,7 @@ export function useSubscriptionQueries() {
     queryKey: ['subscription-status'],
     queryFn: async (): Promise<SubscriptionStatus> => {
       const response = await fetch('/api/account/subscription-status')
-      if (!response.ok) {
-        throw new Error(
-          `Failed to fetch subscription status: ${response.status}`
-        )
-      }
+
       return response.json()
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
@@ -51,32 +51,29 @@ export function useSubscriptionQueries() {
   })
 
   // --- Mutations ---
-  const createCheckout = useSyncMutation(
+  const upgradeToPremium = useSyncMutation(
     {
-      mutationFn: async (
-        data: CreateCheckoutRequest
-      ): Promise<CreateCheckoutResponse> => {
+      mutationFn: async (): Promise<TUpgradeToPremiumResponse> => {
         const response = await fetch('/api/account/subscription', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data),
+          body: JSON.stringify({
+            action: 'create_checkout',
+            tier: 'premium-monthly',
+          }),
         })
-
-        if (!response.ok) {
-          throw new Error(`Failed to create checkout: ${response.status}`)
-        }
 
         return response.json()
       },
-      onSuccess: (data, variables) => {
+      onSuccess: (data) => {
         posthog?.capture('subscription_checkout_created', {
-          tier: variables.tier,
+          tier: 'premium-monthly',
           sessionId: data.sessionId,
         })
       },
-      onError: (error, variables) => {
+      onError: (error) => {
         posthog?.capture('subscription_checkout_failed', {
-          tier: variables.tier,
+          tier: 'premium-monthly',
           error: error.message,
         })
       },
@@ -84,44 +81,66 @@ export function useSubscriptionQueries() {
     queryClient
   )
 
-  // --- Helper functions ---
-  const refreshSubscriptionStatus = () => {
-    queryClient.invalidateQueries({ queryKey: ['subscription-status'] })
-  }
+  const addPublishingAddon = useSyncMutation(
+    {
+      mutationFn: async (): Promise<TAddAddonResponse> => {
+        const response = await fetch('/api/account/subscription-addon', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ addonId: 'publishing-monthly' }),
+        })
 
-  const startCheckout = async (tier: string) => {
-    try {
-      const result = await createCheckout.mutateAsync({
-        action: 'create_checkout',
-        tier,
-      })
-      if (window.Stripe && PUBLIC_STRIPE_PUBLISHABLE_KEY) {
-        const stripe = window.Stripe(PUBLIC_STRIPE_PUBLISHABLE_KEY)
-        await stripe.redirectToCheckout({ sessionId: result.sessionId })
-      } else {
-        throw new Error('Stripe not loaded or publishable key missing')
-      }
+        return response.json()
+      },
+      onSuccess: (data) => {
+        posthog?.capture('subscription_addon_added', {
+          addonId: 'publishing-monthly',
+          success: data.success,
+        })
+        queryClient.invalidateQueries({ queryKey: ['subscription-status'] })
+      },
+      onError: (error) => {
+        posthog?.capture('subscription_addon_failed', {
+          addonId: 'publishing-monthly',
+          error: error.message,
+        })
+      },
+    },
+    queryClient
+  )
+  const addAiAddon = useSyncMutation(
+    {
+      mutationFn: async (): Promise<TAddAddonResponse> => {
+        const response = await fetch('/api/account/subscription-addon', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ addonId: 'ai-monthly' }),
+        })
 
-      return result
-    } catch (error) {
-      console.error('Checkout error:', error)
-      throw error
-    }
-  }
+        return response.json()
+      },
+      onSuccess: (data) => {
+        posthog?.capture('subscription_addon_added', {
+          addonId: 'ai-monthly',
+          success: data.success,
+        })
+        queryClient.invalidateQueries({ queryKey: ['subscription-status'] })
+      },
+      onError: (error) => {
+        posthog?.capture('subscription_addon_failed', {
+          addonId: 'ai-monthly',
+          error: error.message,
+        })
+      },
+    },
+    queryClient
+  )
 
   return {
-    // Queries
-    subscriptionStatus: subscriptionStatusQuery.data,
-    isLoadingStatus: subscriptionStatusQuery.isLoading,
-    statusError: subscriptionStatusQuery.error,
-
-    // Mutations
-    createCheckout,
-    isCreatingCheckout: createCheckout.isPending,
-
-    // Helper functions
-    refreshSubscriptionStatus,
-    startCheckout,
+    subscriptionStatusQuery,
+    upgradeToPremium,
+    addPublishingAddon,
+    addAiAddon,
 
     // Computed values
     hasActiveSubscription:

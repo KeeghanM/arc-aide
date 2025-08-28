@@ -47,7 +47,6 @@ export const GET: APIRoute = async ({ request, params }) => {
       )
 
     if (campaignResult.length === 0) {
-      console.log('Campaign not found for slug:', campaignSlug)
       return new Response(JSON.stringify({ error: 'Campaign not found' }), {
         status: 404,
       })
@@ -61,7 +60,6 @@ export const GET: APIRoute = async ({ request, params }) => {
       )
 
     if (arcResult.length === 0) {
-      console.log('Arc not found for ID:', arcId)
       return new Response(JSON.stringify({ error: 'Arc not found' }), {
         status: 404,
       })

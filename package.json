@@ -17,12 +17,8 @@
     "qa:fix": "yarn qa:stylelint:fix && yarn qa:prettier:fix && yarn qa:eslint:fix",
     "prepare": "husky",
     "docs": "git diff --color ':!*.lock' > git-diff.txt",
-    "generate:migration:hygraph": "node --import 'data:text/javascript,import { register } from \"node:module\"; import { pathToFileUrl } from \"node:url\"; register(\"ts-node/esm\", pathToFileUrl(\"./\"));' src/lib/hygraph/generate-migration.ts",
-    "push:migration:hygraph": "node --import 'data:text/javascript,import { register } from \"node:module\"; import { pathToFileUrl } from \"node:url\"; register(\"ts-node/esm\", pathToFileUrl(\"./\"));' src/lib/hygraph/migration-runner.ts",
     "pull:graphql-schema": "npx graphql-codegen --config codegen.ts",
-    "generate:typed-graphql": "npx typed-graphql-builder --schema ./src/lib/hygraph/graphql/schema.graphql --output ./src/lib/graphql-api.ts",
-    "migrate:db": "drizzle-kit generate && drizzle-kit migrate",
-    "migrate:hygraph": "yarn push:migration:hygraph && yarn pull:graphql-schema && yarn generate:typed-graphql"
+    "migrate:db": "drizzle-kit generate && drizzle-kit migrate"
   },
   "dependencies": {
     "@astrojs/node": "^9.2.2",
@@ -89,7 +85,6 @@
     "@graphql-codegen/schema-ast": "^4.1.0",
     "@graphql-tools/url-loader": "^8.0.31",
     "@graphql-typed-document-node/core": "^3.2.0",
-    "@hygraph/management-sdk": "^1.4.0",
     "@iconify-json/lucide": "^1.2.47",
     "@types/jsdom": "^21.1.7",
     "@types/showdown": "^2.0.6",

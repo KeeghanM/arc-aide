@@ -9,9 +9,35 @@ export const POST: APIRoute = async ({ request }) => {
       return new Response('Unauthorized', { status: 401 })
     }
 
-    const { action, tier: _tier } = await request.json()
+    const { action, tier } = await request.json()
 
     if (action === 'create_checkout') {
+      // Check if user already has a subscription
+      const subscriptionStatus = await killBillClient.getSubscriptionStatus(
+        session.user.id
+      )
+
+      // If user has an active subscription and is trying to add an add-on,
+      // suggest using the direct add-on flow instead
+      if (
+        subscriptionStatus.hasActiveSubscription &&
+        subscriptionStatus.baseTier === 'premium' &&
+        ['ai-monthly', 'publishing-monthly'].includes(tier)
+      ) {
+        return new Response(
+          JSON.stringify({
+            error: 'USE_ADDON_FLOW',
+            message:
+              'You already have an active subscription. Add-ons can be added directly without checkout.',
+            addonId: tier,
+          }),
+          {
+            status: 400,
+            headers: { 'Content-Type': 'application/json' },
+          }
+        )
+      }
+
       // Find or create Kill Bill account (following Ruby example)
       const kbAccount = await killBillClient.findOrCreateAccount(
         session.user.id,

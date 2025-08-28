@@ -6,28 +6,17 @@ import ScreenWrapper, { type TScreenWrapperProps } from '../../screen-wrapper'
 
 function Manager() {
   const {
-    subscriptionStatus,
-    isLoadingStatus,
-    statusError,
-    isCreatingCheckout,
-    startCheckout,
+    subscriptionStatusQuery,
+    upgradeToPremium,
+    addPublishingAddon,
+    addAiAddon,
     baseTier,
     activeAddons,
-    isTrialActive,
-    trialEndsAt,
     features,
+    hasActiveSubscription,
   } = useSubscriptionQueries()
 
-  const handleUpgrade = async (tier: string) => {
-    try {
-      await startCheckout(tier)
-    } catch (error) {
-      console.error('Upgrade error:', error)
-      alert('Failed to start checkout process. Please try again.')
-    }
-  }
-
-  if (isLoadingStatus) {
+  if (subscriptionStatusQuery.isLoading) {
     return (
       <div className='space-y-6'>
         <div>
@@ -40,13 +29,30 @@ function Manager() {
     )
   }
 
-  if (statusError) {
+  if (subscriptionStatusQuery.isError) {
     return (
       <div className='space-y-6'>
         <div>
           <h2 className='text-2xl font-bold'>Subscription Management</h2>
           <p className='text-red-600'>
             Failed to load subscription status. Please try again later.
+          </p>
+        </div>
+      </div>
+    )
+  }
+
+  if (
+    upgradeToPremium.isError ||
+    addPublishingAddon.isError ||
+    addAiAddon.isError
+  ) {
+    return (
+      <div className='space-y-6'>
+        <div>
+          <h2 className='text-2xl font-bold'>Subscription Management</h2>
+          <p className='text-red-600'>
+            Something went wrong. Please try again later.
           </p>
         </div>
       </div>
@@ -81,11 +87,6 @@ function Manager() {
                 </span>
               )}
             </p>
-            {isTrialActive && trialEndsAt && (
-              <p className='text-sm text-orange-600'>
-                Trial ends: {new Date(trialEndsAt).toLocaleDateString()}
-              </p>
-            )}
           </div>
 
           {/* Base Plan Upgrade */}
@@ -93,11 +94,11 @@ function Manager() {
             <div className='space-y-3'>
               <h4 className='font-medium'>Upgrade Base Plan</h4>
               <Button
-                onClick={() => handleUpgrade('premium')}
-                disabled={isCreatingCheckout}
+                onClick={() => upgradeToPremium.mutate()}
+                disabled={upgradeToPremium.isPending}
                 className='justify-start'
               >
-                {isCreatingCheckout
+                {upgradeToPremium.isPending
                   ? 'Loading...'
                   : 'Upgrade to Premium - $5/month'}
               </Button>
@@ -109,31 +110,41 @@ function Manager() {
             <div className='space-y-3'>
               <h4 className='font-medium'>Add Features</h4>
               <div className='grid gap-3 md:grid-cols-2'>
-                <Button
-                  onClick={() => handleUpgrade('publishing')}
-                  disabled={isCreatingCheckout || features.hasPublishing}
-                  variant={features.hasPublishing ? 'secondary' : 'outline'}
-                  className='justify-start'
-                >
-                  {features.hasPublishing
-                    ? '✓ Publishing Features'
-                    : isCreatingCheckout
-                      ? 'Loading...'
-                      : 'Add Publishing - $2/month'}
-                </Button>
-                <Button
-                  onClick={() => handleUpgrade('ai')}
-                  disabled={isCreatingCheckout || features.hasAI}
-                  variant={features.hasAI ? 'secondary' : 'outline'}
-                  className='justify-start'
-                >
-                  {features.hasAI
-                    ? '✓ AI Features'
-                    : isCreatingCheckout
-                      ? 'Loading...'
-                      : 'Add AI Features - $5/month'}
-                </Button>
+                {!features.hasPublishing && (
+                  <Button
+                    onClick={() => addPublishingAddon.mutate()}
+                    disabled={addPublishingAddon.isPending}
+                    className='justify-start'
+                  >
+                    {addPublishingAddon.isPending
+                      ? 'Adding...'
+                      : 'Add Publishing Tools - $2/month'}
+                  </Button>
+                )}
+                {!features.hasAI && (
+                  <Button
+                    onClick={() => addAiAddon.mutate()}
+                    disabled={addAiAddon.isPending}
+                    className='justify-start'
+                  >
+                    {addAiAddon.isPending
+                      ? 'Adding...'
+                      : 'Add AI-Powered Features - $5/month'}
+                  </Button>
+                )}
+                {features.hasPublishing && features.hasAI && (
+                  <p className='text-muted-foreground'>
+                    You have all available add-ons.
+                  </p>
+                )}
               </div>
+              {hasActiveSubscription &&
+                !(features.hasPublishing && features.hasAI) && (
+                  <p className='text-muted-foreground text-xs'>
+                    Features will be added to your existing subscription
+                    immediately.
+                  </p>
+                )}
             </div>
           )}
 
@@ -163,19 +174,21 @@ function Manager() {
           </div>
 
           {/* Show active subscriptions */}
-          {subscriptionStatus?.subscriptions &&
-            subscriptionStatus.subscriptions.length > 0 && (
+          {subscriptionStatusQuery.data?.subscriptions &&
+            subscriptionStatusQuery.data.subscriptions.length > 0 && (
               <div className='space-y-2'>
                 <h4 className='font-medium'>Subscription Details</h4>
-                {subscriptionStatus.subscriptions.map((sub, index) => (
-                  <div
-                    key={index}
-                    className='text-muted-foreground text-sm'
-                  >
-                    {sub.productName} - {sub.state}
-                    {sub.phaseType === 'TRIAL' && ' (Trial)'}
-                  </div>
-                ))}
+                {subscriptionStatusQuery.data.subscriptions.map(
+                  (sub, index) => (
+                    <div
+                      key={index}
+                      className='text-muted-foreground text-sm'
+                    >
+                      {sub.productName} - {sub.state}
+                      {sub.phaseType === 'TRIAL' && ' (Trial)'}
+                    </div>
+                  )
+                )}
               </div>
             )}
         </div>

@@ -24,11 +24,13 @@ const killBillSubscriptionApi = new killbill.SubscriptionApi(
   axios
 )
 
-enum PRODUCTS {
+export enum PRODUCTS {
   'premium-monthly' = 'Premium',
   'ai-monthly' = 'AI',
   'publishing-monthly' = 'Publishing',
 }
+
+export type TPlanId = keyof typeof PRODUCTS
 
 export interface SubscriptionStatus {
   hasActiveSubscription: boolean
@@ -217,6 +219,68 @@ class KillBillClient {
 
     const response = await killBillSubscriptionApi.createSubscription(
       subscriptionData,
+      this.auditData.user,
+      undefined, // entitlementDate
+      undefined, // billingDate
+      undefined, // renameKeyIfExistsAndUnused
+      undefined, // migrated
+      undefined, // skipResponse
+      true, // callCompletion
+      20 // callTimeoutSec
+    )
+
+    return response.data
+  }
+
+  // Add add-on to existing subscription
+  async addAddonToSubscription(
+    accountId: string,
+    addonProductId: TPlanId
+  ): Promise<killbill.Subscription> {
+    // First, get the account's bundles to find the base subscription
+    const bundlesResponse =
+      await killBillAccountApi.getAccountBundles(accountId)
+
+    if (!bundlesResponse.data || bundlesResponse.data.length === 0) {
+      throw new Error('No bundles found for account')
+    }
+
+    // Find the bundle with the base subscription (Premium)
+    let baseBundleId: string | undefined
+    for (const bundle of bundlesResponse.data) {
+      if (bundle.subscriptions) {
+        for (const sub of bundle.subscriptions) {
+          if (
+            sub.productName?.toLowerCase().includes('premium') &&
+            sub.state === 'ACTIVE'
+          ) {
+            baseBundleId = bundle.bundleId
+            break
+          }
+        }
+      }
+      if (baseBundleId) break
+    }
+
+    if (!baseBundleId) {
+      throw new Error('No active Premium subscription found')
+    }
+
+    const productName =
+      PRODUCTS[addonProductId as keyof typeof PRODUCTS] || 'AI'
+
+    // Create add-on subscription with both accountId and bundleId
+    const addOnData = {
+      accountId,
+      bundleId: baseBundleId,
+      productName,
+      productCategory: 'ADD_ON' as any,
+      billingPeriod: 'MONTHLY' as any,
+      priceList: 'DEFAULT',
+    } as killbill.Subscription
+
+    const response = await killBillSubscriptionApi.createSubscription(
+      addOnData,
       this.auditData.user,
       undefined, // entitlementDate
       undefined, // billingDate

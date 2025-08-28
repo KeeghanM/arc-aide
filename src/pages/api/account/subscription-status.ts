@@ -13,8 +13,6 @@ export const GET: APIRoute = async ({ request }) => {
       session.user.id
     )
 
-    console.log('Subscription status:', subscriptionStatus)
-
     return new Response(JSON.stringify(subscriptionStatus), {
       headers: { 'Content-Type': 'application/json' },
     })
