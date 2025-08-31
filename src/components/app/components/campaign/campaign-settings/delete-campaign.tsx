@@ -40,7 +40,7 @@ export default function DeleteCampaign() {
     >
       <DialogTrigger asChild>
         <Button
-          className='mt-auto'
+          className='mt-auto mr-auto'
           variant='destructive'
         >
           Delete Campaign

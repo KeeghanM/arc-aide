@@ -1,5 +1,5 @@
 ---
-import { SearchBarWrapper } from '@components/app/components/search-bar/search-bar'
+import NavBar from '@components/app/components/nav-bar/nav-bar'
 import SideBarWrapper from '@components/app/components/side-bar/side-bar'
 import type { TArc } from '@components/app/hooks/useArcQueries'
 import ArcScreen from '@components/app/screens/arc'
@@ -64,7 +64,6 @@ const childArcs = await db
 
 arcData.childArcs = childArcs
 const arc = arcData
-const campaignName = campaignResult[0].name
 
 const things = await db
   .select({ thing })
@@ -76,6 +75,12 @@ const things = await db
 ---
 
 <MainLayout title={arc.name}>
+  <NavBar
+    user={Astro.locals.user}
+    campaignSlug={campaignSlug}
+    client:load
+    transition:persist
+  />
   <div class='flex'>
     <SideBarWrapper
       user={Astro.locals.user}
@@ -84,24 +89,11 @@ const things = await db
       transition:persist
     />
     <main class='flex-1 space-y-6 p-4 md:p-8 lg:p-12'>
-      <div>
-        <a
-          href={`/dashboard/campaign/${campaignSlug}/`}
-          class='text-accent text-lg font-normal hover:italic'
-        >
-          Back to Campaign</a
-        >
-      </div>
       <div class='flex items-baseline gap-6'>
         <h1 class='text-primary text-4xl font-bold md:text-5xl'>
-          {campaignName}: {arc.name}
+          {arc.name}
           <span class='text-lg font-normal'>(Arc)</span>
         </h1>
-        <SearchBarWrapper
-          user={Astro.locals.user}
-          campaignSlug={campaignSlug}
-          client:load
-        />
       </div>
       <div class='grid grid-cols-1 md:grid-cols-[1fr_300px]'>
         <ArcScreen

@@ -12,11 +12,7 @@ import {
 import { Input } from '@components/ui/input'
 import { useCampaignQueries } from '@hooks/useCampaignQueries'
 import { useEffect, useState } from 'react'
-import type { Descendant } from 'slate'
 import DeleteCampaign from './delete-campaign'
-import MarkdownEditor, {
-  defaultEditorValue,
-} from '@/components/app/components/slate-handling/editor'
 
 /**
  * Delete Campaign Component
@@ -30,33 +26,23 @@ export default function CampaignSettings() {
   const [campaignName, setCampaignName] = useState(
     campaignQuery.data?.name ?? ''
   )
-  const [campaignDescription, setCampaignDescription] = useState<Descendant[]>(
-    (campaignQuery.data?.description as Descendant[]) ?? defaultEditorValue
-  )
   const [open, setOpen] = useState(false)
 
   useEffect(() => {
-    if (campaignQuery.data?.name) {
-      setCampaignName(campaignQuery.data.name)
-    }
-    if (campaignQuery.data?.description) {
-      setCampaignDescription(
-        (campaignQuery.data.description as Descendant[]) ?? defaultEditorValue
-      )
-    }
-  }, [campaignQuery.data, campaignSlug])
+    setCampaignName(campaignQuery.data?.name ?? '')
+  }, [campaignQuery.data])
 
   // --- Form submission ---
   const handleSave = async () => {
     if (!campaignSlug || !campaignName) return
 
-    await modifyCampaign.mutateAsync({
+    const updatedCampaign = await modifyCampaign.mutateAsync({
       campaignSlug,
       name: campaignName,
-      description: campaignDescription,
     })
 
     if (!modifyCampaign.error) {
+      window.location.href = `/dashboard/campaign/${updatedCampaign.slug}/`
       setOpen(false)
     }
   }
@@ -88,10 +74,7 @@ export default function CampaignSettings() {
             }
           }}
         />
-        <MarkdownEditor
-          initialValue={campaignDescription ?? defaultEditorValue}
-          onChange={setCampaignDescription}
-        />
+
         {/* Display mutation errors to user */}
         {modifyCampaign.error && (
           <div className='mt-2 text-sm text-red-500'>

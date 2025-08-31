@@ -74,13 +74,18 @@ export function useCampaignQueries() {
     mutationFn: async (updatedCampaign: {
       campaignSlug: string
       name: string
-      description: Descendant[]
-    }) => {
-      await fetch(`/api/campaigns/${updatedCampaign.campaignSlug}`, {
-        method: 'PUT',
-        body: JSON.stringify({ updatedCampaign }),
-        headers: { 'Content-Type': 'application/json' },
-      })
+      description?: Descendant[]
+    }): Promise<TCampaign> => {
+      const response = await fetch(
+        `/api/campaigns/${updatedCampaign.campaignSlug}`,
+        {
+          method: 'PUT',
+          body: JSON.stringify({ updatedCampaign }),
+          headers: { 'Content-Type': 'application/json' },
+        }
+      )
+
+      return await response.json()
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['campaigns'] })
