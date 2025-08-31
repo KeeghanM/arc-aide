@@ -87,4 +87,14 @@ export const envDefinition = {
     access: 'public',
     optional: false,
   }),
+  CLOUDFLARE_ACCOUNT_ID: envField.string({
+    context: 'server',
+    access: 'secret',
+    optional: false,
+  }),
+  CLOUDFLARE_IMAGES_TOKEN: envField.string({
+    context: 'server',
+    access: 'secret',
+    optional: false,
+  }),
 }

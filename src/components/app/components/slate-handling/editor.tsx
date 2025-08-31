@@ -1,3 +1,4 @@
+import ImageUploader from '@components/app/components/assets/image-uploader'
 import SearchBar from '@components/app/components/search-bar/search-bar.tsx'
 import { css } from '@emotion/css'
 import { cn } from '@lib/utils/cn.ts'
@@ -73,19 +74,44 @@ export default function MarkdownEditor({
       return ranges
     }
 
+    // --- Image detection for ![]() syntax ---
+    const imageRegex = /!\[([^\]]*)\]\(([^)]*)\)/g
+    let imageMatch
+    while ((imageMatch = imageRegex.exec(node.text)) !== null) {
+      const alt = imageMatch[1]
+      const url = imageMatch[2]
+
+      // We only show the search if there isn't a URL
+      ranges.push({
+        alt: alt,
+        imageSearch: url?.length === 0,
+        relpacementRange: {
+          path,
+          offset: imageMatch.index,
+          length: imageMatch[0].length,
+        },
+        anchor: { path, offset: imageMatch.index },
+        focus: { path, offset: imageMatch.index + imageMatch[0].length },
+      })
+    }
+
     // --- Link detection for [[...]] syntax ---
     const linkRegex = /\[\[([^\]]*)\]\]/g
-    let match
-    while ((match = linkRegex.exec(node.text)) !== null) {
-      const content = match[1].trim()
+    let linkMatch
+    while ((linkMatch = linkRegex.exec(node.text)) !== null) {
+      const content = linkMatch[1].trim()
 
       if (!content || content === '') {
         // Empty brackets - show search
         ranges.push({
           linkSearch: true,
-          linkRange: { path, offset: match.index, length: match[0].length },
-          anchor: { path, offset: match.index },
-          focus: { path, offset: match.index + match[0].length },
+          relpacementRange: {
+            path,
+            offset: linkMatch.index,
+            length: linkMatch[0].length,
+          },
+          anchor: { path, offset: linkMatch.index },
+          focus: { path, offset: linkMatch.index + linkMatch[0].length },
         })
       } else if (content.includes('#')) {
         // Resolved link with type#slug format
@@ -94,16 +120,20 @@ export default function MarkdownEditor({
           link: true,
           linkType: type,
           linkSlug: slug,
-          anchor: { path, offset: match.index },
-          focus: { path, offset: match.index + match[0].length },
+          anchor: { path, offset: linkMatch.index },
+          focus: { path, offset: linkMatch.index + linkMatch[0].length },
         })
       } else {
         // Invalid format - treat as search
         ranges.push({
           linkSearch: true,
-          linkRange: { path, offset: match.index, length: match[0].length },
-          anchor: { path, offset: match.index },
-          focus: { path, offset: match.index + match[0].length },
+          relpacementRange: {
+            path,
+            offset: linkMatch.index,
+            length: linkMatch[0].length,
+          },
+          anchor: { path, offset: linkMatch.index },
+          focus: { path, offset: linkMatch.index + linkMatch[0].length },
         })
       }
     }
@@ -169,33 +199,68 @@ const Leaf = ({ attributes, children, leaf }: RenderLeafProps) => {
   const { campaignSlug } = useAppStore()
   const editor = useSlate()
 
-  if (leaf.linkSearch && leaf.linkRange) {
+  if (leaf.imageSearch) {
+    console.log(leaf)
     return (
       <span
         {...attributes}
-        style={{
-          position: 'relative',
-          display: 'inline-block',
-        }}
+        className='relative inline-block space-x-2'
+      >
+        {children}
+        <ImageUploader
+          altText={leaf.alt}
+          onUploadSuccess={(asset) => {
+            if (!asset) return
+            if (!leaf.relpacementRange) return
+            const newText = `![${asset.label}](${asset.url})`
+
+            // Create the range to replace
+            const range = {
+              anchor: {
+                path: leaf.relpacementRange.path,
+                offset: leaf.relpacementRange.offset,
+              },
+              focus: {
+                path: leaf.relpacementRange.path,
+                offset:
+                  leaf.relpacementRange.offset + leaf.relpacementRange.length,
+              },
+            }
+
+            // Select the range and replace with new text
+            Transforms.select(editor, range)
+            Transforms.insertText(editor, newText)
+          }}
+        />
+      </span>
+    )
+  }
+
+  if (leaf.linkSearch && leaf.relpacementRange) {
+    return (
+      <span
+        {...attributes}
+        className='relative inline-block'
       >
         <SearchBar
           searchType='any'
           returnType='function'
           onSelect={(result) => {
             if (!result) return
-            if (!leaf.linkRange) return
+            if (!leaf.relpacementRange) return
             // Replace the [[]] with [[type#slug]]
             const newText = `[[${result.type}#${result.entitySlug}]]`
 
             // Create the range to replace
             const range = {
               anchor: {
-                path: leaf.linkRange.path,
-                offset: leaf.linkRange.offset,
+                path: leaf.relpacementRange.path,
+                offset: leaf.relpacementRange.offset,
               },
               focus: {
-                path: leaf.linkRange.path,
-                offset: leaf.linkRange.offset + leaf.linkRange.length,
+                path: leaf.relpacementRange.path,
+                offset:
+                  leaf.relpacementRange.offset + leaf.relpacementRange.length,
               },
             }
 
@@ -219,7 +284,7 @@ const Leaf = ({ attributes, children, leaf }: RenderLeafProps) => {
       <a
         {...attributes}
         href={href}
-        className='text-primary cursor-pointer underline'
+        className='text-primary relative z-10 cursor-pointer underline'
         onMouseDown={(e) => {
           e.stopPropagation()
         }}
@@ -227,10 +292,6 @@ const Leaf = ({ attributes, children, leaf }: RenderLeafProps) => {
           e.preventDefault()
           e.stopPropagation()
           window.location.href = href
-        }}
-        style={{
-          position: 'relative',
-          zIndex: 1,
         }}
       >
         {children}

@@ -57,6 +57,13 @@
       "when": 1756203883404,
       "tag": "0007_complete_proudstar",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "6",
+      "when": 1756479235980,
+      "tag": "0008_lucky_kronos",
+      "breakpoints": true
     }
   ]
 }

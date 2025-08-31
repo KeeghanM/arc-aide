@@ -81,22 +81,22 @@ import MainLayout from '@layouts/main-layout.astro'
     const statusEl = document.getElementById('activation-status')
     if (statusEl) {
       // Remove all children
-      statusEl.textContent = '';
+      statusEl.textContent = ''
       if (type === 'success') {
-        const successMsg = document.createElement('p');
-        successMsg.className = 'text-green-600 text-sm font-medium';
-        successMsg.textContent = message;
-        statusEl.appendChild(successMsg);
+        const successMsg = document.createElement('p')
+        successMsg.className = 'text-green-600 text-sm font-medium'
+        successMsg.textContent = message
+        statusEl.appendChild(successMsg)
 
-        const infoMsg = document.createElement('p');
-        infoMsg.className = 'text-muted-foreground text-sm';
-        infoMsg.textContent = 'You should receive a confirmation email shortly.';
-        statusEl.appendChild(infoMsg);
+        const infoMsg = document.createElement('p')
+        infoMsg.className = 'text-muted-foreground text-sm'
+        infoMsg.textContent = 'You should receive a confirmation email shortly.'
+        statusEl.appendChild(infoMsg)
       } else {
-        const errorMsg = document.createElement('p');
-        errorMsg.className = 'text-red-600 text-sm font-medium';
-        errorMsg.textContent = message;
-        statusEl.appendChild(errorMsg);
+        const errorMsg = document.createElement('p')
+        errorMsg.className = 'text-red-600 text-sm font-medium'
+        errorMsg.textContent = message
+        statusEl.appendChild(errorMsg)
       }
     }
   }
