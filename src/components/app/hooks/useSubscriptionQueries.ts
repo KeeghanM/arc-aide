@@ -68,13 +68,17 @@ export function useSubscriptionQueries() {
         // The subscription endpoint gives us a Stripe SessionID
         // Which we now need to manually redirect the user to
         if (!window.Stripe) {
-          throw new Error('Stripe.js library is not loaded. Please ensure Stripe.js is included and loaded before attempting checkout.');
+          throw new Error(
+            'Stripe.js library is not loaded. Please ensure Stripe.js is included and loaded before attempting checkout.'
+          )
         }
         if (!PUBLIC_STRIPE_PUBLISHABLE_KEY) {
-          throw new Error('Stripe publishable key is missing. Please set the PUBLIC_STRIPE_PUBLISHABLE_KEY environment variable.');
+          throw new Error(
+            'Stripe publishable key is missing. Please set the PUBLIC_STRIPE_PUBLISHABLE_KEY environment variable.'
+          )
         }
-        const stripe = window.Stripe(PUBLIC_STRIPE_PUBLISHABLE_KEY);
-        await stripe.redirectToCheckout({ sessionId: result.sessionId });
+        const stripe = window.Stripe(PUBLIC_STRIPE_PUBLISHABLE_KEY)
+        await stripe.redirectToCheckout({ sessionId: result.sessionId })
 
         return result
       },
