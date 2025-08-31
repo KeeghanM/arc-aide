@@ -53,7 +53,6 @@ export function slateToHtml(nodes: Descendant[], campaignSlug: string): string {
   // Configure Showdown for D&D content (tables for stats, etc.)
   const converter = new showdown.Converter({
     tables: true, // Support for stat blocks and tables
-    simplifiedAutoLink: true, // Auto-link URLs for references
     strikethrough: true, // Strike through for crossed-out content
     tasklists: true, // Checkbox lists for quest tracking
   })
