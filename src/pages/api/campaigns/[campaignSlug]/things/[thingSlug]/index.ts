@@ -105,13 +105,28 @@ export const PUT: APIRoute = async ({ request, params }) => {
 
     const { campaignSlug, thingSlug } = params
 
+    if (
+      !campaignSlug ||
+      !z.string().nonempty().safeParse(campaignSlug).success
+    ) {
+      return new Response(JSON.stringify({ error: 'Invalid campaign slug' }), {
+        status: 400,
+      })
+    }
+
+    if (!thingSlug || !z.string().nonempty().safeParse(thingSlug).success) {
+      return new Response(JSON.stringify({ error: 'Invalid thing slug' }), {
+        status: 400,
+      })
+    }
+
     // First verify the campaign exists and belongs to the user
     const campaignResult = await db
       .select({ id: campaign.id })
       .from(campaign)
       .where(
         and(
-          eq(campaign.slug, campaignSlug as string),
+          eq(campaign.slug, campaignSlug),
           eq(campaign.userId, session.user.id)
         )
       )
@@ -179,6 +194,18 @@ export const PUT: APIRoute = async ({ request, params }) => {
       .set(updateData)
       .where(eq(thing.id, existingThing[0].id))
       .returning()
+
+    await db
+      .update(campaign)
+      .set({
+        updatedAt: new Date(),
+      })
+      .where(
+        and(
+          eq(campaign.userId, session.user.id),
+          eq(campaign.slug, campaignSlug)
+        )
+      )
 
     return new Response(JSON.stringify(result[0]), { status: 200 })
   } catch (error) {
