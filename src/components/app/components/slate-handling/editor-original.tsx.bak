@@ -1,7 +1,15 @@
 import SearchBar from '@components/app/components/search-bar/search-bar.tsx'
+import { Button } from '@components/ui/button'
 import { css } from '@emotion/css'
 import { cn } from '@lib/utils/cn.ts'
 import { useAppStore } from '@stores/appStore.ts'
+import {
+  BoldIcon,
+  ImageIcon,
+  ItalicIcon,
+  Link2Icon,
+  UnderlineIcon,
+} from 'lucide-react'
 import Prism from 'prismjs'
 import 'prismjs/components/prism-markdown'
 import { useCallback, useMemo, useState } from 'react'
@@ -46,6 +54,7 @@ export default function MarkdownEditor({
     initialValue && initialValue.length > 0 ? initialValue : defaultEditorValue
   )
   const [controlPressed, setControlPressed] = useState(false)
+  const [isFocused, setIsFocused] = useState(false)
 
   const handleChange = useCallback((nextValue: Descendant[]) => {
     // Prevent empty editor state by ensuring we always have at least one paragraph
@@ -147,83 +156,142 @@ export default function MarkdownEditor({
   }, [])
 
   return (
-    <Slate
-      editor={editor}
-      initialValue={value}
-      onChange={handleChange}
+    <div
+      onFocus={() => {
+        setIsFocused(true)
+      }}
+      onBlur={() => {
+        setIsFocused(false)
+      }}
     >
-      <Editable
-        decorate={decorate}
-        renderLeaf={renderLeaf}
-        placeholder='Start writing...'
-        className={cn(
-          'border-border focus:ring-primary resize-y overflow-y-auto rounded border p-4 focus:border-transparent focus:ring-2 focus:outline-none',
-          height === 'sm' && 'h-[200px]',
-          height === 'md' && 'h-[500px]',
-          height === 'lg' && 'h-[700px]'
+      <Slate
+        editor={editor}
+        initialValue={value}
+        onChange={handleChange}
+      >
+        {/* Controls Bar
+        - Image
+        - Link
+        - Bold
+        - Italic
+        - Underline
+        - Title Dropdown (h1/h2/h3/h4)
+        - Table
+        - Block Quote
+        */}
+        {isFocused && (
+          <div className='flex w-full items-center gap-1 rounded-sm bg-slate-300 p-2'>
+            <Button
+              variant='ghost'
+              onClick={() => {
+                Transforms.insertText(editor, '![Image Label](https://)')
+              }}
+            >
+              <ImageIcon className='h-4 w-4' />
+            </Button>
+            <Button
+              variant='ghost'
+              onClick={() => {
+                Transforms.insertText(editor, '[[]]')
+              }}
+            >
+              <Link2Icon className='h-4 w-4' />
+            </Button>
+            <Button
+              variant='ghost'
+              onClick={() => {}}
+            >
+              <BoldIcon className='h-4 w-4' />
+            </Button>
+
+            <Button
+              variant='ghost'
+              onClick={() => {}}
+            >
+              <ItalicIcon className='h-4 w-5' />
+            </Button>
+
+            <Button
+              variant='ghost'
+              onClick={() => {}}
+            >
+              <UnderlineIcon className='h-4 w-4' />
+            </Button>
+          </div>
         )}
-        onKeyDown={(e) => {
-          setControlPressed(e.ctrlKey)
+        <Editable
+          decorate={decorate}
+          renderLeaf={renderLeaf}
+          placeholder='Start writing...'
+          className={cn(
+            'border-border focus:ring-primary resize-y overflow-y-auto rounded border p-4 focus:border-transparent focus:ring-2 focus:outline-none',
+            height === 'sm' && 'h-[200px]',
+            height === 'md' && 'h-[500px]',
+            height === 'lg' && 'h-[700px]'
+          )}
+          onKeyDown={(e) => {
+            setControlPressed(e.ctrlKey)
 
-          // If control is pressed and the key is b, i, or u, toggle the respective formatting
-          if (
-            controlPressed &&
-            (e.key === 'b' || e.key === 'i' || e.key === 'u')
-          ) {
-            e.preventDefault()
+            // If control is pressed and the key is b, i, or u, toggle the respective formatting
+            if (
+              controlPressed &&
+              (e.key === 'b' || e.key === 'i' || e.key === 'u')
+            ) {
+              e.preventDefault()
 
-            const { selection } = editor
-            if (!selection) return
+              const { selection } = editor
+              if (!selection) return
 
-            // Define markdown syntax for each format
-            const markdownSyntax = {
-              b: { start: '**', end: '**' },
-              i: { start: '*', end: '*' },
-              u: { start: '<u>', end: '</u>' },
-            }
+              const markdownSyntax = {
+                b: { start: '**', end: '**' },
+                i: { start: '*', end: '*' },
+                u: { start: '<u>', end: '</u>' },
+              }
 
-            const syntax = markdownSyntax[e.key as keyof typeof markdownSyntax]
+              const syntax =
+                markdownSyntax[e.key as keyof typeof markdownSyntax]
 
-            if (selection.anchor.offset === selection.focus.offset) {
-              // No text selected - insert the syntax markers and position cursor between them
-              const text = `${syntax.start}${syntax.end}`
-              Transforms.insertText(editor, text)
+              if (selection.anchor.offset === selection.focus.offset) {
+                // No text selected - insert the syntax markers and position cursor between them
+                const text = `${syntax.start}${syntax.end}`
+                Transforms.insertText(editor, text)
 
-              // Move cursor to between the markers
-              const newOffset = selection.anchor.offset + syntax.start.length
-              Transforms.select(editor, {
-                anchor: { path: selection.anchor.path, offset: newOffset },
-                focus: { path: selection.focus.path, offset: newOffset },
-              })
-            } else {
-              // Text is selected - get the selected text
-              const selectedText = Editor.string(editor, selection)
-
-              // Check if the selected text is already wrapped with this format
-              const isWrapped =
-                selectedText.startsWith(syntax.start) &&
-                selectedText.endsWith(syntax.end)
-
-              if (isWrapped) {
-                // Remove the formatting by unwrapping
-                const unwrappedText = selectedText.slice(
-                  syntax.start.length,
-                  -syntax.end.length
-                )
-                Transforms.insertText(editor, unwrappedText)
+                // Move cursor to between the markers
+                const newOffset = selection.anchor.offset + syntax.start.length
+                Transforms.select(editor, {
+                  anchor: { path: selection.anchor.path, offset: newOffset },
+                  focus: { path: selection.focus.path, offset: newOffset },
+                })
               } else {
-                // Add the formatting by wrapping
-                const wrappedText = `${syntax.start}${selectedText}${syntax.end}`
-                Transforms.insertText(editor, wrappedText)
+                // Text is selected - get the selected text
+                const selectedText = Editor.string(editor, selection)
+
+                // Check if the selected text is already wrapped with this format
+                const isWrapped =
+                  selectedText.startsWith(syntax.start) &&
+                  selectedText.endsWith(syntax.end)
+
+                if (isWrapped) {
+                  // Remove the formatting by unwrapping
+                  const unwrappedText = selectedText.slice(
+                    syntax.start.length,
+                    -syntax.end.length
+                  )
+                  Transforms.insertText(editor, unwrappedText)
+                } else {
+                  // Add the formatting by wrapping
+                  const wrappedText = `${syntax.start}${selectedText}${syntax.end}`
+                  Transforms.insertText(editor, wrappedText)
+                }
               }
             }
-          }
-        }}
-        onKeyUp={() => {
-          setControlPressed(false)
-        }}
-      />
-    </Slate>
+          }}
+          onKeyUp={() => {
+            setControlPressed(false)
+          }}
+        />
+      </Slate>
+    </div>
   )
 }
 

@@ -3,7 +3,7 @@ import pDebounce from 'p-debounce'
 import type { Descendant } from 'slate'
 import MarkdownEditor, {
   defaultEditorValue,
-} from '../components/slate-handling/editor'
+} from '../components/slate-handling/editor/markdown-editor'
 import SlateViewer from '../components/slate-handling/viewer'
 import type { TScreenWrapperProps } from '../screen-wrapper'
 import ScreenWrapper from '../screen-wrapper'
