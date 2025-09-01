@@ -92,6 +92,27 @@ ArcAide is built using modern web technologies chosen for performance, developer
 - Low latency through edge distribution
 - Cost-effective for small to medium applications
 
+## External Services
+
+### Asset Management
+
+**Cloudflare Images** - Image storage and optimization
+
+- Global CDN delivery for fast image loading
+- Automatic image optimization and variant generation
+- Secure direct upload with signed URLs
+- Cost-effective storage with generous free tier
+- Built-in image transformations and resizing
+
+### Payment Processing
+
+**Kill Bill** - Subscription and billing management
+
+- Flexible subscription billing and management
+- Usage tracking and premium feature gating
+- Multiple payment provider integration
+- Dunning management and retry logic
+
 ## Development Tools
 
 ### Code Quality
@@ -171,6 +192,14 @@ ArcAide is built using modern web technologies chosen for performance, developer
 - **Performance**: Excellent performance with large documents
 - **Extensibility**: Easy to add custom elements and behaviors
 - **Modern**: React-based with hooks and modern patterns
+
+### Why Cloudflare Images?
+
+- **Performance**: Global CDN ensures fast image delivery worldwide
+- **Cost-effective**: Generous free tier with reasonable pricing at scale
+- **Automatic optimization**: Intelligent compression and format selection
+- **Developer experience**: Simple API with secure direct uploads
+- **Variant generation**: Automatic creation of different image sizes
 
 ## Bundle Size and Performance
 
