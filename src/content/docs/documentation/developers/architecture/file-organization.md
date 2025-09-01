@@ -60,6 +60,8 @@ src/components/app/
 │   │   ├── campaign-form.tsx
 │   │   ├── campaign-list.tsx
 │   │   └── campaign-settings.tsx
+│   ├── nav-bar/               # Main navigation header
+│   │   └── nav-bar.tsx
 │   ├── search-bar/            # Search functionality
 │   │   ├── search-bar.tsx
 │   │   ├── search-results.tsx
@@ -69,11 +71,12 @@ src/components/app/
 │   │   ├── nav-item.tsx
 │   │   └── nav-section.tsx
 │   ├── slate-handling/        # Rich text editor
-│   │   ├── slate-editor.tsx
-│   │   ├── slate-viewer.tsx
-│   │   ├── slate-elements.tsx
-│   │   ├── slate-leaves.tsx
-│   │   └── link-plugin.tsx
+│   │   ├── editor/           # Modular editor components
+│   │   │   ├── custom-types.d.ts      # TypeScript definitions
+│   │   │   ├── editor-decorations.ts  # Syntax highlighting
+│   │   │   ├── editor-leaf.tsx        # Text rendering
+│   │   │   ├── editor-toolbar.tsx     # Formatting toolbar
+│   │   │   └── editor-utils.ts        # Shared utilities
 │   └── thing/                 # Thing management
 │       ├── thing-card.tsx
 │       ├── thing-editor.tsx
