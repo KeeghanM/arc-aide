@@ -57,6 +57,23 @@ export function slateToHtml(nodes: Descendant[], campaignSlug: string): string {
     tasklists: true, // Checkbox lists for quest tracking
   })
 
+  // We want to add labels below images if alt text is provided
+  converter.addExtension(() => {
+    return [
+      {
+        type: 'output',
+        regex: /<img src="([^"]+)" alt="([^"]*)" ?\/?>/g,
+        replace: (_match: string, src: string, alt: string) => {
+          if (alt && alt.trim() !== '') {
+            return `<figure class="text-center max-w-fit"><img src="${src}" alt="${alt}" class="max-w-full h-auto" /><figcaption class="italic text-sm text-gray-500">${alt}</figcaption></figure>`
+          } else {
+            return `<img src="${src}" alt="" class="max-w-full h-auto" />`
+          }
+        },
+      },
+    ]
+  })
+
   const html = converter.makeHtml(markdown)
 
   // We need to replace any [[type#slug]] links with proper anchor tags.

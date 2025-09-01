@@ -47,7 +47,7 @@ const thingData = await db
   .limit(20)
 ---
 
-<MainLayout title={campaign.name}>
+<MainLayout title={`${campaign.name} | ArcAide`}>
   <NavBar
     transition:persist
     user={user}

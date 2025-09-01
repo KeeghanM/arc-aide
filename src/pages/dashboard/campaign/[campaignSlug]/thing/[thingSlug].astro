@@ -5,13 +5,29 @@ import ArcListWrapper from '@components/app/components/thing/arc-list/arc-list'
 import ThingScreen from '@components/app/screens/thing'
 import { ModeToggle } from '@components/ui/mode-toggle'
 import { db } from '@db/db'
-import { arc, arcThing, thing as thingSchema, thingType } from '@db/schema'
+import {
+  arc,
+  arcThing,
+  campaign,
+  thing as thingSchema,
+  thingType,
+} from '@db/schema'
 import MainLayout from '@layouts/main-layout.astro'
 import { eq } from 'drizzle-orm'
 
 const { campaignSlug, thingSlug } = Astro.params
 
 if (!campaignSlug || !thingSlug) {
+  return Astro.redirect('/404')
+}
+
+const campaignResult = await db
+  .select()
+  .from(campaign)
+  .where(eq(campaign.slug, campaignSlug))
+  .limit(1)
+
+if (!campaignResult[0]) {
   return Astro.redirect('/404')
 }
 
@@ -43,7 +59,9 @@ const arcs = (await db
 }[]
 ---
 
-<MainLayout title={thing.name}>
+<MainLayout
+  title={`${thing.name} (Thing) - ${campaignResult[0].name} | ArcAide`}
+>
   <NavBar
     user={Astro.locals.user}
     campaignSlug={campaignSlug}
