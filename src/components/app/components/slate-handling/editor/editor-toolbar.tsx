@@ -8,6 +8,7 @@ import {
 } from 'lucide-react'
 import { Transforms } from 'slate'
 import type { CustomEditor } from './custom-types'
+import { applyFormatting } from './editor-utils'
 
 type EditorToolbarProps = {
   editor: CustomEditor
@@ -24,7 +25,8 @@ export default function EditorToolbar({
     <div className='flex w-full items-center gap-1 rounded-sm bg-slate-300 p-2'>
       <Button
         variant='ghost'
-        onClick={() => {
+        onMouseDown={(e) => {
+          e.preventDefault()
           Transforms.insertText(editor, '![Image Label](https://)')
         }}
       >
@@ -32,7 +34,8 @@ export default function EditorToolbar({
       </Button>
       <Button
         variant='ghost'
-        onClick={() => {
+        onMouseDown={(e) => {
+          e.preventDefault()
           Transforms.insertText(editor, '[[]]')
         }}
       >
@@ -40,21 +43,30 @@ export default function EditorToolbar({
       </Button>
       <Button
         variant='ghost'
-        onClick={() => {}}
+        onMouseDown={(e) => {
+          e.preventDefault()
+          applyFormatting('b', editor)
+        }}
       >
         <BoldIcon className='h-4 w-4' />
       </Button>
 
       <Button
         variant='ghost'
-        onClick={() => {}}
+        onMouseDown={(e) => {
+          e.preventDefault()
+          applyFormatting('i', editor)
+        }}
       >
         <ItalicIcon className='h-4 w-5' />
       </Button>
 
       <Button
         variant='ghost'
-        onClick={() => {}}
+        onMouseDown={(e) => {
+          e.preventDefault()
+          applyFormatting('u', editor)
+        }}
       >
         <UnderlineIcon className='h-4 w-4' />
       </Button>

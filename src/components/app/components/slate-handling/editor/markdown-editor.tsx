@@ -7,7 +7,7 @@ import type { CustomEditor } from './custom-types'
 import { createDecorator } from './editor-decorations'
 import EditorLeaf from './editor-leaf'
 import EditorToolbar from './editor-toolbar'
-import { handleKeyboardShortcuts } from './editor-utils'
+import { applyFormatting } from './editor-utils'
 
 export const defaultEditorValue: Descendant[] = [
   {
@@ -91,7 +91,13 @@ export default function MarkdownEditor({
           )}
           onKeyDown={(e) => {
             setControlPressed(e.ctrlKey)
-            handleKeyboardShortcuts(e, editor, controlPressed)
+            if (
+              controlPressed &&
+              (e.key === 'i' || e.key === 'b' || e.key === 'u')
+            ) {
+              e.preventDefault()
+              applyFormatting(e.key, editor)
+            }
           }}
           onKeyUp={() => {
             setControlPressed(false)
