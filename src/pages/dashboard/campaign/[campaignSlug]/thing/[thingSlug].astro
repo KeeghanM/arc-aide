@@ -1,17 +1,11 @@
 ---
-import { SearchBarWrapper } from '@components/app/components/search-bar/search-bar'
+import NavBar from '@components/app/components/nav-bar/nav-bar'
 import SideBarWrapper from '@components/app/components/side-bar/side-bar'
 import ArcListWrapper from '@components/app/components/thing/arc-list/arc-list'
 import ThingScreen from '@components/app/screens/thing'
 import { ModeToggle } from '@components/ui/mode-toggle'
 import { db } from '@db/db'
-import {
-  arc,
-  arcThing,
-  campaign,
-  thing as thingSchema,
-  thingType,
-} from '@db/schema'
+import { arc, arcThing, thing as thingSchema, thingType } from '@db/schema'
 import MainLayout from '@layouts/main-layout.astro'
 import { eq } from 'drizzle-orm'
 
@@ -24,11 +18,9 @@ if (!campaignSlug || !thingSlug) {
 const ThingData = await db
   .select({
     thing: thingSchema,
-    campaignName: campaign.name,
     type: thingType.name,
   })
   .from(thingSchema)
-  .fullJoin(campaign, eq(thingSchema.campaignId, campaign.id))
   .fullJoin(thingType, eq(thingSchema.typeId, thingType.id))
   .where(eq(thingSchema.slug, thingSlug))
   .limit(1)
@@ -38,7 +30,6 @@ if (!ThingData[0]?.thing) {
 }
 
 const thing = ThingData[0].thing
-const campaignName = ThingData[0].campaignName
 const type = ThingData[0].type
 
 const arcs = (await db
@@ -53,6 +44,12 @@ const arcs = (await db
 ---
 
 <MainLayout title={thing.name}>
+  <NavBar
+    user={Astro.locals.user}
+    campaignSlug={campaignSlug}
+    client:load
+    transition:persist
+  />
   <div class='flex'>
     <SideBarWrapper
       user={Astro.locals.user}
@@ -61,24 +58,11 @@ const arcs = (await db
       transition:persist
     />
     <main class='flex-1 space-y-2 p-4 md:p-8 lg:p-12'>
-      <div>
-        <a
-          href={`/dashboard/campaign/${campaignSlug}/`}
-          class='text-accent text-lg font-normal hover:italic'
-        >
-          Back to Campaign</a
-        >
-      </div>
       <div class='flex items-baseline gap-6'>
         <h1 class='text-primary text-4xl font-bold md:text-5xl'>
-          {campaignName}: {thing.name}
+          {thing.name}
           <span class='text-lg font-normal'>({type})</span>
         </h1>
-        <SearchBarWrapper
-          user={Astro.locals.user}
-          campaignSlug={campaignSlug}
-          client:load
-        />
       </div>
       <div class='grid grid-cols-1 md:grid-cols-[1fr_300px]'>
         <ThingScreen
@@ -100,5 +84,9 @@ const arcs = (await db
       </div>
     </main>
   </div>
-  <ModeToggle client:visible />
+  <ModeToggle
+    user={Astro.locals.user}
+    campaignSlug={campaignSlug}
+    client:visible
+  />
 </MainLayout>

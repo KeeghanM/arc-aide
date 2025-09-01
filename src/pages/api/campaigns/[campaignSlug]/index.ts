@@ -2,6 +2,7 @@ import Honeybadger from '@honeybadger-io/js'
 import { auth } from '@lib/auth/auth'
 import { db } from '@lib/db/db'
 import { campaign } from '@lib/db/schema'
+import { slugify } from '@lib/utils'
 import type { APIRoute } from 'astro'
 import { and, eq } from 'drizzle-orm'
 import z from 'zod'
@@ -48,13 +49,13 @@ export const GET: APIRoute = async ({ request, params }) => {
       )
       .limit(1)
 
-    if (!campaignData) {
+    if (!campaignData?.[0]) {
       return new Response(JSON.stringify({ error: 'Campaign not found' }), {
         status: 404,
       })
     }
 
-    return new Response(JSON.stringify(campaignData), { status: 200 })
+    return new Response(JSON.stringify(campaignData[0]), { status: 200 })
   } catch (error) {
     console.error('Error fetching campaign:', error)
     Honeybadger.notify(error as Error)
@@ -152,8 +153,7 @@ export const PUT: APIRoute = async ({ request, params }) => {
     }
 
     const UpdatedCampaign = z.object({
-      name: z.string().min(1).max(255).optional(),
-      description: z.string().optional(),
+      name: z.string().min(1).max(255),
     })
 
     const { updatedCampaign } = await request.json()
@@ -168,18 +168,11 @@ export const PUT: APIRoute = async ({ request, params }) => {
       )
     }
 
-    if (!parsedCampaign.data.name && !parsedCampaign.data.description) {
-      return new Response(
-        JSON.stringify({ error: 'No fields to update provided' }),
-        { status: 400 }
-      )
-    }
-
     const result = await db
       .update(campaign)
       .set({
         name: parsedCampaign.data.name,
-        description: parsedCampaign.data.description,
+        slug: slugify(parsedCampaign.data.name),
         updatedAt: new Date(),
       })
       .where(

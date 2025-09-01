@@ -14,7 +14,6 @@ type TSlateViewerProps = {
  * rendered out without the Markdown tags.
  */
 
-// TODO: Handle links. For now, just render them as [[type#slug]] text. We'll need to modify the textExtractor and md->html functions to handle this properly.
 export default function SlateViewer({ content }: TSlateViewerProps) {
   const { campaignSlug } = useAppStore()
   return (

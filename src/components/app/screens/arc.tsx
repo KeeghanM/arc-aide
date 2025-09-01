@@ -1,5 +1,4 @@
 import { type TArc, useArcQueries } from '@hooks/useArcQueries'
-import { cn } from '@lib/utils/cn'
 import { useAppStore } from '@stores/appStore'
 import pDebounce from 'p-debounce'
 import type { Descendant } from 'slate'
@@ -7,7 +6,7 @@ import ArcItem from '../components/arc/arc-item'
 import ParentArc from '../components/arc/parent-arc/parent-arc'
 import MarkdownEditor, {
   defaultEditorValue,
-} from '../components/slate-handling/editor'
+} from '../components/slate-handling/editor/markdown-editor'
 import SlateViewer from '../components/slate-handling/viewer'
 import type { TScreenWrapperProps } from '../screen-wrapper'
 import ScreenWrapper from '../screen-wrapper'
@@ -49,12 +48,7 @@ function Arc({ arc }: TArcProps) {
   return (
     <div className='space-y-4 pr-6 md:pr-12'>
       <ParentArc arc={arc} />
-      <div
-        className={cn(
-          'grid grid-cols-1 gap-4',
-          mode === 'edit' && 'md:grid-cols-2'
-        )}
-      >
+      <div className='space-y-4'>
         {/* 
         Arc Structure follows the D&D narrative framework:
         - Hook: What draws players in

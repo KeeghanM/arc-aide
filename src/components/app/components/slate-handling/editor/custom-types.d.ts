@@ -202,7 +202,7 @@ declare module 'slate' {
       linkSlug?: string | undefined
       linkType?: 'arc' | 'thing' | undefined
       linkSearch?: boolean
-      relpacementRange?: { path: number[]; offset: number; length: number }
+      replacementRange?: { path: number[]; offset: number; length: number }
       imageSearch?: boolean
       alt?: string
     }

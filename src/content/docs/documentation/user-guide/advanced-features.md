@@ -193,14 +193,50 @@ When in View Mode, content is styled with authentic D&D 5e visual elements:
 
 ## Rich Text Editor and Linking
 
-ArcAide features a powerful rich text editor for all your content:
+ArcAide features a powerful rich text editor with an interactive toolbar and keyboard shortcuts for all your content:
+
+### Editor Interface
+
+The editor automatically adapts to your workflow:
+
+- **Focus-aware toolbar**: Formatting buttons appear when the editor is active
+- **Keyboard shortcuts**: Quick formatting using familiar key combinations
+- **Visual feedback**: Real-time preview of markdown formatting
+- **Smart formatting**: Intelligent text wrapping and unwrapping
 
 ### Formatting Options
 
-- **Bold**, _italic_, and `code` text
-- Headers and subheaders
+#### Text Formatting
+
+- **Bold text** using `**text**` or Ctrl+B
+- _Italic text_ using `*text*` or Ctrl+I
+- <u>Underlined text</u> using `<u>text</u>` or Ctrl+U
+
+#### Structure Elements
+
+- **Headers** (H1-H5) using `#` syntax or the header dropdown
 - Bullet points and numbered lists
 - Block quotes for important information
+- **Tables** for organized data presentation
+
+#### Toolbar Features
+
+The interactive toolbar provides one-click access to:
+
+- **Bold, Italic, Underline** formatting buttons
+- **Image insertion** with markdown syntax template
+- **Link creation** for internal references
+- **Header dropdown** for different heading levels
+- **Table generator** with basic table structure
+
+### Keyboard Shortcuts
+
+Master these shortcuts for efficient content creation:
+
+- **Ctrl+B**: Toggle bold formatting
+- **Ctrl+I**: Toggle italic formatting
+- **Ctrl+U**: Toggle underline formatting
+- **Double brackets [[]]**: Create internal links
 
 ### Internal Linking
 
@@ -208,7 +244,7 @@ Create connections between your campaign content using wiki-style links:
 
 #### Creating Links
 
-1. **Type double brackets** `[[]]` anywhere in your text
+1. **Type double brackets** `[[]]` anywhere in your text or click the link button
 2. **Search interface appears** automatically within the editor
 3. **Search and select** any Arc or Thing from your campaign
 4. **Link is created** in the format `[[type#slug]]`
@@ -236,11 +272,14 @@ This connects to the main quest in [[arc#finding-the-lost-crown]].
 
 ### Writing Tips
 
+- Use the **toolbar buttons** for quick formatting access
+- Combine **keyboard shortcuts** with mouse selection for efficiency
 - Use **bold text** for important names and concepts
 - Create _italic emphasis_ for thoughts or whispered dialogue
 - Use `code formatting` for game mechanics or dice rolls
 - Add block quotes for player handouts or NPC dialogue
 - **Use internal links** to create rich interconnected content
+- **Tables** are perfect for stat blocks, treasure lists, or reference information
 
 ## Search and Discovery
 

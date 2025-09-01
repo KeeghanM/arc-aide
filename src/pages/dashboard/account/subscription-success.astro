@@ -1,8 +1,15 @@
 ---
+import NavBar from '@components/app/components/nav-bar/nav-bar'
 import MainLayout from '@layouts/main-layout.astro'
 ---
 
 <MainLayout title='Subscription Success'>
+  <NavBar
+    transition:persist
+    user={Astro.locals.user}
+    campaignSlug={undefined}
+    client:load
+  />
   <div class='container mx-auto py-8'>
     <div class='mx-auto max-w-2xl space-y-6 text-center'>
       <div
@@ -16,13 +23,13 @@ import MainLayout from '@layouts/main-layout.astro'
 
       <div class='flex justify-center gap-4'>
         <a
-          href='/dashboard/account'
+          href='/dashboard/account/'
           class='bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium'
         >
           View Account
         </a>
         <a
-          href='/dashboard'
+          href='/dashboard/'
           class='border-input bg-background hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center rounded-md border px-4 py-2 text-sm font-medium'
         >
           Go to Dashboard

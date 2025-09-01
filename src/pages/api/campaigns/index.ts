@@ -4,7 +4,7 @@ import { campaign } from '@db/schema'
 import Honeybadger from '@honeybadger-io/js'
 import { slugify } from '@utils/string'
 import type { APIRoute } from 'astro'
-import { eq } from 'drizzle-orm'
+import { desc, eq } from 'drizzle-orm'
 import * as z from 'zod'
 
 /**
@@ -27,6 +27,7 @@ export const GET: APIRoute = async ({ request }) => {
       .select()
       .from(campaign)
       .where(eq(campaign.userId, session.user.id))
+      .orderBy(desc(campaign.updatedAt))
 
     return new Response(JSON.stringify(campaigns), { status: 200 })
   } catch (error) {

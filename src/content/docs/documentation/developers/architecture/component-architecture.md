@@ -217,44 +217,152 @@ export function ArcStructureEditor({ arc, onUpdate }: ArcStructureProps) {
 
 ### Slate Editor Components
 
-#### SlateEditor
+The rich text editor has been refactored into a modular architecture for better maintainability and extensibility:
+
+```
+slate-handling/
+├── editor/
+│   ├── custom-types.d.ts      # TypeScript type definitions
+│   ├── editor-decorations.ts  # Syntax highlighting and link detection
+│   ├── editor-leaf.tsx        # Text rendering and formatting
+│   ├── editor-toolbar.tsx     # Interactive formatting toolbar
+│   └── editor-utils.ts        # Shared utility functions
+```
+
+#### MarkdownEditor (Main Component)
 
 ```typescript
-interface SlateEditorProps {
+interface MarkdownEditorProps {
   value: Descendant[]
   onChange: (value: Descendant[]) => void
   placeholder?: string
-  campaignSlug: string
+  height?: 'sm' | 'md' | 'lg'
 }
 
-export function SlateEditor({ value, onChange, placeholder, campaignSlug }: SlateEditorProps) {
-  const editor = useMemo(() => withLinks(withHistory(createEditor())), [])
-  const [searchRange, setSearchRange] = useState<Range | null>(null)
+export function MarkdownEditor({ value, onChange, placeholder, height = 'md' }: MarkdownEditorProps) {
+  const editor = useMemo(() => withHistory(createEditor()), [])
+  const [isFocused, setIsFocused] = useState(false)
+  const decorate = createDecorator()
 
   return (
-    <div className="relative">
-      <Slate editor={editor} value={value} onChange={onChange}>
+    <div onFocus={() => setIsFocused(true)} onBlur={() => setIsFocused(false)}>
+      <Slate editor={editor} initialValue={value} onChange={onChange}>
+        <EditorToolbar editor={editor} isFocused={isFocused} />
         <Editable
+          decorate={decorate}
+          renderLeaf={EditorLeaf}
           placeholder={placeholder}
-          onKeyDown={handleKeyDown}
-          decorate={decorateLinks}
-          renderElement={renderElement}
-          renderLeaf={renderLeaf}
+          onKeyDown={handleKeyboardShortcuts}
         />
-
-        {searchRange && (
-          <SearchBar
-            range={searchRange}
-            campaignSlug={campaignSlug}
-            onSelect={handleLinkSelect}
-            onClose={() => setSearchRange(null)}
-          />
-        )}
       </Slate>
     </div>
   )
 }
 ```
+
+#### EditorToolbar
+
+Interactive toolbar that appears when the editor is focused:
+
+```typescript
+interface EditorToolbarProps {
+  editor: CustomEditor
+  isFocused: boolean
+}
+
+export function EditorToolbar({ editor, isFocused }: EditorToolbarProps) {
+  if (!isFocused) return null
+
+  return (
+    <div className="flex w-full items-center gap-1 rounded-sm bg-slate-300 p-2">
+      <Button variant="ghost" onMouseDown={(e) => {
+        e.preventDefault()
+        applyFormatting('b', editor)
+      }}>
+        <BoldIcon className="h-4 w-4" />
+      </Button>
+      {/* Additional formatting buttons */}
+    </div>
+  )
+}
+```
+
+#### EditorLeaf
+
+Handles text rendering with formatting and interactive links:
+
+```typescript
+export function EditorLeaf({ attributes, children, leaf }: RenderLeafProps) {
+  // Handle link search overlay
+  if (leaf.linkSearch && leaf.linkRange) {
+    return (
+      <span {...attributes}>
+        <SearchBar onSelect={handleLinkSelection} />
+        {children}
+      </span>
+    )
+  }
+
+  // Handle resolved links
+  if (leaf.link && leaf.linkSlug && leaf.linkType) {
+    return (
+      <a {...attributes} href={href} className="text-primary underline">
+        {children}
+      </a>
+    )
+  }
+
+  // Handle text formatting
+  return (
+    <span {...attributes} className={formatStyles}>
+      {children}
+    </span>
+  )
+}
+```
+
+#### Editor Decorations
+
+Provides syntax highlighting and link detection:
+
+```typescript
+export const createDecorator = () => {
+  return ([node, path]: NodeEntry) => {
+    const ranges: Range[] = []
+
+    // Link detection for [[...]] syntax
+    const linkRegex = /\[\[([^\]]*)\]\]/g
+    // ... link processing logic
+
+    // Syntax highlighting with Prism.js
+    const tokens = Prism.tokenize(node.text, Prism.languages.markdown)
+    // ... syntax highlighting logic
+
+    return ranges
+  }
+}
+```
+
+#### Editor Utilities
+
+Shared formatting functions:
+
+```typescript
+export const applyFormatting = (key: 'b' | 'i' | 'u', editor: CustomEditor) => {
+  const { selection } = editor
+  if (!selection) return
+
+  const markdownSyntax = {
+    b: { start: '**', end: '**' },
+    i: { start: '*', end: '*' },
+    u: { start: '<u>', end: '</u>' },
+  }
+
+  // Handle text wrapping/unwrapping logic
+}
+```
+
+````
 
 #### SlateViewer
 
@@ -279,7 +387,7 @@ export function SlateViewer({ content, className }: SlateViewerProps) {
     </div>
   )
 }
-```
+````
 
 ### Search Components
 

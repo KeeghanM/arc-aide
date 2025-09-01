@@ -1,7 +1,7 @@
 {
   "name": "arc-aide",
   "type": "module",
-  "version": "0.5.0",
+  "version": "0.6.1",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
@@ -16,7 +16,7 @@
     "qa": "yarn qa:stylelint && yarn qa:prettier && yarn qa:eslint",
     "qa:fix": "yarn qa:stylelint:fix && yarn qa:prettier:fix && yarn qa:eslint:fix",
     "prepare": "husky",
-    "docs": "git log main..HEAD --pretty=format:'%ad:: %s' > git-diff.txt && echo '\n----------\n' >> git-diff.txt && git diff origin/main...HEAD --color ':!*.lock' >> git-diff.txt",
+    "docs": "git log origin/main..HEAD --pretty=format:'%ad:: %s' > git-diff.txt && echo '\n----------\n' >> git-diff.txt && git diff origin/main...HEAD --color ':!*.lock' >> git-diff.txt",
     "pull:graphql-schema": "npx graphql-codegen --config codegen.ts",
     "migrate:db": "drizzle-kit generate && drizzle-kit migrate"
   },

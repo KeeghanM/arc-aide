@@ -45,7 +45,7 @@ export default function SearchBar({
   const correctedQuery = hasCorrections ? query.data?.[0]?.correctedQuery : null
 
   return (
-    <div className='relative space-y-2'>
+    <div className='text-foreground relative space-y-2'>
       {showTitle && <h2 className='text-2xl font-semibold'>{title}</h2>}
       <input
         type='text'
@@ -57,7 +57,7 @@ export default function SearchBar({
             setValue('')
           }
         }}
-        className='border-border focus:border-primary w-md max-w-full flex-1 rounded-md border p-2 focus:outline-none'
+        className='border-border focus:border-primary w-md max-w-full flex-1 rounded-md border bg-white p-2 focus:outline-none'
       />
 
       {query.data && (

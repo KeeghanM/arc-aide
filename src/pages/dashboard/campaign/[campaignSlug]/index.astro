@@ -1,5 +1,4 @@
 ---
-import { SearchBarWrapper } from '@components/app/components/search-bar/search-bar'
 import SideBarWrapper from '@components/app/components/side-bar/side-bar'
 import CampaignScreen from '@components/app/screens/campaign'
 import { ModeToggle } from '@components/ui/mode-toggle'
@@ -8,6 +7,7 @@ import { arc, campaign as campaignSchema, thing } from '@db/schema'
 import MainLayout from '@layouts/main-layout.astro'
 import { desc } from 'drizzle-orm'
 import { and, eq } from 'drizzle-orm'
+import NavBar from '@/components/app/components/nav-bar/nav-bar'
 
 const { campaignSlug } = Astro.params
 const { user } = Astro.locals
@@ -48,6 +48,12 @@ const thingData = await db
 ---
 
 <MainLayout title={campaign.name}>
+  <NavBar
+    transition:persist
+    user={user}
+    campaignSlug={campaignSlug}
+    client:load
+  />
   <div class='flex'>
     <SideBarWrapper
       user={user}
@@ -55,25 +61,7 @@ const thingData = await db
       client:load
       transition:persist
     />
-    <main class='flex-1 space-y-6 p-4 md:p-8 lg:p-12'>
-      <div>
-        <a
-          href={`/dashboard/`}
-          class='text-accent ml-4 text-lg font-normal hover:italic'
-        >
-          Back to Dashboard</a
-        >
-      </div>
-      <div class='flex items-baseline gap-6'>
-        <h1 class='text-primary text-4xl font-bold md:text-5xl'>
-          {campaign.name}
-        </h1>
-        <SearchBarWrapper
-          user={Astro.locals.user}
-          campaignSlug={campaignSlug}
-          client:load
-        />
-      </div>
+    <main class='flex-1 space-y-6 p-4'>
       <CampaignScreen
         user={user}
         campaignSlug={campaignSlug}
@@ -83,5 +71,9 @@ const thingData = await db
       />
     </main>
   </div>
-  <ModeToggle client:visible />
+  <ModeToggle
+    user={user}
+    campaignSlug={campaignSlug}
+    client:visible
+  />
 </MainLayout>

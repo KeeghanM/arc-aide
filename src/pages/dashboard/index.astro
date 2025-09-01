@@ -4,6 +4,7 @@ import { db } from '@db/db'
 import { campaign } from '@db/schema'
 import MainLayout from '@layouts/main-layout.astro'
 import { desc } from 'drizzle-orm'
+import NavBar from '@/components/app/components/nav-bar/nav-bar'
 
 const campaigns = await db
   .select()
@@ -15,6 +16,12 @@ const campaigns = await db
   title='Dashboard | ArcAide'
   seo={{ description: 'Manage your campaigns from one hub, right here!' }}
 >
+  <NavBar
+    transition:persist
+    user={Astro.locals.user}
+    campaignSlug={undefined}
+    client:load
+  />
   <DashboardScreen
     campaignSlug={undefined}
     initialCampaigns={campaigns}
