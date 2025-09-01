@@ -13,21 +13,20 @@ function Header() {
   return (
     <header className='w-full bg-gray-800 p-4 text-white shadow'>
       <div className='container mx-auto flex max-w-screen-lg items-center'>
-        {/* Left: Campaign Name */}
-        <div className='flex min-w-0 items-center'>
-          {campaignQuery.data && (
-            <h1 className='hover:text-primary max-w-[180px] truncate text-xl font-bold'>
-              <a href={`/dashboard/campaign/${campaignSlug}/`}>
-                {campaignQuery.data.name}
-              </a>
-            </h1>
-          )}
-        </div>
-        {/* Center: Search Bar */}
-        <div className='flex flex-1 justify-center'>
-          <SearchBar />
-        </div>
-        {/* Right: User Info */}
+        {campaignSlug && campaignQuery.data && (
+          <>
+            <div className='flex min-w-0 items-center'>
+              <h1 className='hover:text-primary max-w-[180px] truncate text-xl font-bold'>
+                <a href={`/dashboard/campaign/${campaignSlug}/`}>
+                  {campaignQuery.data.name}
+                </a>
+              </h1>
+            </div>
+            <div className='flex flex-1 justify-center'>
+              <SearchBar />
+            </div>
+          </>
+        )}
         <div className='ml-auto flex items-center space-x-4'>
           {user && (
             <>
