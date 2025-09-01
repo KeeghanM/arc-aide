@@ -7,10 +7,8 @@ import { ModeToggle } from '@components/ui/mode-toggle'
 import { db } from '@db/db'
 import { arc as arcSchema, arcThing, campaign, thing } from '@db/schema'
 import MainLayout from '@layouts/main-layout.astro'
-import { slateToHtml } from '@utils/slate-text-extractor'
 import { and, desc, eq } from 'drizzle-orm'
 import { alias } from 'drizzle-orm/sqlite-core'
-import type { Descendant } from 'slate'
 
 const { campaignSlug, arcSlug } = Astro.params
 
@@ -114,13 +112,9 @@ const things = await db
                 .map((thing) => (
                   <div class='thing border-border bg-primary/5 relative rounded-lg border p-4'>
                     <h3 class='text-lg font-semibold'>{thing.name}</h3>
-                    <div
-                      class='text-muted-foreground line-clamp-3 text-sm'
-                      set:html={slateToHtml(
-                        thing.description as Descendant[],
-                        campaignSlug
-                      )}
-                    />
+                    <div class='text-muted-foreground line-clamp-3 text-sm'>
+                      {thing.descriptionText}
+                    </div>
                     <a
                       href={`/dashboard/campaign/${campaignSlug}/thing/${thing.slug}/`}
                       class='absolute inset-0'
@@ -135,7 +129,11 @@ const things = await db
       </div>
     </main>
   </div>
-  <ModeToggle client:visible />
+  <ModeToggle
+    user={Astro.locals.user}
+    campaignSlug={campaignSlug}
+    client:visible
+  />
 </MainLayout>
 
 <style is:global>

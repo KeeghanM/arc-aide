@@ -1,21 +1,20 @@
 import { useAppStore } from '@components/app/stores/appStore'
 import { Button } from '@components/ui/button'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@components/ui/dropdown-menu'
+import { useArcQueries } from '@hooks/useArcQueries'
+import { useThingQueries } from '@hooks/useThingQueries'
 import { Eye, Pencil } from 'lucide-react'
 import * as React from 'react'
+import ScreenWrapper, { type TScreenWrapperProps } from '../app/screen-wrapper'
 
 /**
  * This is a mode toggle button that switches between 'edit' and 'view' modes.
  * It controls the apps global state using Zustand and persists the mode in localStorage.
  * This allows the user to toggle modes and have their preference remembered across sessions & reloads.
  */
-export function ModeToggle() {
+function Switch() {
   const { mode, setMode } = useAppStore()
+  const { modifyArc } = useArcQueries()
+  const { modifyThing } = useThingQueries()
 
   React.useEffect(() => {
     const storedMode = localStorage.getItem('mode')
@@ -28,30 +27,36 @@ export function ModeToggle() {
     localStorage.setItem('mode', mode)
   }, [mode])
 
+  // We disable the swap button when the app is busy saving changes to prevent mode switching during critical operations.
+  // This ensures the user doesn't lose any data!
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant='outline'
-          size='icon'
-          className='fixed right-4 bottom-4 z-50 rounded-full'
-        >
-          {mode === 'edit' ? (
-            <Pencil className='h-[1.2rem] w-[1.2rem]' />
-          ) : (
-            <Eye className='h-[1.2rem] w-[1.2rem]' />
-          )}
-          <span className='sr-only'>Toggle Mode</span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align='end'>
-        <DropdownMenuItem onClick={() => setMode('edit')}>
-          Edit
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setMode('view')}>
-          View
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    !modifyArc.isPending &&
+    !modifyThing.isPending && (
+      <Button
+        disabled={modifyArc.isPending || modifyThing.isPending}
+        variant='secondary'
+        size='icon'
+        className='fixed right-4 bottom-4 z-50 rounded-full'
+        onClick={() => setMode(mode === 'edit' ? 'view' : 'edit')}
+      >
+        {mode === 'edit' ? (
+          <Pencil className='h-[1.2rem] w-[1.2rem]' />
+        ) : (
+          <Eye className='h-[1.2rem] w-[1.2rem]' />
+        )}
+        <span className='sr-only'>Toggle Mode</span>
+      </Button>
+    )
+  )
+}
+
+export function ModeToggle({ user, campaignSlug }: TScreenWrapperProps) {
+  return (
+    <ScreenWrapper
+      user={user}
+      campaignSlug={campaignSlug}
+    >
+      <Switch />
+    </ScreenWrapper>
   )
 }

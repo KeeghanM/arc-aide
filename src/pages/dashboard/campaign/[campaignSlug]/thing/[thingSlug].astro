@@ -84,5 +84,9 @@ const arcs = (await db
       </div>
     </main>
   </div>
-  <ModeToggle client:visible />
+  <ModeToggle
+    user={Astro.locals.user}
+    campaignSlug={campaignSlug}
+    client:visible
+  />
 </MainLayout>

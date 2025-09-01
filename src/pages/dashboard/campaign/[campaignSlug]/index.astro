@@ -71,5 +71,9 @@ const thingData = await db
       />
     </main>
   </div>
-  <ModeToggle client:visible />
+  <ModeToggle
+    user={user}
+    campaignSlug={campaignSlug}
+    client:visible
+  />
 </MainLayout>
