@@ -65,7 +65,7 @@ export function slateToHtml(nodes: Descendant[], campaignSlug: string): string {
   return html.replace(linkRegex, (_, content) => {
     const [type, slug] = content.split('#', 2)
     if (type && slug) {
-      return `<a href="/dashboard/campaign/${campaignSlug}/${type}/${slug}">${properCase(slug)}</a>`
+      return `<a href="/dashboard/campaign/${campaignSlug}/${type}/${slug}/">${properCase(slug)}</a>`
     } else {
       // If format is invalid, just return the raw text
       return `[[${content}]]`

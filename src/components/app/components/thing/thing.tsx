@@ -19,7 +19,7 @@ export default function Thing({ thing }: { thing: TThing }) {
       </p>
       {/* Full-card navigation link */}
       <a
-        href={`/dashboard/campaign/${campaignSlug}/thing/${thing.slug}`}
+        href={`/dashboard/campaign/${campaignSlug}/thing/${thing.slug}/`}
         className='absolute inset-0'
       >
         <span className='sr-only'>View Thing</span>

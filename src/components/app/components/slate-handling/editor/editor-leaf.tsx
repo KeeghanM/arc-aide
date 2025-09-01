@@ -55,8 +55,8 @@ export default function EditorLeaf({
   if (leaf.link && leaf.linkSlug && leaf.linkType) {
     const href =
       leaf.linkType === 'arc'
-        ? `/dashboard/campaign/${campaignSlug}/arc/${leaf.linkSlug}`
-        : `/dashboard/campaign/${campaignSlug}/thing/${leaf.linkSlug}`
+        ? `/dashboard/campaign/${campaignSlug}/arc/${leaf.linkSlug}/`
+        : `/dashboard/campaign/${campaignSlug}/thing/${leaf.linkSlug}/`
 
     return (
       <a
