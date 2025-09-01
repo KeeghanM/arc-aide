@@ -1,6 +1,7 @@
 import { auth } from '@lib/auth/auth'
 import { db } from '@lib/db/db'
 import { asset, campaign } from '@lib/db/schema'
+import { killBillClient } from '@lib/killbill/client'
 import type { APIRoute } from 'astro'
 import {
   CLOUDFLARE_ACCOUNT_ID,
@@ -41,6 +42,17 @@ export const POST: APIRoute = async ({ request, params }) => {
     const { imageId, label } = await request.json()
     if (!imageId || !label) {
       return new Response('Image ID and label are required', { status: 400 })
+    }
+
+    // Check that the user has a premium subscription
+    const subscriptionStatus = await killBillClient.getSubscriptionStatus(
+      session.user.id
+    )
+
+    if (!subscriptionStatus || !subscriptionStatus.hasActiveSubscription) {
+      return new Response('Forbidden: Premium subscription required', {
+        status: 403,
+      })
     }
 
     // Check if the image was successfully uploaded to Cloudflare
