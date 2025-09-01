@@ -11,7 +11,6 @@ export default function PremiumPrompt({
   onClose?: () => void
   trigger?: React.ReactNode
 }) {
-  console.log('<==== PremiumPrompt ====>', trigger)
   const [open, setOpen] = useState(trigger === undefined)
 
   return (

@@ -1,6 +1,6 @@
-import { auth } from '@lib/auth/auth'
-import { db } from '@lib/db/db'
-import { asset, campaign } from '@lib/db/schema'
+import { auth } from '@auth/auth'
+import { db } from '@db/db'
+import { asset, campaign } from '@db/schema'
 import { killBillClient } from '@lib/killbill/client'
 import type { APIRoute } from 'astro'
 import {
