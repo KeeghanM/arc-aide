@@ -1,6 +1,5 @@
 // @ts-check
 import node from '@astrojs/node'
-import partytown from '@astrojs/partytown'
 import react from '@astrojs/react'
 import sitemap from '@astrojs/sitemap'
 import starlight from '@astrojs/starlight'
@@ -26,19 +25,13 @@ export default defineConfig({
     open: true, // Automatically open the browser when the server starts
   },
   integrations: [
-    // Allow using React components in Astro
-    react(), // Enable icon support for SVGs and other icons
-    icon(),
-    partytown({
-      config: {
-        forward: ['Honeybadger.notify'],
-      },
-    }), // Generate a sitemap for the site
-    sitemap(), // Generate robots.txt file
+    react(), // Allow using React components in Astro
+    icon(), // Enable icon support for SVGs and other icons
+    sitemap(),
     robotsTxt({
       sitemap: `${SITE_URL}/sitemap-index.xml`,
-    }), // Enable compression for assets to reduce size
-    compress(),
+    }), // Generate a sitemap for the site// Generate robots.txt file
+    compress(), // Enable compression for assets to reduce size
     starlight({
       plugins: [starlightAutoSidebar()],
       title: 'Arc Aide Docs',

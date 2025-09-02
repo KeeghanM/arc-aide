@@ -3,6 +3,7 @@ import { css } from '@emotion/css'
 import { useAppStore } from '@stores/appStore.ts'
 import { Transforms } from 'slate'
 import { type RenderLeafProps, useSlate } from 'slate-react'
+import ImageUploader from '../../assets/image-uploader'
 
 export default function EditorLeaf({
   attributes,
@@ -12,7 +13,43 @@ export default function EditorLeaf({
   const { campaignSlug } = useAppStore()
   const editor = useSlate()
 
-  if (leaf.linkSearch && leaf.linkRange) {
+  if (leaf.imageSearch) {
+    return (
+      <span
+        {...attributes}
+        className='relative inline-block space-x-2'
+      >
+        {children}
+        <ImageUploader
+          altText={leaf.alt}
+          onUploadSuccess={(asset) => {
+            if (!asset) return
+            if (!leaf.replacementRange) return
+            const newText = `![${asset.label}](${asset.url})`
+
+            // Create the range to replace
+            const range = {
+              anchor: {
+                path: leaf.replacementRange.path,
+                offset: leaf.replacementRange.offset,
+              },
+              focus: {
+                path: leaf.replacementRange.path,
+                offset:
+                  leaf.replacementRange.offset + leaf.replacementRange.length,
+              },
+            }
+
+            // Select the range and replace with new text
+            Transforms.select(editor, range)
+            Transforms.insertText(editor, newText)
+          }}
+        />
+      </span>
+    )
+  }
+
+  if (leaf.linkSearch && leaf.replacementRange) {
     return (
       <span
         {...attributes}
@@ -26,19 +63,20 @@ export default function EditorLeaf({
           returnType='function'
           onSelect={(result) => {
             if (!result) return
-            if (!leaf.linkRange) return
+            if (!leaf.replacementRange) return
             // Replace the [[]] with [[type#slug]]
             const newText = `[[${result.type}#${result.entitySlug}]]`
 
             // Create the range to replace
             const range = {
               anchor: {
-                path: leaf.linkRange.path,
-                offset: leaf.linkRange.offset,
+                path: leaf.replacementRange.path,
+                offset: leaf.replacementRange.offset,
               },
               focus: {
-                path: leaf.linkRange.path,
-                offset: leaf.linkRange.offset + leaf.linkRange.length,
+                path: leaf.replacementRange.path,
+                offset:
+                  leaf.replacementRange.offset + leaf.replacementRange.length,
               },
             }
 

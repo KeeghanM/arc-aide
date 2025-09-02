@@ -99,6 +99,24 @@ export const thing = sqliteTable(
   ]
 )
 
+export const asset = sqliteTable('asset', {
+  id: integer('id').primaryKey(),
+  label: text('label').notNull(),
+  cloudflareId: text('cloudflare_id').notNull().unique(),
+  url: text('url').notNull(),
+  campaignId: integer('campaign_id')
+    .notNull()
+    .references(() => campaign.id, {
+      onDelete: 'cascade',
+    }),
+  userId: text('user_id')
+    .notNull()
+    .references(() => user.id, { onDelete: 'cascade' }),
+  createdAt: integer('created_at', {
+    mode: 'timestamp',
+  }).notNull(),
+})
+
 export const arcThing = sqliteTable(
   'arc_thing',
   {

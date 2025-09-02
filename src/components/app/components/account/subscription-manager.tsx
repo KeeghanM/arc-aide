@@ -1,5 +1,6 @@
 import { Button } from '@components/ui/button'
 import { Card } from '@components/ui/card'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@components/ui/tooltip'
 import { useSubscriptionQueries } from '@hooks/useSubscriptionQueries'
 import { CheckCircle, CircleX } from 'lucide-react'
 import ScreenWrapper, { type TScreenWrapperProps } from '../../screen-wrapper'
@@ -92,48 +93,48 @@ function Manager() {
             </p>
           </div>
 
-          {/* Base Plan Upgrade */}
           {baseTier === 'free' && (
-            <div className='space-y-3'>
-              <h4 className='font-medium'>Upgrade Base Plan</h4>
-              <Button
-                onClick={() => upgradeToPremium.mutate()}
-                disabled={upgradeToPremium.isPending}
-                className='justify-start'
-              >
-                {upgradeToPremium.isPending
-                  ? 'Loading...'
-                  : 'Upgrade to Premium - $5/month'}
-              </Button>
-            </div>
+            <Button
+              onClick={() => upgradeToPremium.mutate()}
+              disabled={upgradeToPremium.isPending}
+              className='justify-start'
+            >
+              {upgradeToPremium.isPending
+                ? 'Loading...'
+                : 'Upgrade to Premium - $5/month'}
+            </Button>
           )}
 
           {/* Add-ons Section */}
           {baseTier === 'premium' && (
             <div className='space-y-3'>
               <h4 className='font-medium'>Add Features</h4>
-              <div className='grid gap-3 md:grid-cols-2'>
+              <div className='flex flex-col gap-2 md:flex-row'>
                 {!features.hasPublishing && (
-                  <Button
-                    onClick={() => addPublishingAddon.mutate()}
-                    disabled={addPublishingAddon.isPending}
-                    className='justify-start'
-                  >
-                    {addPublishingAddon.isPending
-                      ? 'Adding...'
-                      : 'Add Publishing Tools - $2/month'}
-                  </Button>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <Button
+                        disabled={true}
+                        className='justify-start'
+                      >
+                        Add Publishing Tools - $2/month
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Coming soon!</TooltipContent>
+                  </Tooltip>
                 )}
                 {!features.hasAI && (
-                  <Button
-                    onClick={() => addAiAddon.mutate()}
-                    disabled={addAiAddon.isPending}
-                    className='justify-start'
-                  >
-                    {addAiAddon.isPending
-                      ? 'Adding...'
-                      : 'Add AI-Powered Features - $5/month'}
-                  </Button>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <Button
+                        disabled={true}
+                        className='justify-start'
+                      >
+                        Add AI Tools - $5/month
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Coming soon!</TooltipContent>
+                  </Tooltip>
                 )}
                 {features.hasPublishing && features.hasAI && (
                   <p className='text-muted-foreground'>

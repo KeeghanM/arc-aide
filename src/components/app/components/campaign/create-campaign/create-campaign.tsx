@@ -9,7 +9,9 @@ import {
   DialogTrigger,
 } from '@components/ui/dialog'
 import { Input } from '@components/ui/input'
+import PremiumPrompt from '@components/ui/premium-prompt'
 import { useCampaignQueries } from '@hooks/useCampaignQueries'
+import { useSubscriptionQueries } from '@hooks/useSubscriptionQueries'
 import { useState } from 'react'
 
 /**
@@ -20,9 +22,10 @@ import { useState } from 'react'
  * becomes the primary identifier and navigation slug.
  */
 export default function CreateCampaign() {
-  const { createCampaign } = useCampaignQueries()
+  const { createCampaign, campaignsQuery } = useCampaignQueries()
   const [campaignName, setCampaignName] = useState('')
   const [open, setOpen] = useState(false)
+  const { features } = useSubscriptionQueries()
 
   // --- Form submission ---
   const handleCreate = async () => {
@@ -33,6 +36,35 @@ export default function CreateCampaign() {
       setOpen(false)
     }
   }
+
+  if (
+    !features?.hasPremium &&
+    campaignsQuery.data &&
+    campaignsQuery.data?.length >= 1
+  )
+    return (
+      <PremiumPrompt
+        trigger={
+          <Button
+            className='mt-auto'
+            variant='default'
+          >
+            Create Campaign
+          </Button>
+        }
+        onClose={() => setOpen(false)}
+      >
+        <p>Having multiple campaigns is for our premium members only. </p>
+        <p>
+          We want to offer as many features as we can for free, and one of the
+          most expensive parts of running the site is storage space.
+        </p>
+        <p>
+          If you&apos;d like to support the project and gain access to multiple
+          campaigns, please consider upgrading to a premium account.
+        </p>
+      </PremiumPrompt>
+    )
 
   return (
     <Dialog

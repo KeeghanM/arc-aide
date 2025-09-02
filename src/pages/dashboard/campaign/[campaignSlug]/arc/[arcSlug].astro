@@ -72,7 +72,7 @@ const things = await db
   .limit(10)
 ---
 
-<MainLayout title={arc.name}>
+<MainLayout title={`${arc.name} (Arc) - ${campaignResult[0].name} | ArcAide`}>
   <NavBar
     user={Astro.locals.user}
     campaignSlug={campaignSlug}

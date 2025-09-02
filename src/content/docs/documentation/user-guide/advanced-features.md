@@ -224,10 +224,52 @@ The editor automatically adapts to your workflow:
 The interactive toolbar provides one-click access to:
 
 - **Bold, Italic, Underline** formatting buttons
-- **Image insertion** with markdown syntax template
+- **Image insertion** with dual upload modes (URL and file upload)
 - **Link creation** for internal references
 - **Header dropdown** for different heading levels
 - **Table generator** with basic table structure
+
+### Image Handling
+
+ArcAide supports two methods for adding images to your campaign content:
+
+#### Image by URL (Free)
+
+All users can add images using external URLs:
+
+1. **Click the Image button** in the editor toolbar
+2. **Select "URL mode"** in the image dialog
+3. **Enter a descriptive label** for accessibility
+4. **Paste the image URL** from any web source
+5. **Click "Add Image"** to insert into your content
+
+#### Image Upload (Premium Feature)
+
+Premium subscribers can upload their own image files:
+
+1. **Click the Image button** in the editor toolbar
+2. **Select "File Upload mode"** in the image dialog
+3. **Enter a descriptive label** for the image
+4. **Choose a file** from your computer
+5. **Upload automatically** to secure cloud storage
+6. **Image is inserted** with optimized delivery
+
+#### Premium Upgrade Prompts
+
+Free users attempting file uploads will see educational prompts explaining:
+
+- **Storage costs** and why uploads require premium
+- **Alternative URL method** remains available
+- **Premium benefits** including multiple campaigns
+- **Easy upgrade process** to access full features
+
+#### Image Features
+
+- **Accessibility support** - Labels become alt text for screen readers
+- **Responsive display** - Images adapt to different screen sizes
+- **Secure storage** - Uploaded files stored on Cloudflare's global CDN
+- **Optimized delivery** - Automatic image optimization and variant generation
+- **Campaign organization** - All uploaded assets tied to specific campaigns
 
 ### Keyboard Shortcuts
 

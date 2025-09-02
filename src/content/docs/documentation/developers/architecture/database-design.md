@@ -126,6 +126,19 @@ arc_things (
   FOREIGN KEY (arc_id) REFERENCES arcs(id) ON DELETE CASCADE,
   FOREIGN KEY (thing_id) REFERENCES things(id) ON DELETE CASCADE
 )
+
+-- Asset management
+assets (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  label TEXT NOT NULL,
+  cloudflare_id TEXT NOT NULL UNIQUE,
+  url TEXT NOT NULL,
+  campaign_id INTEGER NOT NULL,
+  user_id TEXT NOT NULL,
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (campaign_id) REFERENCES campaigns(id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+)
 ```
 
 ## Indexing Strategy
@@ -188,6 +201,12 @@ CREATE INDEX idx_sessions_token ON sessions(token)
 CREATE INDEX idx_campaigns_updated_at ON campaigns(updated_at)
 CREATE INDEX idx_arcs_updated_at ON arcs(updated_at)
 CREATE INDEX idx_things_updated_at ON things(updated_at)
+
+-- Asset management queries
+CREATE INDEX idx_assets_campaign_id ON assets(campaign_id)
+CREATE INDEX idx_assets_user_id ON assets(user_id)
+CREATE INDEX idx_assets_created_at ON assets(created_at)
+CREATE UNIQUE INDEX idx_assets_cloudflare_id ON assets(cloudflare_id)
 ```
 
 ## Full-Text Search

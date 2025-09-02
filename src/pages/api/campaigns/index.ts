@@ -2,6 +2,7 @@ import { auth } from '@auth/auth'
 import { db } from '@db/db'
 import { campaign } from '@db/schema'
 import Honeybadger from '@honeybadger-io/js'
+import { killBillClient } from '@lib/killbill/client'
 import { slugify } from '@utils/string'
 import type { APIRoute } from 'astro'
 import { desc, eq } from 'drizzle-orm'
@@ -65,6 +66,28 @@ export const POST: APIRoute = async ({ request }) => {
       return new Response(JSON.stringify({ error: 'Unauthorized' }), {
         status: 401,
       })
+    }
+
+    const subscriptionStatus = await killBillClient.getSubscriptionStatus(
+      session.user.id
+    )
+
+    if (!subscriptionStatus || !subscriptionStatus.hasActiveSubscription) {
+      // We now need to check for how many campaigns the user has
+      const userCampaigns = await db
+        .select()
+        .from(campaign)
+        .where(eq(campaign.userId, session.user.id))
+
+      if (userCampaigns.length >= 1) {
+        return new Response(
+          JSON.stringify({
+            error:
+              'You have reached the limit of 1 campaign for free accounts. Please upgrade to create more campaigns.',
+          }),
+          { status: 403 }
+        )
+      }
     }
 
     const NewCampaign = z.object({

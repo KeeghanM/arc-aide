@@ -35,7 +35,7 @@ export default function EditorToolbar({
         variant='ghost'
         onMouseDown={(e) => {
           e.preventDefault()
-          Transforms.insertText(editor, '![Image Label](https://)')
+          Transforms.insertText(editor, '![Image Label]()')
         }}
       >
         <ImageIcon className='h-4 w-4' />
