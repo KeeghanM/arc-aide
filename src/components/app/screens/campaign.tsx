@@ -3,13 +3,17 @@ import { type TThing, useThingQueries } from '@hooks/useThingQueries'
 import ArcItem from '../components/arc/arc-item'
 import CreateArc from '../components/arc/create-arc/create-arc'
 import CampaignSettings from '../components/campaign/campaign-settings/campaign-settings'
+import Publish from '../components/publish/publish'
 import CreateThing from '../components/thing/create-thing/create-thing'
 import Thing from '../components/thing/thing'
+import { useCampaignQueries } from '../hooks/useCampaignQueries'
 import ScreenWrapper, { type TScreenWrapperProps } from '../screen-wrapper'
 
 type TCampaignProps = {
   initialArcs: TArc[]
   latestThings: TThing[]
+  published: boolean
+  campaignSlug: string
 }
 
 /**
@@ -22,9 +26,16 @@ type TCampaignProps = {
  *
  * Uses initial data from SSR as fallback while React Query loads fresh data.
  */
-function Campaign({ initialArcs, latestThings }: TCampaignProps) {
+function Campaign({
+  initialArcs,
+  latestThings,
+  published,
+  campaignSlug,
+}: TCampaignProps) {
   const { arcsQuery } = useArcQueries()
   const { useThingsQuery } = useThingQueries()
+  const { useCampaignQuery } = useCampaignQueries()
+  const campaignQuery = useCampaignQuery(campaignSlug)
 
   const thingsQuery = useThingsQuery({
     count: 20,
@@ -32,14 +43,21 @@ function Campaign({ initialArcs, latestThings }: TCampaignProps) {
 
   return (
     <>
-      <div className='mb-2 flex items-center gap-2'>
+      <div className='bg-primary/10 mb-2 flex items-center gap-8 rounded p-2'>
         <CampaignSettings />
         <a
           href='/dashboard/'
-          className='ml-auto text-red-500 hover:underline'
+          className='text-red-500 hover:underline'
         >
-          Exit
+          Exit to Dashboard
         </a>
+        <div className='flex items-center gap-2'>
+          <Publish
+            published={campaignQuery.data?.published ?? published}
+            type='campaign'
+            slug={campaignSlug}
+          />
+        </div>
       </div>
       {/* --- Arcs Section --- */}
       <h2 className='mb-4 flex items-center gap-4 text-2xl font-semibold'>
@@ -86,6 +104,7 @@ function Campaign({ initialArcs, latestThings }: TCampaignProps) {
 }
 
 export default function CampaignScreen({
+  published,
   campaignSlug,
   initialArcs,
   latestThings,
@@ -96,7 +115,7 @@ export default function CampaignScreen({
       user={user}
       campaignSlug={campaignSlug}
     >
-      <Campaign {...{ initialArcs, latestThings }} />
+      <Campaign {...{ initialArcs, latestThings, campaignSlug, published }} />
     </ScreenWrapper>
   )
 }

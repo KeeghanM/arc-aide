@@ -1,7 +1,6 @@
 import type { campaign } from '@db/schema'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { usePostHog } from 'posthog-js/react'
-import type { Descendant } from 'slate'
 import { useSyncMutation } from './useSyncMutation'
 
 export type TCampaign = typeof campaign.$inferSelect
@@ -71,24 +70,19 @@ export function useCampaignQueries() {
   })
 
   const modifyCampaign = useSyncMutation({
-    mutationFn: async (updatedCampaign: {
-      campaignSlug: string
-      name: string
-      description?: Descendant[]
-    }): Promise<TCampaign> => {
-      const response = await fetch(
-        `/api/campaigns/${updatedCampaign.campaignSlug}`,
-        {
-          method: 'PUT',
-          body: JSON.stringify({ updatedCampaign }),
-          headers: { 'Content-Type': 'application/json' },
-        }
-      )
+    mutationFn: async (
+      updatedCampaign: Partial<TCampaign> & { slug: string }
+    ): Promise<TCampaign> => {
+      const response = await fetch(`/api/campaigns/${updatedCampaign.slug}`, {
+        method: 'PUT',
+        body: JSON.stringify({ updatedCampaign }),
+        headers: { 'Content-Type': 'application/json' },
+      })
 
       return await response.json()
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['campaigns'] })
+    onSuccess: (variables) => {
+      queryClient.invalidateQueries({ queryKey: ['campaign', variables.slug] })
     },
   })
 

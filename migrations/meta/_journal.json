@@ -64,6 +64,27 @@
       "when": 1756479235980,
       "tag": "0008_lucky_kronos",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "6",
+      "when": 1757082077006,
+      "tag": "0009_long_exiles",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "6",
+      "when": 1757084460210,
+      "tag": "0010_huge_switch",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "6",
+      "when": 1757089741409,
+      "tag": "0011_brown_devos",
+      "breakpoints": true
     }
   ]
 }

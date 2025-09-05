@@ -159,6 +159,7 @@ export const PUT: APIRoute = async ({ request, params }) => {
       name: z.string().min(1).max(255).optional(),
       typeId: z.number().int().positive().optional(),
       description: z.any().optional(),
+      published: z.boolean().optional(),
     })
 
     const { updatedThing } = await request.json()
@@ -188,6 +189,8 @@ export const PUT: APIRoute = async ({ request, params }) => {
         parsedThing.data.description
       )
     }
+    if (parsedThing.data.published !== undefined)
+      updateData.published = parsedThing.data.published
 
     const result = await db
       .update(thing)

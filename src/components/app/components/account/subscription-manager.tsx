@@ -10,8 +10,6 @@ function Manager() {
     subscriptionStatusQuery,
     upgradeToPremium,
     cancelPremium,
-    addPublishingAddon,
-    cancelPublishingAddon,
     addAiAddon,
     cancelAiAddon,
     baseTier,
@@ -46,11 +44,7 @@ function Manager() {
     )
   }
 
-  if (
-    upgradeToPremium.isError ||
-    addPublishingAddon.isError ||
-    addAiAddon.isError
-  ) {
+  if (upgradeToPremium.isError || addAiAddon.isError) {
     return (
       <div className='space-y-6'>
         <div>
@@ -110,19 +104,6 @@ function Manager() {
             <div className='space-y-3'>
               <h4 className='font-medium'>Add Features</h4>
               <div className='flex flex-col gap-2 md:flex-row'>
-                {!features.hasPublishing && (
-                  <Tooltip>
-                    <TooltipTrigger>
-                      <Button
-                        disabled={true}
-                        className='justify-start'
-                      >
-                        Add Publishing Tools - $2/month
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>Coming soon!</TooltipContent>
-                  </Tooltip>
-                )}
                 {!features.hasAI && (
                   <Tooltip>
                     <TooltipTrigger>
@@ -168,22 +149,6 @@ function Manager() {
                       size='sm'
                       className='m-0 ml-auto p-0 text-red-500'
                       onClick={() => cancelPremium.mutate()}
-                    >
-                      Cancel
-                    </Button>
-                  )}
-                </div>
-                <div
-                  className={`flex items-center gap-2 ${features.hasPublishing ? 'text-green-600' : 'text-muted-foreground'}`}
-                >
-                  {features.hasPublishing ? <CheckCircle /> : <CircleX />}{' '}
-                  Publishing Tools
-                  {features.hasPublishing && (
-                    <Button
-                      variant='link'
-                      size='sm'
-                      className='m-0 ml-auto p-0 text-red-500'
-                      onClick={() => cancelPublishingAddon.mutate()}
                     >
                       Cancel
                     </Button>

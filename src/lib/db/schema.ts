@@ -9,6 +9,11 @@ export const campaign = sqliteTable(
     slug: text('slug').notNull(),
     name: text('name').notNull(),
     description: text('description', { mode: 'json' }),
+    published: integer('published', {
+      mode: 'boolean',
+    })
+      .notNull()
+      .default(false),
     createdAt: integer('created_at', {
       mode: 'timestamp',
     }).notNull(),
@@ -42,6 +47,11 @@ export const arc = sqliteTable(
     problemText: text('problem_text').default(''),
     outcomeText: text('outcome_text').default(''),
     notesText: text('notes_text').default(''),
+    published: integer('published', {
+      mode: 'boolean',
+    })
+      .notNull()
+      .default(false),
     createdAt: integer('created_at', {
       mode: 'timestamp',
     }).notNull(),
@@ -82,6 +92,11 @@ export const thing = sqliteTable(
     description: text('description', { mode: 'json' }),
     // Plain text version for search indexing
     descriptionText: text('description_text').default(''),
+    published: integer('published', {
+      mode: 'boolean',
+    })
+      .notNull()
+      .default(false),
     campaignId: integer('campaign_id')
       .notNull()
       .references(() => campaign.id, {
@@ -135,6 +150,7 @@ export const user = sqliteTable('user', {
   id: text('id').primaryKey(),
   name: text('name').notNull(),
   email: text('email').notNull().unique(),
+  username: text('username').unique(),
   emailVerified: integer('email_verified', {
     mode: 'boolean',
   }).notNull(),

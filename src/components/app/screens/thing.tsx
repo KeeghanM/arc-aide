@@ -1,6 +1,7 @@
 import { type TThing, useThingQueries } from '@hooks/useThingQueries'
 import pDebounce from 'p-debounce'
 import type { Descendant } from 'slate'
+import Publish from '../components/publish/publish'
 import MarkdownEditor, {
   defaultEditorValue,
 } from '../components/slate-handling/editor/markdown-editor'
@@ -27,6 +28,13 @@ function Thing({ thing }: TThingProps) {
 
   return (
     <div className='space-y-6 pr-6 md:pr-12'>
+      <div className='flex items-center gap-2'>
+        <Publish
+          published={thingQuery.data?.published ?? thing.published}
+          type='thing'
+          slug={thing.slug}
+        />
+      </div>
       <div>
         <h2 className='mb-2 flex items-center gap-2 text-2xl font-semibold'>
           Description

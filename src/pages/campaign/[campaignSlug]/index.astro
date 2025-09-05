@@ -1,0 +1,80 @@
+---
+import { db } from '@lib/db/db'
+import { arc, campaign, thing } from '@lib/db/schema'
+import { and, desc, eq } from 'drizzle-orm'
+import MainLayout from '@/layouts/main-layout.astro'
+
+const { campaignSlug } = Astro.params
+
+if (!campaignSlug) {
+  return Astro.redirect('/404')
+}
+
+const [campaignData] = await db
+  .select()
+  .from(campaign)
+  .where(and(eq(campaign.slug, campaignSlug), eq(campaign.published, true)))
+  .limit(1)
+
+if (!campaignData) {
+  return Astro.redirect('/404')
+}
+
+const arcData = await db
+  .select()
+  .from(arc)
+  .where(and(eq(arc.campaignId, campaignData.id), eq(arc.published, true)))
+  .orderBy(desc(arc.updatedAt))
+
+const thingData = await db
+  .select()
+  .from(thing)
+  .where(and(eq(thing.campaignId, campaignData.id), eq(thing.published, true)))
+  .orderBy(desc(thing.updatedAt))
+  .limit(20)
+---
+
+<MainLayout title={`${campaignData.name} | ArcAide`}>
+  <div class='dnd-content min-h-screen'>
+    <h1>{campaignData.name}</h1>
+    <p>
+      {campaignData.description}
+    </p>
+    <section>
+      <h2>Recent Arcs</h2>
+      {
+        arcData.length > 0 ? (
+          <ul>
+            {arcData.map((arc) => (
+              <li>
+                <a href={`/campaign/${campaignSlug}/arc/${arc.slug}`}>
+                  {arc.name}
+                </a>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p class='text-muted-foreground'>No arcs available.</p>
+        )
+      }
+    </section>
+    <section>
+      <h2>Recent Things</h2>
+      {
+        thingData.length > 0 ? (
+          <ul>
+            {thingData.map((thing) => (
+              <li>
+                <a href={`/campaign/${campaignSlug}/thing/${thing.slug}`}>
+                  {thing.name}
+                </a>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p class='text-muted-foreground'>No things available.</p>
+        )
+      }
+    </section>
+  </div>
+</MainLayout>
