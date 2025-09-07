@@ -7,15 +7,16 @@ import Hero from '@components/marketing/Hero.astro'
 import MainLayout from '@layouts/main-layout.astro'
 import {
   BarChart3,
-  Book,
   Calendar,
   Cloud,
+  Dices,
   Eye,
   Globe,
   Link,
+  Map,
   Search,
   Shield,
-  Users,
+  TableProperties,
   Wand2,
   Zap,
 } from 'lucide-react'
@@ -61,31 +62,37 @@ const allFeatures = [
 
 const advancedFeatures = [
   {
-    title: 'Campaign Analytics',
+    title: 'Campaign Analytics (coming soon)',
     description:
       'Track which NPCs appear most, what locations matter, and how your arcs are progressing with detailed insights.',
     icon: BarChart3,
   },
   {
-    title: 'Session Planning',
+    title: 'Session Planning (coming soon)',
     description:
       'Plan sessions efficiently with encounter builders, NPC quick-references, and plot point reminders.',
     icon: Calendar,
   },
   {
-    title: 'Collaboration Tools',
+    title: 'Infinite Maps (coming soon)',
     description:
-      'Co-DM with friends, let players contribute to world-building, or get feedback from other DMs.',
-    icon: Users,
+      'Create interactive, zoomable maps for your world. Connect locations, add markers, and explore your campaign visually.',
+    icon: Map,
   },
   {
-    title: 'Import & Export',
+    title: 'Rollable Tables (coming soon)',
     description:
-      'Import from D&D Beyond, Roll20, or spreadsheets. Export for sharing with players or backup.',
-    icon: Book,
+      'Create custom roll tables with weighted results. Click to roll random encounters, loot, or story elements instantly.',
+    icon: TableProperties,
   },
   {
-    title: 'AI-Powered Tools',
+    title: 'Interactive Dice (coming soon)',
+    description:
+      'Add clickable dice to any content. Roll stat blocks, damage, or custom dice with a single click in view mode.',
+    icon: Dices,
+  },
+  {
+    title: 'AI-Powered Tools (coming soon)',
     description:
       'Generate compelling story hooks, NPCs, and plot twists using our AI-powered creative tools.',
     icon: Wand2,

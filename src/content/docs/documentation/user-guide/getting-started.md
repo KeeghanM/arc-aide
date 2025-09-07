@@ -62,14 +62,14 @@ This hook immediately presents a mystery and potential danger, giving players a 
 
 ### 2. Protagonist
 
-The main character(s) or heroes of this particular story arc.
+The main character(s) or heroes of this particular story arc. **Note: This doesn't always mean the player characters!** Sometimes the protagonist is an NPC the party is helping, like a local temple priest trying to save their community.
 
 <details>
 <summary>Example: Lost Mine of Phandelver Protagonist</summary>
 
 _"The adventuring party, hired by Gundren Rockseeker to escort supplies to Phandalin."_
 
-Clear identification of who the heroes are and their initial motivation.
+In this case, the party are the protagonists. But it could also be: _"Gundren Rockseeker, a dwarf merchant trying to reclaim his family's lost mine."_ - with the party as allies helping the true protagonist.
 
 </details>
 
@@ -82,33 +82,33 @@ The opposition, conflict source, or "villain" of the arc.
 
 _"Klarg, the bugbear leader of a goblin tribe that has captured Gundren and his escort."_
 
-A specific, named threat that the players can focus on confronting.
+A specific, named threat that creates meaningful opposition to the protagonist's goals.
 
 </details>
 
 ### 4. Problem
 
-The central challenge or conflict that needs to be resolved.
+The central challenge or conflict that needs to be resolved. This should be specific and have clear stakes - what happens if it's not solved?
 
 <details>
 <summary>Example: Lost Mine of Phandelver Problem</summary>
 
-_"Gundren has been captured and his location is unknown. The supplies he was expecting are crucial for the town's defense."_
+_"Gundren has been captured and his location is unknown. Without his expertise and the supplies, the town of Phandalin will be vulnerable to threats and unable to rebuild."_
 
-A clear problem statement that drives the story forward.
+A clear problem statement that explains both the immediate issue and why it matters.
 
 </details>
 
 ### 5. Key
 
-The solution, tool, method, or insight needed to resolve the problem.
+The crucial discovery, revelation, tool, or insight needed to solve the problem. This is often a twist or piece of information that changes everything - **the one thing** the protagonists need to find out or obtain.
 
 <details>
 <summary>Example: Lost Mine of Phandelver Key</summary>
 
-_"Following the goblin tracks to their hideout, gathering information from captured goblins, and staging a rescue mission."_
+_"Learning that the goblins are working for someone called 'the Black Spider' and discovering the location of their hideout through captured goblin interrogation."_
 
-The path to resolution that players must discover and execute.
+The specific knowledge or revelation that unlocks the path to resolution.
 
 </details>
 

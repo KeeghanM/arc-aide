@@ -11,7 +11,7 @@ ArcAide is designed specifically for Dungeon Masters who want to create more eng
 - **Campaigns**: Top-level containers for your D&D campaigns
 - **Arcs**: Narrative storylines within campaigns (Hook, Protagonist, Antagonist, Problem, Key, Outcome)
 - **Things**: Campaign entities (NPCs, locations, items, plot devices) organized by custom types
-- **Rich Text Editing**: Markdown-based content creation with real-time collaboration support
+- **Rich Text Editing**: Markdown-based content creation with cross-referencing
 
 ## Technologies Used
 
@@ -169,13 +169,13 @@ public/                    # Static assets
 ArcAide uses a structured approach to storytelling based on narrative arcs. Each arc contains six key elements:
 
 - **Hook**: The opening or inciting incident that draws players in
-- **Protagonist**: The main character or hero of the story
+- **Protagonist**: The main character or hero of the story (not always the party - sometimes an NPC they're helping!)
 - **Antagonist**: The opposition or conflict source
-- **Problem**: The central challenge or conflict to be resolved
-- **Key**: The solution, tool, or method to resolve the problem
+- **Problem**: The central challenge with clear stakes - what happens if it's not solved?
+- **Key**: The crucial discovery or revelation needed to solve the problem - often a twist or "the one thing" needed
 - **Outcome**: The resolution and consequences of the arc
 
-This framework helps Dungeon Masters create compelling, well-structured storylines that engage players and drive the narrative forward.
+This framework helps Dungeon Masters create compelling, well-structured storylines that engage players and drive the narrative forward. By understanding that protagonists aren't always the party and that keys should be specific revelations, you can craft more nuanced and engaging stories.
 
 ## Contributing
 
