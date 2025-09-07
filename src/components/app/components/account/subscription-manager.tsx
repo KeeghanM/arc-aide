@@ -13,7 +13,6 @@ function Manager() {
     addAiAddon,
     cancelAiAddon,
     baseTier,
-    activeAddons,
     features,
     hasActiveSubscription,
   } = useSubscriptionQueries()
@@ -72,18 +71,7 @@ function Manager() {
             <h3 className='font-semibold'>Current Plan</h3>
             <p className='text-muted-foreground text-sm'>
               {baseTier === 'premium' ? 'Premium Plan' : 'Free Plan'}
-              {activeAddons.length > 0 && (
-                <span>
-                  {' '}
-                  +{' '}
-                  {activeAddons
-                    .map(
-                      (addon) => addon.charAt(0).toUpperCase() + addon.slice(1)
-                    )
-                    .join(', ')}{' '}
-                  Add-ons
-                </span>
-              )}
+              {features.hasAI ? ' + AI Add-on' : ''}
             </p>
           </div>
 

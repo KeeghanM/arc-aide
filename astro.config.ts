@@ -64,6 +64,9 @@ export default defineConfig({
     ssr: {
       noExternal: ['zod'],
     },
+    optimizeDeps: {
+      exclude: ['better-auth'],
+    },
   },
   adapter: node({
     mode: 'standalone', // Run on a Node.js server, can be swapped to another adapter for different environments

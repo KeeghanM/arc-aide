@@ -2,6 +2,7 @@ import { Button } from '@components/ui/button'
 import PremiumPrompt from '@components/ui/premium-prompt'
 import SavingSpinner from '@components/ui/saving-spinner'
 import { Tooltip, TooltipContent } from '@components/ui/tooltip'
+import UsernamePrompt from '@components/ui/username-prompt'
 import { useArcQueries } from '@hooks/useArcQueries'
 import { useCampaignQueries } from '@hooks/useCampaignQueries'
 import { useSubscriptionQueries } from '@hooks/useSubscriptionQueries'
@@ -22,8 +23,9 @@ export default function Publish({ published, type, slug }: TPublish) {
   const { modifyThing } = useThingQueries()
   const { modifyCampaign } = useCampaignQueries()
   const { features } = useSubscriptionQueries()
-  const { campaignSlug } = useAppStore()
+  const { campaignSlug, user } = useAppStore()
   const [showPremiumPrompt, setShowPremiumPrompt] = useState(false)
+  const [showUsernamePrompt, setShowUsernamePrompt] = useState(false)
 
   const somethingPending =
     modifyArc.isPending || modifyThing.isPending || modifyCampaign.isPending
@@ -31,6 +33,11 @@ export default function Publish({ published, type, slug }: TPublish) {
   const handlePublishToggle = async () => {
     if (!features?.hasPremium) {
       setShowPremiumPrompt(true)
+      return
+    }
+
+    if (!user?.username) {
+      setShowUsernamePrompt(true)
       return
     }
 
@@ -77,6 +84,17 @@ export default function Publish({ published, type, slug }: TPublish) {
           </p>
         </PremiumPrompt>
       )}
+      {showUsernamePrompt && (
+        <UsernamePrompt
+          onClose={() => setShowUsernamePrompt(false)}
+          onSuccess={() => {
+            console.log('Username set, closing prompt')
+            setShowUsernamePrompt(false)
+            // Automatically trigger publish after username is set
+            handlePublishToggle()
+          }}
+        />
+      )}
       <div>
         {published ? (
           <div className='flex items-center gap-2'>
@@ -102,8 +120,8 @@ export default function Publish({ published, type, slug }: TPublish) {
             <a
               href={
                 type === 'campaign'
-                  ? `/campaign/${campaignSlug}/`
-                  : `/campaign/${campaignSlug}/${type}/${slug}/`
+                  ? `/${user?.username || user?.name || 'user'}/campaign/${campaignSlug}/`
+                  : `/${user?.username || user?.name || 'user'}/campaign/${campaignSlug}/${type}/${slug}/`
               }
               target='_blank'
               rel='noreferrer'

@@ -1,0 +1,173 @@
+---
+import { defaultEditorValue } from '@components/app/components/slate-handling/editor/markdown-editor'
+import MainLayout from '@layouts/main-layout.astro'
+import { db } from '@lib/db/db'
+import { arc, arcThing, campaign, thing, thingType, user } from '@lib/db/schema'
+import { slateToHtml } from '@lib/utils/slate-text-extractor'
+import { and, desc, eq } from 'drizzle-orm'
+import type { Descendant } from 'slate'
+
+const { username, campaignSlug, arcSlug } = Astro.params
+
+if (!username || !campaignSlug || !arcSlug) {
+  return Astro.redirect('/404')
+}
+
+// Fetch user by username
+const [userData] = await db
+  .select()
+  .from(user)
+  .where(eq(user.username, username))
+  .limit(1)
+
+if (!userData) {
+  return Astro.redirect('/404')
+}
+
+// Fetch arc, campaign, and verify ownership
+const arcCampaignQuery = await db
+  .select({
+    arc,
+    campaign,
+  })
+  .from(arc)
+  .fullJoin(campaign, eq(arc.campaignId, campaign.id))
+  .where(
+    and(
+      eq(arc.slug, arcSlug),
+      eq(campaign.slug, campaignSlug),
+      eq(campaign.userId, userData.id),
+      eq(arc.published, true),
+      eq(campaign.published, true)
+    )
+  )
+  .limit(1)
+
+if (
+  arcCampaignQuery.length === 0 ||
+  !arcCampaignQuery[0].arc ||
+  !arcCampaignQuery[0].campaign
+) {
+  return Astro.redirect('/404')
+}
+
+const { arc: arcData, campaign: campaignData } = arcCampaignQuery[0]
+
+// Fetch linked things
+const linkedThings = await db
+  .select({
+    thing,
+    thingType,
+  })
+  .from(arcThing)
+  .fullJoin(thing, eq(arcThing.thingId, thing.id))
+  .fullJoin(thingType, eq(thing.typeId, thingType.id))
+  .where(and(eq(arcThing.arcId, arcData.id), eq(thing.published, true)))
+  .orderBy(desc(thing.updatedAt))
+
+// Helper function to filter out secret content
+const filterSecrets = (content: Descendant[] | null): Descendant[] => {
+  if (!content) return defaultEditorValue
+  return content.filter((node) => !(node as any).isSecret)
+}
+
+// Build content array with headers, filtering out secrets
+const contentWithHeaders = [
+  {
+    type: 'paragraph',
+    children: [{ text: '# Hook' }],
+  },
+  ...filterSecrets(arcData.hook as Descendant[]),
+  {
+    type: 'paragraph',
+    children: [{ text: '# Protagonist' }],
+  },
+  ...filterSecrets(arcData.protagonist as Descendant[]),
+  {
+    type: 'paragraph',
+    children: [{ text: '# Antagonist' }],
+  },
+  ...filterSecrets(arcData.antagonist as Descendant[]),
+  {
+    type: 'paragraph',
+    children: [{ text: '# Problem' }],
+  },
+  ...filterSecrets(arcData.problem as Descendant[]),
+  {
+    type: 'paragraph',
+    children: [{ text: '# Key' }],
+  },
+  ...filterSecrets(arcData.key as Descendant[]),
+  {
+    type: 'paragraph',
+    children: [{ text: '# Outcome' }],
+  },
+  ...filterSecrets(arcData.outcome as Descendant[]),
+  {
+    type: 'paragraph',
+    children: [{ text: '# Notes' }],
+  },
+  ...filterSecrets(arcData.notes as Descendant[]),
+] as Descendant[]
+---
+
+<MainLayout
+  title={`${arcData.name} | ${campaignData.name} | ${username} | ArcAide`}
+>
+  <div class='dnd-content min-h-screen'>
+    <div class='mb-4'>
+      <a
+        href={`/${username}/campaign/${campaignSlug}`}
+        class='text-accent text-sm hover:underline'
+      >
+        ← Back to {campaignData.name}
+      </a>
+    </div>
+
+    <h1>{arcData.name}</h1>
+    <p class='text-muted-foreground mb-6'>
+      From <a
+        href={`/${username}/campaign/${campaignSlug}`}
+        class='text-accent hover:underline'
+        >{campaignData.name}</a
+      >
+      by <a
+        href={`/${username}`}
+        class='text-accent hover:underline'
+        >{username}</a
+      >
+    </p>
+
+    <div set:html={slateToHtml(contentWithHeaders, campaignSlug)} />
+
+    {
+      linkedThings.length > 0 && (
+        <section class='mt-12'>
+          <h2>Related Elements</h2>
+          <div class='grid gap-4 md:grid-cols-2 lg:grid-cols-3'>
+            {linkedThings.map(
+              ({ thing, thingType }) =>
+                thing && (
+                  <div class='card'>
+                    <h3 class='font-semibold'>
+                      <a
+                        href={`/${username}/campaign/${campaignSlug}/thing/${thing.slug}`}
+                        class='hover:text-accent hover:underline'
+                      >
+                        {thing.name}
+                      </a>
+                    </h3>
+                    {thingType && (
+                      <p class='text-muted-foreground text-sm'>
+                        {thingType.name}
+                      </p>
+                    )}
+                  </div>
+                )
+            )}
+          </div>
+        </section>
+      )
+    }
+  </div>
+</MainLayout>

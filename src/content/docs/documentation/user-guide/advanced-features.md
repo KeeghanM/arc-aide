@@ -220,9 +220,10 @@ Each publishable piece of content includes a publish toggle button that shows:
 
 Published content is accessible at predictable URLs:
 
-- **Campaigns**: `/campaign/[campaign-slug]/`
-- **Arcs**: `/campaign/[campaign-slug]/arc/[arc-slug]/`
-- **Things**: `/campaign/[campaign-slug]/thing/[thing-slug]/`
+- **User Profile**: `/{username}/` - Shows all published campaigns by a user
+- **Campaigns**: `/{username}/campaign/{campaign-slug}/`
+- **Arcs**: `/{username}/campaign/{campaign-slug}/arc/{arc-slug}/`
+- **Things**: `/{username}/campaign/{campaign-slug}/thing/{thing-slug}/`
 
 ### Secret Content System
 
