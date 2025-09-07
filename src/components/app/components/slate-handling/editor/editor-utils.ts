@@ -46,3 +46,46 @@ export const applyFormatting = (key: 'b' | 'i' | 'u', editor: CustomEditor) => {
     }
   }
 }
+
+export const addPublishableClickListeners = (
+  editorRef: React.RefObject<HTMLDivElement | null>,
+  editor: CustomEditor
+) => {
+  const editorEl = editorRef.current
+  if (!editorEl) return
+  // We need to add click event listeners to all top level items within the editor, aka the paragraphs
+  // This is so we can handle the setting of certain sections to being private/public for the publishing feature
+  // They all are `data-slate-node="element"`
+
+  const elements = editorEl.querySelectorAll('[data-slate-node="element"]')
+
+  elements.forEach((el, i) => {
+    el.classList.add('publishable-element')
+    // First, set the initial state based on the editor's AST
+    if ((editor.children[i] as any).isSecret) {
+      el.classList.add('secret')
+    } else {
+      el.classList.remove('secret')
+    }
+
+    // Now, setup the event listener if we haven't already
+    // which toggles the 'secret' class on the element and updates the AST
+    if (el.getAttribute('data-click-listener') === 'true') return
+
+    // Mark that we've added the listener, so we don't add it again
+    el.setAttribute('data-click-listener', 'true')
+
+    // The event listener checks the current state in the AST, toggles it, and updates the class
+    el.addEventListener('click', () => {
+      const node = editor.children[i] as any
+      const currentlyIsSecret = node.isSecret
+      if (currentlyIsSecret) {
+        el.classList.remove('secret')
+        node.isSecret = false
+      } else {
+        el.classList.add('secret')
+        node.isSecret = true
+      }
+    })
+  })
+}

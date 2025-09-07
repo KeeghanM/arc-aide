@@ -71,34 +71,48 @@ const things = await db
             type: 'paragraph',
             children: [{ text: '# Hook' }],
           },
-          ...((arcData.hook as Descendant[]) ?? defaultEditorValue),
+          ...((arcData.hook as Descendant[]) ?? defaultEditorValue).filter(
+            (node) => !(node as any).isSecret
+          ),
           {
             type: 'paragraph',
             children: [{ text: '# Protagonist' }],
           },
-          ...((arcData.protagonist as Descendant[]) ?? defaultEditorValue),
+          ...(
+            (arcData.protagonist as Descendant[]) ?? defaultEditorValue
+          ).filter((node) => !(node as any).isSecret),
           {
             type: 'paragraph',
             children: [{ text: '# Antagonist' }],
           },
-          ...((arcData.antagonist as Descendant[]) ?? defaultEditorValue),
+          ...(
+            (arcData.antagonist as Descendant[]) ?? defaultEditorValue
+          ).filter((node) => !(node as any).isSecret),
           {
             type: 'paragraph',
             children: [{ text: '# Problem' }],
           },
-          ...((arcData.problem as Descendant[]) ?? defaultEditorValue),
+          ...((arcData.problem as Descendant[]) ?? defaultEditorValue).filter(
+            (node) => !(node as any).isSecret
+          ),
           {
             type: 'paragraph',
             children: [{ text: '# Key' }],
           },
-          ...((arcData.key as Descendant[]) ?? defaultEditorValue),
+          ...((arcData.key as Descendant[]) ?? defaultEditorValue).filter(
+            (node) => !(node as any).isSecret
+          ),
           {
             type: 'paragraph',
             children: [{ text: '# Outcome' }],
           },
-          ...((arcData.outcome as Descendant[]) ?? defaultEditorValue),
+          ...((arcData.outcome as Descendant[]) ?? defaultEditorValue).filter(
+            (node) => !(node as any).isSecret
+          ),
           { type: 'paragraph', children: [{ text: '# Notes' }] },
-          ...((arcData.notes as Descendant[]) ?? defaultEditorValue),
+          ...((arcData.notes as Descendant[]) ?? defaultEditorValue).filter(
+            (node) => !(node as any).isSecret
+          ),
         ],
         campaignSlug
       )}

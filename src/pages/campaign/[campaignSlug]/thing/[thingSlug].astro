@@ -48,7 +48,9 @@ const arcs = await db
   )
 ---
 
-<MainLayout title={`${thing.name} (Thing) - ${campaignData.name} | ArcAide`}>
+<MainLayout
+  title={`${thingData.name} (Thing) - ${campaignData.name} | ArcAide`}
+>
   <div class='dnd-content min-h-screen'>
     <nav class='text-muted-foreground mb-4 text-sm'>
       <a href={`/campaign/${campaignSlug}/`}>{campaignData.name}</a> / <a
@@ -61,7 +63,9 @@ const arcs = await db
     </h1>
     <div
       set:html={slateToHtml(
-        thingData.description as Descendant[],
+        (thingData.description as Descendant[]).filter(
+          (node) => !(node as any).isSecret
+        ),
         campaignSlug
       )}
     />

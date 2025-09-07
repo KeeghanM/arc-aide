@@ -1,0 +1,14 @@
+.publishable .publishable-element:hover {
+  outline: 1px dashed rgb(255 0 0 / 50%);
+  cursor: pointer;
+}
+
+.publishable .publishable-element.secret {
+  background-color: rgb(255 0 0 / 10%);
+}
+
+.publishable .publishable-element.secret:hover {
+  background-color: rgb(70 174 70 / 10%);
+  outline: 1px dashed rgb(0 255 0 / 50%);
+  cursor: pointer;
+}
