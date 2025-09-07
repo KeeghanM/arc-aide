@@ -205,6 +205,7 @@ declare module 'slate' {
       replacementRange?: { path: number[]; offset: number; length: number }
       imageSearch?: boolean
       alt?: string
+      isSecret?: boolean
     }
     Range: BaseRange & {
       [key: string]: unknown

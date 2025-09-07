@@ -1,0 +1,142 @@
+---
+import { defaultEditorValue } from '@components/app/components/slate-handling/editor/markdown-editor'
+import MainLayout from '@layouts/main-layout.astro'
+import { db } from '@lib/db/db'
+import { thingType } from '@lib/db/schema'
+import { arc, campaign, thing } from '@lib/db/schema'
+import { arcThing } from '@lib/db/schema'
+import { slateToHtml } from '@lib/utils/slate-text-extractor'
+import { and, desc, eq } from 'drizzle-orm'
+import type { Descendant } from 'slate'
+
+const { campaignSlug, arcSlug } = Astro.params
+
+if (!campaignSlug || !arcSlug) {
+  return Astro.redirect('/404')
+}
+
+// Fetch arc and campaign
+const [{ arc: arcData, campaign: campaignData }] = await db
+  .select()
+  .from(arc)
+  .fullJoin(campaign, eq(arc.campaignId, campaign.id))
+  .where(
+    and(
+      eq(arc.slug, arcSlug),
+      eq(campaign.slug, campaignSlug),
+      eq(arc.published, true),
+      eq(campaign.published, true)
+    )
+  )
+  .orderBy(desc(arc.updatedAt))
+  .limit(1)
+
+if (!arcData || !campaignData) {
+  return Astro.redirect('/404')
+}
+
+// Fetch things connected to this arc
+const things = await db
+  .select({
+    id: thing.id,
+    name: thing.name,
+    slug: thing.slug,
+    description: thing.description,
+    typeId: thing.typeId,
+    updatedAt: thing.updatedAt,
+    typeName: thingType.name,
+  })
+  .from(thing)
+  .fullJoin(arcThing, eq(thing.id, arcThing.thingId))
+  .fullJoin(thingType, eq(thing.typeId, thingType.id))
+  .where(and(eq(arcThing.arcId, arcData.id), eq(thing.published, true)))
+  .orderBy(desc(thing.updatedAt))
+---
+
+<MainLayout title={`${arcData.name} (Arc) - ${campaignData.name} | ArcAide`}>
+  <div class='dnd-content min-h-screen'>
+    <nav class='text-muted-foreground mb-4 text-sm'>
+      <a href={`/campaign/${campaignSlug}/`}>{campaignData.name}</a> / <span
+        >{arcData.name}</span
+      >
+    </nav>
+    <h1>
+      Arc: {arcData.name}
+    </h1>
+
+    <div
+      set:html={slateToHtml(
+        [
+          {
+            type: 'paragraph',
+            children: [{ text: '# Hook' }],
+          },
+          ...((arcData.hook as Descendant[]) ?? defaultEditorValue).filter(
+            (node) => !(node as any).isSecret
+          ),
+          {
+            type: 'paragraph',
+            children: [{ text: '# Protagonist' }],
+          },
+          ...(
+            (arcData.protagonist as Descendant[]) ?? defaultEditorValue
+          ).filter((node) => !(node as any).isSecret),
+          {
+            type: 'paragraph',
+            children: [{ text: '# Antagonist' }],
+          },
+          ...(
+            (arcData.antagonist as Descendant[]) ?? defaultEditorValue
+          ).filter((node) => !(node as any).isSecret),
+          {
+            type: 'paragraph',
+            children: [{ text: '# Problem' }],
+          },
+          ...((arcData.problem as Descendant[]) ?? defaultEditorValue).filter(
+            (node) => !(node as any).isSecret
+          ),
+          {
+            type: 'paragraph',
+            children: [{ text: '# Key' }],
+          },
+          ...((arcData.key as Descendant[]) ?? defaultEditorValue).filter(
+            (node) => !(node as any).isSecret
+          ),
+          {
+            type: 'paragraph',
+            children: [{ text: '# Outcome' }],
+          },
+          ...((arcData.outcome as Descendant[]) ?? defaultEditorValue).filter(
+            (node) => !(node as any).isSecret
+          ),
+          { type: 'paragraph', children: [{ text: '# Notes' }] },
+          ...((arcData.notes as Descendant[]) ?? defaultEditorValue).filter(
+            (node) => !(node as any).isSecret
+          ),
+        ],
+        campaignSlug
+      )}
+    />
+    <div class='mt-4'>
+      <h2>Connects to Things</h2>
+      {
+        things.length > 0 ? (
+          <ul>
+            {things.map((thing) => (
+              <li>
+                <a href={`/campaign/${campaignSlug}/thing/${thing.slug}/`}>
+                  {thing.name}{' '}
+                  <span class='text-muted-foreground'>({thing.typeName})</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p class='text-muted-foreground'>
+            This arc does not connect to any things.
+          </p>
+        )
+      }
+    </div>
+  </div>
+</MainLayout>

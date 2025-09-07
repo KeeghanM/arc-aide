@@ -194,6 +194,7 @@ export const PUT: APIRoute = async ({ request, params }) => {
       outcome: z.array(z.unknown()).optional() as z.ZodType<Descendant[]>,
       notes: z.array(z.unknown()).optional() as z.ZodType<Descendant[]>,
       parentArcId: z.number().nullable().optional(),
+      published: z.boolean().optional(),
     })
 
     const { updatedArc } = await request.json()
@@ -247,6 +248,8 @@ export const PUT: APIRoute = async ({ request, params }) => {
       updateData.notes = parsedArc.data.notes
       updateData.notesText = slateToPlainText(parsedArc.data.notes)
     }
+    if (parsedArc.data.published !== undefined)
+      updateData.published = parsedArc.data.published
 
     // If no fields to update, return early
     if (Object.keys(updateData).length === 1) {

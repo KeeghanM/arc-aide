@@ -160,12 +160,7 @@ export function useThingQueries() {
     mutationFn: async ({
       updatedThing,
     }: {
-      updatedThing: {
-        slug: string
-        name?: string
-        typeId?: number
-        description?: any
-      }
+      updatedThing: Partial<TThing> & { slug: string }
     }) => {
       await fetch(
         `/api/campaigns/${campaignSlug}/things/${updatedThing.slug}`,

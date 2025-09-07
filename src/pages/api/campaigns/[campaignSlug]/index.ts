@@ -153,7 +153,8 @@ export const PUT: APIRoute = async ({ request, params }) => {
     }
 
     const UpdatedCampaign = z.object({
-      name: z.string().min(1).max(255),
+      name: z.string().min(1).max(255).optional(),
+      published: z.boolean().optional(),
     })
 
     const { updatedCampaign } = await request.json()
@@ -168,13 +169,29 @@ export const PUT: APIRoute = async ({ request, params }) => {
       )
     }
 
+    const now = new Date()
+    const updateData: any = {
+      updatedAt: now,
+    }
+
+    if (parsedCampaign.data.name) {
+      updateData.name = parsedCampaign.data.name
+      updateData.slug = slugify(parsedCampaign.data.name)
+    }
+    if (parsedCampaign.data.published !== undefined)
+      updateData.published = parsedCampaign.data.published
+
+    // If no fields to update, return early
+    if (Object.keys(updateData).length === 1) {
+      return new Response(
+        JSON.stringify({ error: 'No valid fields to update' }),
+        { status: 400 }
+      )
+    }
+
     const result = await db
       .update(campaign)
-      .set({
-        name: parsedCampaign.data.name,
-        slug: slugify(parsedCampaign.data.name),
-        updatedAt: new Date(),
-      })
+      .set(updateData)
       .where(
         and(
           eq(campaign.userId, session.user.id),
