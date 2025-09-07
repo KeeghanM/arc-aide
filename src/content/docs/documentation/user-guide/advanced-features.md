@@ -191,6 +191,80 @@ When in View Mode, content is styled with authentic D&D 5e visual elements:
 - **Flowing narrative**: Single-column design promotes reading
 - **Connected content**: Internal links maintained and styled appropriately
 
+## Publishing and Content Sharing
+
+ArcAide includes powerful publishing features that allow you to share your campaign content with players while maintaining control over what information is visible.
+
+### Publishing System
+
+Publishing is a premium feature that enables you to create public links to your campaign content. When content is published, it becomes accessible via public URLs that you can share with your players.
+
+#### Publishing Controls
+
+**Campaign Publishing**: Publish entire campaigns to create a public campaign page
+
+**Arc Publishing**: Share specific story arcs with players
+
+**Thing Publishing**: Make individual NPCs, locations, or items publicly viewable
+
+#### Publishing Interface
+
+Each publishable piece of content includes a publish toggle button that shows:
+
+- **Published Status**: Green "Published" button with checkmark when content is live
+- **Unpublished Status**: Red "Unpublished" button with X when content is private
+- **Public Links**: Direct links to published content for easy sharing
+- **Quick Toggle**: One-click publishing and unpublishing
+
+#### Content URLs
+
+Published content is accessible at predictable URLs:
+
+- **Campaigns**: `/campaign/[campaign-slug]/`
+- **Arcs**: `/campaign/[campaign-slug]/arc/[arc-slug]/`
+- **Things**: `/campaign/[campaign-slug]/thing/[thing-slug]/`
+
+### Secret Content System
+
+ArcAide includes a sophisticated secret content system that allows you to hide specific paragraphs or sections from published pages while keeping them visible in your private editing interface.
+
+#### How Secrets Work
+
+**Visual Indicators**: Secret content is highlighted with a red background in edit mode
+
+**Click to Toggle**: Click any paragraph to mark it as secret or public
+
+**Publishing Filter**: Secret content is automatically excluded from published pages
+
+**DM-Only Information**: Perfect for hiding plot twists, DM notes, or sensitive information
+
+#### Using the Secret System
+
+1. **Enable Publishing Mode**: Premium subscribers see interactive paragraph highlighting
+2. **Click Paragraphs**: Click any paragraph to toggle its secret status
+3. **Visual Feedback**:
+   - Red background = Secret (hidden from players)
+   - Normal background = Public (visible to players)
+   - Hover effects show clickable areas
+4. **Automatic Filtering**: Published pages only show non-secret content
+
+#### Secret Content Examples
+
+- **Plot Twists**: Hide surprise reveals until the right moment
+- **DM Notes**: Keep mechanical notes private while sharing story content
+- **Alternative Outcomes**: Hide unused story branches from players
+- **Sensitive Information**: Conceal information players shouldn't know yet
+
+### Premium Publishing Features
+
+Publishing features require a premium subscription due to hosting costs:
+
+**Public Hosting**: Shared links are hosted on ArcAide's servers
+**Bandwidth Costs**: Public content incurs hosting and delivery costs
+**Premium Value**: Supports continued development and feature expansion
+
+**Free Alternative**: You can still share content by copying text or using screen sharing
+
 ## Rich Text Editor and Linking
 
 ArcAide features a powerful rich text editor with an interactive toolbar and keyboard shortcuts for all your content:
@@ -203,6 +277,7 @@ The editor automatically adapts to your workflow:
 - **Keyboard shortcuts**: Quick formatting using familiar key combinations
 - **Visual feedback**: Real-time preview of markdown formatting
 - **Smart formatting**: Intelligent text wrapping and unwrapping
+- **Publishing Integration**: Premium users see clickable paragraphs for secret content management
 
 ### Formatting Options
 

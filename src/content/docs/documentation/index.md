@@ -25,6 +25,10 @@ Organize your campaign world with custom entity types (NPCs, Locations, Items, O
 
 Find any content instantly with full-text search across all campaign materials, including fuzzy matching for typos and spell correction.
 
+### 📤 Publishing & Content Sharing
+
+Share your campaign content with players using the publishing system. Control exactly what information is visible with paragraph-level secret content management.
+
 ### 🎯 Campaign Organization
 
 Manage multiple campaigns with clear navigation, quick creation tools, and seamless content linking.
@@ -54,10 +58,11 @@ These guides will help you get the most out of ArcAide for managing your D&D cam
 ### Advanced Features
 
 - **[Advanced Features](/documentation/user-guide/advanced-features/)** - Power user features and advanced techniques
+- **[Publishing System](/documentation/user-guide/advanced-features/#publishing-and-content-sharing)** - Share content with players while controlling visibility
 - **[Arc Hierarchies](/documentation/user-guide/advanced-features/#arc-hierarchies)** - Create nested storylines and complex narratives
-- **[Entity Management](/documentation/user-guide/advanced-features/#entity-management)** - Organize NPCs, locations, and campaign elements
-- **[View Modes](/documentation/user-guide/advanced-features/#view-modes)** - Switch between editing and presentation modes
-- **[Search & Linking](/documentation/user-guide/advanced-features/#search-and-cross-referencing)** - Find content and create connections between elements
+- **[Entity Management](/documentation/user-guide/advanced-features/#managing-campaign-entities)** - Organize NPCs, locations, and campaign elements
+- **[View Modes](/documentation/user-guide/advanced-features/#view-and-edit-modes)** - Switch between editing and presentation modes
+- **[Search & Linking](/documentation/user-guide/advanced-features/#search-and-discovery)** - Find content and create connections between elements
 
 ## Developer Documentation
 
@@ -94,6 +99,8 @@ ArcAide is actively developed with regular improvements. Check our changelog for
 
 Recent major improvements include:
 
+- **Publishing System**: Share campaign content with players while controlling sensitive information visibility
+- **Secret Content Management**: Paragraph-level control over what players can see in published content
 - **Enhanced Search System**: Full-text search with fuzzy matching and spell correction
 - **Internal Linking**: Wiki-style content cross-referencing with `[[...]]` syntax
 - **UI/UX Overhaul**: D&D-themed interface with view/edit mode switching

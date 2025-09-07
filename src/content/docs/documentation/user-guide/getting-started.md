@@ -141,9 +141,26 @@ Once you're comfortable with the basics, explore these advanced features to get 
 
 Once you're comfortable with the basics, explore:
 
-- [Advanced Features](./advanced-features) - Arc hierarchies, linking, and view modes
+- [Advanced Features](./advanced-features) - Arc hierarchies, linking, view modes, and publishing
 - [Content Creation](./advanced-features#managing-campaign-entities) - Creating Things and organizing content
+- [Publishing System](./advanced-features#publishing-and-content-sharing) - Share content with players (Premium feature)
 - [Search and Discovery](./advanced-features#search-and-discovery) - Finding and connecting your content
+
+### Publishing Your Content (Premium Feature)
+
+ArcAide's publishing system allows premium subscribers to share campaign content with players:
+
+1. **Toggle Publishing**: Use the publish button on any Arc, Thing, or Campaign
+2. **Control Visibility**: Mark specific paragraphs as "secret" to hide from players
+3. **Share Links**: Send public URLs to players for easy access
+4. **Update Anytime**: Changes to published content are reflected immediately
+
+Publishing is perfect for:
+
+- Sharing character backstories and world lore
+- Providing location descriptions and maps
+- Creating player-accessible campaign wikis
+- Distributing session summaries and story updates
 
 :::note[Need Help?]
 If you run into any issues or have questions, check out our [documentation](/docs/) or reach out to our community for support.
