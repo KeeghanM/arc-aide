@@ -1,0 +1,141 @@
+---
+interface Props {
+  theme?: 'default' | 'dark'
+}
+
+const { theme = 'default' } = Astro.props
+---
+
+<nav
+  class={`sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 ${theme === 'dark' ? 'bg-slate-900/95' : ''}`}
+>
+  <div class='container mx-auto px-4'>
+    <div class='flex h-16 items-center justify-between'>
+      <!-- Logo -->
+      <div class='flex items-center'>
+        <a
+          href='/'
+          class='flex items-center space-x-2'
+        >
+          <div
+            class='bg-primary flex h-8 w-8 items-center justify-center rounded'
+          >
+            <span class='text-primary-foreground text-lg font-bold'>A</span>
+          </div>
+          <span class='text-foreground text-xl font-bold'>ArcAide</span>
+        </a>
+      </div>
+
+      <!-- Desktop Navigation -->
+      <div class='hidden items-center space-x-8 md:flex'>
+        <a
+          href='/documentation/user-guide/getting-started/'
+          class='text-muted-foreground hover:text-foreground transition-colors'
+        >
+          Documentation
+        </a>
+        <a
+          href='/landing/features/'
+          class='text-muted-foreground hover:text-foreground transition-colors'
+        >
+          Features
+        </a>
+        <a
+          href='/landing/features/#pricing'
+          class='text-muted-foreground hover:text-foreground transition-colors'
+        >
+          Pricing
+        </a>
+      </div>
+
+      <!-- Auth Buttons -->
+      <div class='flex items-center space-x-4'>
+        <a
+          href='/auth/login/'
+          class='text-muted-foreground hover:text-foreground transition-colors'
+        >
+          Sign In
+        </a>
+        <a
+          href='/auth/register/'
+          class='bg-primary text-primary-foreground hover:bg-primary/90 rounded-md px-4 py-2 text-sm font-medium transition-colors'
+        >
+          Get Started Free
+        </a>
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <button
+        id='mobile-menu-toggle'
+        class='text-muted-foreground hover:text-foreground hover:bg-accent rounded-md p-2 md:hidden'
+        aria-label='Toggle menu'
+      >
+        <svg
+          class='h-6 w-6'
+          fill='none'
+          viewBox='0 0 24 24'
+          stroke='currentColor'
+        >
+          <path
+            stroke-linecap='round'
+            stroke-linejoin='round'
+            stroke-width='2'
+            d='M4 6h16M4 12h16M4 18h16'
+          ></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Mobile Navigation -->
+    <div
+      id='mobile-menu'
+      class='hidden pb-4 md:hidden'
+    >
+      <div class='space-y-2'>
+        <a
+          href='/documentation/user-guide/getting-started/'
+          class='text-muted-foreground hover:text-foreground block px-3 py-2 transition-colors'
+        >
+          Documentation
+        </a>
+        <a
+          href='/landing/features/'
+          class='text-muted-foreground hover:text-foreground block px-3 py-2 transition-colors'
+        >
+          Features
+        </a>
+        <a
+          href='/landing/features/#pricing'
+          class='text-muted-foreground hover:text-foreground block px-3 py-2 transition-colors'
+        >
+          Pricing
+        </a>
+        <div class='mt-2 border-t pt-2'>
+          <a
+            href='/auth/login/'
+            class='text-muted-foreground hover:text-foreground block px-3 py-2 transition-colors'
+          >
+            Sign In
+          </a>
+          <a
+            href='/auth/register/'
+            class='bg-primary text-primary-foreground hover:bg-primary/90 block rounded-md px-3 py-2 text-center text-sm font-medium transition-colors'
+          >
+            Get Started Free
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const toggle = document.getElementById('mobile-menu-toggle')
+    const menu = document.getElementById('mobile-menu')
+
+    toggle?.addEventListener('click', () => {
+      menu?.classList.toggle('hidden')
+    })
+  })
+</script>

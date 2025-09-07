@@ -1,0 +1,162 @@
+---
+export const prerender = true
+
+import CTABanner from '@components/marketing/CTABanner.astro'
+import FeatureBlock from '@components/marketing/FeatureBlock.astro'
+import Hero from '@components/marketing/Hero.astro'
+import MainLayout from '@layouts/main-layout.astro'
+import {
+  BarChart3,
+  Book,
+  Calendar,
+  Cloud,
+  Eye,
+  Globe,
+  Link,
+  Search,
+  Shield,
+  Users,
+  Wand2,
+  Zap,
+} from 'lucide-react'
+
+const allFeatures = [
+  {
+    title: 'Smart Organization',
+    description:
+      'Our six-part arc framework structures your stories so you can find any detail instantly and keep the adventure flowing.',
+    icon: Search,
+  },
+  {
+    title: 'World Building Tools',
+    description:
+      'Link characters, locations, and storylines together so your world feels alive and consistent.',
+    icon: Globe,
+  },
+  {
+    title: 'Instant Reference System',
+    description:
+      'Type [[character name]] while writing and instantly link to any NPC, location, or plot element in your campaign.',
+    icon: Link,
+  },
+  {
+    title: 'Professional Presentations',
+    description:
+      'Switch to view mode for clean, D&D-themed presentations that make your campaign look professionally crafted.',
+    icon: Eye,
+  },
+  {
+    title: 'Auto-Save & Sync',
+    description:
+      'Everything saves automatically as you type, from any device, anywhere. Never lose your work again.',
+    icon: Cloud,
+  },
+  {
+    title: 'Lightning Fast Search',
+    description:
+      'Find any character, location, or plot point instantly with our intelligent search that understands D&D terminology.',
+    icon: Zap,
+  },
+]
+
+const advancedFeatures = [
+  {
+    title: 'Campaign Analytics',
+    description:
+      'Track which NPCs appear most, what locations matter, and how your arcs are progressing with detailed insights.',
+    icon: BarChart3,
+  },
+  {
+    title: 'Session Planning',
+    description:
+      'Plan sessions efficiently with encounter builders, NPC quick-references, and plot point reminders.',
+    icon: Calendar,
+  },
+  {
+    title: 'Collaboration Tools',
+    description:
+      'Co-DM with friends, let players contribute to world-building, or get feedback from other DMs.',
+    icon: Users,
+  },
+  {
+    title: 'Import & Export',
+    description:
+      'Import from D&D Beyond, Roll20, or spreadsheets. Export for sharing with players or backup.',
+    icon: Book,
+  },
+  {
+    title: 'AI-Powered Tools',
+    description:
+      'Generate compelling story hooks, NPCs, and plot twists using our AI-powered creative tools.',
+    icon: Wand2,
+  },
+  {
+    title: 'Security & Privacy',
+    description:
+      'Your campaign data is encrypted and secure. Share what you want, keep private what you need.',
+    icon: Shield,
+  },
+]
+---
+
+<MainLayout
+  title='Complete D&D Campaign Management Features | ArcAide'
+  showNav={true}
+  seo={{
+    description:
+      'Discover all the powerful features ArcAide offers for D&D campaign management. From organization tools to AI-powered content generation, everything you need to run epic campaigns.',
+  }}
+>
+  <!-- Hero Section -->
+  <Hero
+    title='Every Feature You Need'
+    subtitle='Professional D&D Campaign Management'
+    description='ArcAide combines powerful organization tools, intelligent automation, and beautiful presentation features to help you run the best campaigns of your life.'
+    primaryCta={{
+      text: 'Start Free Trial',
+      href: '/auth/register/',
+    }}
+    secondaryCta={{
+      text: 'View All Features',
+      href: '#features',
+    }}
+    heroImage={{
+      src: '/images/hero-features.png',
+      alt: 'ArcAide Features Dashboard',
+    }}
+  />
+
+  <!-- Core Features -->
+  <FeatureBlock
+    title='Core Features That Transform Your Game'
+    description='The essential tools every DM needs to run organized, engaging campaigns'
+    features={allFeatures}
+    layout='grid'
+    columns={3}
+    theme='default'
+  />
+
+  <!-- Advanced Features -->
+  <FeatureBlock
+    title='Advanced Tools for Power Users'
+    description='Take your campaign management to the next level with professional features'
+    features={advancedFeatures}
+    layout='cards'
+    columns={3}
+    theme='fantasy'
+  />
+
+  <!-- CTA Banner -->
+  <CTABanner
+    title='Ready to Transform Your Campaigns?'
+    description='Sign up for free and start organizing your D&D campaigns like a pro today.'
+    primaryCta={{
+      text: 'Start Free Trial',
+      href: '/auth/register/',
+    }}
+    secondaryCta={{
+      text: 'Schedule Demo',
+      href: '/contact/',
+    }}
+  />
+</MainLayout>

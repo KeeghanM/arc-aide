@@ -1,0 +1,162 @@
+---
+export const prerender = true
+
+import Callout from '@components/marketing/Callout.astro'
+import CTABanner from '@components/marketing/CTABanner.astro'
+import FeatureBlock from '@components/marketing/FeatureBlock.astro'
+import Hero from '@components/marketing/Hero.astro'
+import MainLayout from '@layouts/main-layout.astro'
+import {
+  BookOpen,
+  Brain,
+  Heart,
+  Link,
+  Network,
+  PenTool,
+  Shield,
+  Swords,
+  Users,
+  Wand2,
+} from 'lucide-react'
+
+const characterFeatures = [
+  {
+    title: 'Character Profile Builder',
+    description:
+      'Create detailed character profiles with stats, backstories, motivations, and secrets. Everything organized and easily accessible.',
+    icon: PenTool,
+  },
+  {
+    title: 'Relationship Networks',
+    description:
+      'Map complex character relationships with visual networks. Track alliances, rivalries, family ties, and romantic connections.',
+    icon: Network,
+  },
+  {
+    title: 'Motivation Tracking',
+    description:
+      'Track what drives each character - their goals, fears, desires, and secrets. Create compelling character-driven storylines.',
+    icon: Brain,
+  },
+  {
+    title: 'Character Arc Development',
+    description:
+      'Plan character development arcs that span multiple sessions. Track growth, changes, and character evolution.',
+    icon: BookOpen,
+  },
+  {
+    title: 'Backstory Integration',
+    description:
+      'Connect player character backstories to your world. Turn personal histories into compelling plot hooks.',
+    icon: Heart,
+  },
+  {
+    title: 'Cross-Reference Links',
+    description:
+      'Link characters to locations, events, and other characters. Build rich, interconnected character webs.',
+    icon: Link,
+  },
+]
+
+const characterTypes = [
+  {
+    title: 'Player Characters',
+    description:
+      'Track player character details, backstories, goals, and development. Keep all PC information organized and accessible.',
+    icon: Users,
+  },
+  {
+    title: 'Major NPCs',
+    description:
+      'Develop rich, complex NPCs with detailed motivations, relationships, and story significance.',
+    icon: Wand2,
+  },
+  {
+    title: 'Villains & Antagonists',
+    description:
+      'Create memorable villains with clear motivations, resources, and long-term plans that challenge your players.',
+    icon: Shield,
+  },
+  {
+    title: 'Supporting Cast',
+    description:
+      'Manage the hundreds of minor NPCs that populate your world. Quick reference for shopkeepers, guards, and citizens.',
+    icon: Swords,
+  },
+]
+---
+
+<MainLayout
+  title='D&D Character Management Tools - Organize NPCs & PCs | ArcAide'
+  showNav={true}
+  seo={{
+    description:
+      'Professional character management for D&D campaigns. Track NPCs, player characters, relationships, and character arcs with powerful organization tools.',
+  }}
+>
+  <!-- Hero Section -->
+  <Hero
+    title='Master Character Management'
+    subtitle='Bring Every Character to Life'
+    description='From player characters to the humblest shopkeeper, organize every character in your campaign with detailed profiles, relationship maps, and development tracking.'
+    primaryCta={{
+      text: 'Start Managing Characters',
+      href: '/auth/register/',
+    }}
+    secondaryCta={{
+      text: 'See Demo',
+      href: '/documentation/user-guide/getting-started/',
+    }}
+    heroImage={{
+      src: '/images/hero-characters.png',
+      alt: 'Character Management Dashboard',
+    }}
+  />
+
+  <!-- Character Features -->
+  <FeatureBlock
+    title='Professional Character Management'
+    description='Everything you need to create, organize, and develop memorable characters'
+    features={characterFeatures}
+    layout='grid'
+    columns={3}
+    theme='default'
+  />
+
+  <!-- Character Types -->
+  <FeatureBlock
+    title='Manage Every Type of Character'
+    description='From heroes to villains, organize every character that matters to your story'
+    features={characterTypes}
+    layout='cards'
+    columns={2}
+    theme='fantasy'
+  />
+
+  <!-- Character Development Callout -->
+  <div class='container mx-auto px-4 py-12'>
+    <Callout
+      title='Character Development Made Easy'
+      description='Learn our proven framework for creating memorable characters that your players will talk about for years. From initial concept to long-term development.'
+      type='fantasy'
+      icon={Brain}
+      ctaText='Learn Character Development'
+      ctaLink='/documentation/user-guide/character-development/'
+      size='large'
+    />
+  </div>
+
+  <!-- CTA Banner -->
+  <CTABanner
+    title='Ready to Create Unforgettable Characters?'
+    description='Start organizing your characters with professional tools designed for serious Dungeon Masters.'
+    primaryCta={{
+      text: 'Start Free Trial',
+      href: '/auth/register/',
+    }}
+    secondaryCta={{
+      text: 'Browse Character Templates',
+      href: '/templates/',
+    }}
+  />
+</MainLayout>

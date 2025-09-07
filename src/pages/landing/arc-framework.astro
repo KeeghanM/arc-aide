@@ -1,0 +1,236 @@
+---
+export const prerender = true
+
+import Callout from '@components/marketing/Callout.astro'
+import CTABanner from '@components/marketing/CTABanner.astro'
+import FeatureBlock from '@components/marketing/FeatureBlock.astro'
+import Hero from '@components/marketing/Hero.astro'
+import MainLayout from '@layouts/main-layout.astro'
+import {
+  ArrowRight,
+  BookOpen,
+  ChevronRight,
+  Lightbulb,
+  Map,
+  Target,
+} from 'lucide-react'
+
+const arcElements = [
+  {
+    title: 'Hook',
+    description:
+      'The initial situation that draws characters into the story. A compelling problem or opportunity that demands action.',
+    icon: Lightbulb,
+  },
+  {
+    title: 'Problem',
+    description:
+      'The central conflict or challenge that drives the arc. What stands in the way of the characters achieving their goals?',
+    icon: Target,
+  },
+  {
+    title: 'Context',
+    description:
+      'The background information, world details, and circumstances that give the problem meaning and depth.',
+    icon: Map,
+  },
+  {
+    title: 'Solution',
+    description:
+      'The possible ways to resolve the problem. Multiple paths keep players engaged and give them meaningful choices.',
+    icon: ChevronRight,
+  },
+  {
+    title: 'Outcome',
+    description:
+      "The consequences of the characters' actions. How the world changes based on what the players choose to do.",
+    icon: ArrowRight,
+  },
+  {
+    title: 'References',
+    description:
+      'Links to related NPCs, locations, and other story elements. Keep everything connected in your campaign.',
+    icon: BookOpen,
+  },
+]
+
+const frameworkBenefits = [
+  {
+    title: 'Never Lose Track of Stories',
+    description:
+      'The six-part structure ensures you capture every important detail about your story arcs in a consistent, searchable format.',
+    icon: BookOpen,
+  },
+  {
+    title: 'Easy Session Preparation',
+    description:
+      'With everything organized in the framework, preparing for sessions becomes a matter of reviewing your structured notes.',
+    icon: Map,
+  },
+  {
+    title: 'Flexible Story Development',
+    description:
+      'The framework adapts to any story type - from simple side quests to complex multi-session campaigns.',
+    icon: Target,
+  },
+]
+---
+
+<MainLayout
+  title='The Arc Framework - Revolutionary D&D Story Organization | ArcAide'
+  showNav={true}
+  seo={{
+    description:
+      'Learn the six-part Arc Framework that transforms how you organize D&D stories. From hooks to outcomes, structure your campaigns for maximum impact and easy reference.',
+  }}
+>
+  <!-- Hero Section -->
+  <Hero
+    title='The Arc Framework'
+    subtitle='Revolutionary Story Organization for D&D'
+    description='Our six-part framework transforms chaotic campaign notes into organized, searchable story structures. Never lose track of a plot thread again.'
+    primaryCta={{
+      text: 'Try the Framework',
+      href: '/auth/register/',
+    }}
+    secondaryCta={{
+      text: 'Learn More',
+      href: '#framework',
+    }}
+    heroImage={{
+      src: '/images/hero-framework.png',
+      alt: 'Arc Framework Diagram',
+    }}
+  />
+
+  <!-- Framework Elements -->
+  <section
+    id='framework'
+    class='py-20'
+  >
+    <div class='container mx-auto px-4'>
+      <div class='mb-16 text-center'>
+        <h2 class='text-primary mb-4 text-3xl font-bold md:text-4xl'>
+          The Six Elements of Every Great Story Arc
+        </h2>
+        <p class='text-muted-foreground mx-auto max-w-3xl text-lg md:text-xl'>
+          Every compelling D&D story can be broken down into these six essential
+          components. Master this framework and you'll never struggle with
+          campaign organization again.
+        </p>
+      </div>
+
+      <div class='grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3'>
+        {
+          arcElements.map((element, index) => (
+            <div class='bg-card border-border relative rounded-lg border p-6 shadow-sm'>
+              <div class='mb-4 flex items-center'>
+                <div class='bg-primary/10 text-primary mr-4 flex h-12 w-12 items-center justify-center rounded-full'>
+                  <element.icon className='w-5 h-5' />
+                </div>
+                <div>
+                  <span class='text-primary text-sm font-medium'>
+                    Step {index + 1}
+                  </span>
+                  <h3 class='text-lg font-semibold'>{element.title}</h3>
+                </div>
+              </div>
+              <p class='text-muted-foreground text-sm leading-relaxed'>
+                {element.description}
+              </p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Framework Benefits -->
+  <FeatureBlock
+    title='Why the Arc Framework Works'
+    description='This structured approach to story organization draws upon well known writing principles to help you create engaging, coherent narratives.'
+    features={frameworkBenefits}
+    layout='cards'
+    columns={3}
+    theme='fantasy'
+  />
+
+  <!-- Example Section -->
+  <section class='bg-primary/15 py-20'>
+    <div class='container mx-auto px-4'>
+      <div class='mx-auto max-w-4xl text-center'>
+        <h2 class='text-primary mb-8 text-3xl font-bold md:text-4xl'>
+          See the Framework in Action
+        </h2>
+        <div class='bg-card border-border rounded-lg border p-8 shadow-sm'>
+          <h3 class='mb-4 text-xl font-semibold'>
+            Example: The Missing Caravan
+          </h3>
+          <div class='grid grid-cols-1 gap-6 md:grid-cols-2'>
+            <div>
+              <h4 class='text-primary mb-2 font-semibold'>Hook</h4>
+              <p class='text-muted-foreground mb-4 text-sm'>
+                A vital supply caravan is three days overdue to the frontier
+                town of Millbrook.
+              </p>
+              <h4 class='text-primary mb-2 font-semibold'>Problem</h4>
+              <p class='text-muted-foreground mb-4 text-sm'>
+                Without these supplies, the town will struggle through winter.
+                Something has clearly gone wrong.
+              </p>
+              <h4 class='text-primary mb-2 font-semibold'>Context</h4>
+              <p class='text-muted-foreground text-sm'>
+                Recent goblin activity in the area, a new trade route through
+                dangerous territory, and rumors of bandits.
+              </p>
+            </div>
+            <div>
+              <h4 class='text-primary mb-2 font-semibold'>Solution</h4>
+              <p class='text-muted-foreground mb-4 text-sm'>
+                Investigate the trade route, negotiate with the goblin tribe, or
+                find an alternative supply source.
+              </p>
+              <h4 class='text-primary mb-2 font-semibold'>Outcome</h4>
+              <p class='text-muted-foreground mb-4 text-sm'>
+                Success strengthens town relationships; failure leads to winter
+                hardship and potential conflict.
+              </p>
+              <h4 class='text-primary mb-2 font-semibold'>References</h4>
+              <p class='text-muted-foreground text-sm'>
+                Links to Millbrook NPCs, goblin tribe details, regional map, and
+                related story arcs.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Framework Learning Callout -->
+  <div class='container mx-auto px-4 py-12'>
+    <Callout
+      title='Master the Arc Framework'
+      description='Get our comprehensive guide to implementing the Arc Framework in your campaigns. Includes templates, examples, and advanced techniques.'
+      type='success'
+      icon={BookOpen}
+      ctaText='Get the Guide'
+      ctaLink='/documentation/user-guide/arc-framework/'
+      size='large'
+    />
+  </div>
+
+  <!-- CTA Banner -->
+  <CTABanner
+    title='Ready to Transform Your Campaign Organization?'
+    description='Start using the Arc Framework today and experience the difference structured storytelling makes.'
+    primaryCta={{
+      text: 'Start Free Trial',
+      href: '/auth/register/',
+    }}
+    secondaryCta={{
+      text: 'View Examples',
+      href: '/examples/',
+    }}
+  />
+</MainLayout>

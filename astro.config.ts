@@ -21,6 +21,7 @@ export default defineConfig({
     schema: envDefinition, // Environment variable schema definition
     validateSecrets: true, // Validate secrets in production builds
   },
+
   server: {
     open: true, // Automatically open the browser when the server starts
   },

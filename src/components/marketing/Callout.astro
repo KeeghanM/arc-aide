@@ -1,0 +1,89 @@
+---
+export interface CalloutProps {
+  title: string
+  description: string
+  type?: 'info' | 'success' | 'warning' | 'fantasy' | 'tip'
+  icon?: any // React component
+  ctaText?: string
+  ctaLink?: string
+  size?: 'default' | 'large'
+}
+
+import { Button } from '../ui/button'
+
+const {
+  title,
+  description,
+  type = 'info',
+  icon,
+  ctaText,
+  ctaLink,
+  size = 'default',
+} = Astro.props as CalloutProps
+
+const typeClasses = {
+  info: 'bg-blue-50 border-blue-200 text-blue-900   ',
+  success: 'bg-green-50 border-green-200 text-green-900   ',
+  warning: 'bg-yellow-50 border-yellow-200 text-yellow-900   ',
+  fantasy:
+    'bg-gradient-to-r from-blue-50 to-orange-50 border-blue-200 text-blue-900    ',
+  tip: 'bg-purple-50 border-purple-200 text-purple-900   ',
+}
+
+const iconClasses = {
+  info: 'text-blue-500',
+  success: 'text-green-500',
+  warning: 'text-yellow-500',
+  fantasy: 'text-blue-500',
+  tip: 'text-purple-500',
+}
+
+const sizeClasses = {
+  default: 'p-6',
+  large: 'p-8 md:p-12',
+}
+
+const titleSizes = {
+  default: 'text-lg font-semibold',
+  large: 'text-xl md:text-2xl font-bold',
+}
+---
+
+<div class={`rounded-lg border ${typeClasses[type]} ${sizeClasses[size]}`}>
+  <div class='flex items-start space-x-4'>
+    {
+      icon && (
+        <div class={`flex-shrink-0 ${iconClasses[type]}`}>
+          {(() => {
+            const IconComponent = icon
+            return <IconComponent className='w-5 h-5' />
+          })()}
+        </div>
+      )
+    }
+
+    <div class='flex-1'>
+      <h3 class={titleSizes[size]}>
+        {title}
+      </h3>
+
+      <p class={`mt-2 opacity-90 ${size === 'large' ? 'text-lg' : ''}`}>
+        {description}
+      </p>
+
+      {
+        ctaText && ctaLink && (
+          <div class='mt-4'>
+            <Button
+              variant='outline'
+              size={size === 'large' ? 'lg' : 'default'}
+              className='border-current hover:bg-current hover:text-white'
+            >
+              <a href={ctaLink}>{ctaText}</a>
+            </Button>
+          </div>
+        )
+      }
+    </div>
+  </div>
+</div>

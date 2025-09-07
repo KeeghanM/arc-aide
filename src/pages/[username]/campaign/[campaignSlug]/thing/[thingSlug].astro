@@ -59,6 +59,10 @@ const {
   thingType: thingTypeData,
 } = thingCampaignQuery[0]
 
+if (!thingTypeData) {
+  return Astro.redirect('/404')
+}
+
 // Filter out secret content from description
 const filterSecrets = (content: Descendant[] | null): Descendant[] => {
   if (!content) return defaultEditorValue
@@ -72,22 +76,8 @@ const publicDescription = filterSecrets(thingData.description as Descendant[])
   title={`${thingData.name} | ${campaignData.name} | ${username} | ArcAide`}
 >
   <div class='dnd-content min-h-screen'>
-    <div class='mb-4'>
-      <a
-        href={`/${username}/campaign/${campaignSlug}`}
-        class='text-accent text-sm hover:underline'
-      >
-        ← Back to {campaignData.name}
-      </a>
-    </div>
-
-    <h1>{thingData.name}</h1>
+    <h1>{thingTypeData.name}: {thingData.name}</h1>
     <div class='mb-6'>
-      {
-        thingTypeData && (
-          <p class='text-accent text-sm font-medium'>{thingTypeData.name}</p>
-        )
-      }
       <p class='text-muted-foreground text-sm'>
         From <a
           href={`/${username}/campaign/${campaignSlug}`}

@@ -1,0 +1,264 @@
+---
+export const prerender = true
+
+import Callout from '@components/marketing/Callout.astro'
+import CTABanner from '@components/marketing/CTABanner.astro'
+import FeatureBlock from '@components/marketing/FeatureBlock.astro'
+import Hero from '@components/marketing/Hero.astro'
+import MainLayout from '@layouts/main-layout.astro'
+import {
+  BarChart,
+  BookOpen,
+  CreditCard,
+  HandMetal,
+  Lightbulb,
+  MessageSquare,
+  Mountain,
+  Search,
+  Sprout,
+  Users,
+  Wand2,
+} from 'lucide-react'
+
+const hookFeatures = [
+  {
+    title: 'Hook Generator',
+    description:
+      'Generate compelling story hooks using our AI-powered tool. Input your setting, themes, and player backgrounds for personalized hooks.',
+    icon: Wand2,
+  },
+  {
+    title: 'Hook Templates Library',
+    description:
+      'Browse hundreds of tested story hooks organized by theme, tone, and adventure type. From mystery to combat to social intrigue.',
+    icon: BookOpen,
+  },
+  {
+    title: 'Player Integration',
+    description:
+      'Connect hooks to player character backstories for maximum engagement. Make every hook feel personal and meaningful.',
+    icon: Users,
+  },
+  {
+    title: 'Hook Development Tools',
+    description:
+      'Evolve your initial hooks into full story arcs. Track how hooks develop into problems, solutions, and outcomes.',
+    icon: Sprout,
+  },
+  {
+    title: 'Testing & Analytics',
+    description:
+      'Track which types of hooks your players respond to most. Learn what grabs their attention and what falls flat.',
+    icon: BarChart,
+  },
+  {
+    title: 'Quick Reference Cards',
+    description:
+      'Generate printable hook cards for easy reference during sessions. Never scramble for plot hooks mid-game again.',
+    icon: CreditCard,
+  },
+]
+
+const hookTypes = [
+  {
+    title: 'Mystery Hooks',
+    description:
+      'Start with an intriguing question or unexplained event that demands investigation. Perfect for getting players immediately engaged.',
+    icon: Search,
+  },
+  {
+    title: 'Action Hooks',
+    description:
+      'Drop players into immediate danger or conflict. Chase scenes, ambushes, and urgent rescues that start with a bang.',
+    icon: HandMetal,
+  },
+  {
+    title: 'Social Hooks',
+    description:
+      'Begin with political intrigue, social events, or relationship drama. Great for character development and roleplay opportunities.',
+    icon: MessageSquare,
+  },
+  {
+    title: 'Environmental Hooks',
+    description:
+      'Let the setting itself draw players in. Strange weather, magical phenomena, or unusual locations that spark curiosity.',
+    icon: Mountain,
+  },
+]
+
+const hookExamples = [
+  {
+    title: 'The Missing Caravan',
+    description:
+      'A vital supply caravan is three days overdue. The merchant guild is offering good money for answers, but the road ahead shows signs of something far worse than bandits.',
+    type: 'Mystery/Action',
+  },
+  {
+    title: "The Baron's Daughter",
+    description:
+      "The baron's daughter has been acting strangely since returning from her 'diplomatic mission.' Tonight's feast might be the perfect opportunity to discover what really happened.",
+    type: 'Social/Mystery',
+  },
+  {
+    title: 'The Singing Stones',
+    description:
+      'Ancient standing stones have begun emanating a haunting melody that grows stronger each night. Locals are reporting strange dreams and missing livestock.',
+    type: 'Environmental/Mystery',
+  },
+]
+---
+
+<MainLayout
+  title='D&D Story Hooks & Adventure Starters - Engage Your Players | ArcAide'
+  showNav={true}
+  seo={{
+    description:
+      'Create compelling D&D story hooks that grab player attention instantly. Generate, organize, and develop hooks into epic story arcs with proven frameworks.',
+  }}
+>
+  <main>
+    <Hero
+      subtitle='Story Hooks & Adventure Starters'
+      title='Start Every Session With a Bang'
+      description="Create irresistible story hooks that grab your players' attention from the first moment. Transform simple ideas into compelling adventure starters that drive epic campaigns."
+      primaryCta={{ text: 'Generate Story Hooks', href: '/auth/register/' }}
+      secondaryCta={{ text: 'Browse Hook Library', href: '#examples' }}
+      theme='fantasy'
+    />
+
+    <section class='bg-primary/15 py-20'>
+      <div class='container mx-auto px-4'>
+        <div class='mx-auto mb-16 max-w-4xl text-center'>
+          <h2 class='text-primary mb-6 text-3xl font-bold md:text-4xl'>
+            The Hook That Changes Everything
+          </h2>
+          <p class='text-muted-foreground mb-8 text-lg'>
+            Your campaign's success often depends on those crucial first
+            moments. A great hook doesn't just start an adventure—it captures
+            hearts and minds.
+          </p>
+          <div class='rounded-lg border border-blue-200 bg-blue-50 p-6'>
+            <p class='text-lg text-blue-900 italic'>
+              "The tavern door bursts open, revealing a figure in travel-stained
+              robes clutching a scroll with your character's name on it. Before
+              they can speak, they collapse, revealing an arrow in their back
+              and the scroll glowing with arcane energy."
+            </p>
+            <p class='mt-4 text-sm text-blue-700'>
+              — A hook that immediately creates mystery, personal stakes, and
+              urgency
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <FeatureBlock
+      title='Professional Hook Creation Tools'
+      description='Everything you need to create, develop, and organize compelling story hooks'
+      features={hookFeatures}
+      layout='cards'
+      columns={3}
+      theme='default'
+    />
+
+    <FeatureBlock
+      title='Master Every Type of Hook'
+      description='Learn the different categories of story hooks and when to use each one'
+      features={hookTypes}
+      layout='grid'
+      columns={2}
+      theme='fantasy'
+    />
+
+    <section
+      class='bg-card py-20'
+      id='examples'
+    >
+      <div class='container mx-auto px-4'>
+        <div class='mx-auto max-w-4xl'>
+          <h2
+            class='text-primary mb-8 text-center text-3xl font-bold md:text-4xl'
+          >
+            Proven Hook Examples
+          </h2>
+          <div class='space-y-8'>
+            {
+              hookExamples.map((example) => (
+                <div class='bg-background border-border rounded-lg border p-6'>
+                  <div class='mb-4 flex items-start justify-between'>
+                    <h3 class='text-xl font-semibold'>{example.title}</h3>
+                    <span class='bg-primary/10 text-primary rounded-full px-3 py-1 text-sm'>
+                      {example.type}
+                    </span>
+                  </div>
+                  <p class='text-muted-foreground leading-relaxed'>
+                    {example.description}
+                  </p>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class='container mx-auto px-4 py-12'>
+      <Callout
+        title='The Hook Development Framework'
+        description='Every great hook follows a pattern: establish normal, introduce disruption, create stakes, and provide a clear call to action. Learn the framework that professional DMs use.'
+        type='fantasy'
+        icon={Lightbulb}
+        ctaText='Learn the Framework'
+        ctaLink='/documentation/user-guide/getting-started/'
+        size='large'
+      />
+    </div>
+
+    <section class='bg-primary/15 py-20'>
+      <div class='container mx-auto px-4 text-center'>
+        <h2 class='text-primary mb-8 text-3xl font-bold md:text-4xl'>
+          Hook Success Metrics
+        </h2>
+        <div class='mx-auto grid max-w-4xl gap-8 md:grid-cols-4'>
+          <div>
+            <div class='text-primary mb-2 text-3xl font-bold'>3-5</div>
+            <div class='text-muted-foreground text-sm'>
+              Minutes to grab attention
+            </div>
+          </div>
+          <div>
+            <div class='text-primary mb-2 text-3xl font-bold'>85%</div>
+            <div class='text-muted-foreground text-sm'>
+              Player engagement increase
+            </div>
+          </div>
+          <div>
+            <div class='text-primary mb-2 text-3xl font-bold'>500+</div>
+            <div class='text-muted-foreground text-sm'>
+              Tested hook templates
+            </div>
+          </div>
+          <div>
+            <div class='text-primary mb-2 text-3xl font-bold'>∞</div>
+            <div class='text-muted-foreground text-sm'>
+              Creative possibilities
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <CTABanner
+      title='Ready to Hook Your Players?'
+      description='Start creating compelling story hooks that your players will talk about for years. Generate your first hook in under 2 minutes.'
+      primaryCta={{ text: 'Start Creating Hooks', href: '/auth/register/' }}
+      secondaryCta={{
+        text: 'Browse Hook Library',
+        href: '/documentation/user-guide/getting-started/',
+      }}
+      theme='fantasy'
+      backgroundPattern={true}
+    />
+  </main>
+</MainLayout>

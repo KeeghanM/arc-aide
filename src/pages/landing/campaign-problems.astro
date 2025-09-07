@@ -1,0 +1,231 @@
+---
+export const prerender = true
+
+import Callout from '@components/marketing/Callout.astro'
+import CTABanner from '@components/marketing/CTABanner.astro'
+import FeatureBlock from '@components/marketing/FeatureBlock.astro'
+import Hero from '@components/marketing/Hero.astro'
+import MainLayout from '@layouts/main-layout.astro'
+import {
+  AlertTriangle,
+  Brain,
+  Lightbulb,
+  Search,
+  Target,
+  Users,
+} from 'lucide-react'
+
+const problemTypes = [
+  {
+    title: 'Immediate Threats',
+    description:
+      'Urgent problems that demand immediate action. Natural disasters, monster attacks, or time-sensitive crises.',
+    icon: AlertTriangle,
+  },
+  {
+    title: 'Political Conflicts',
+    description:
+      'Complex social and political problems involving multiple factions, competing interests, and difficult choices.',
+    icon: Users,
+  },
+  {
+    title: 'Mystery & Investigation',
+    description:
+      'Problems that require investigation, deduction, and careful exploration to understand and solve.',
+    icon: Search,
+  },
+  {
+    title: 'Personal Challenges',
+    description:
+      'Character-driven problems that stem from backstories, relationships, and personal growth opportunities.',
+    icon: Brain,
+  },
+  {
+    title: 'Resource Scarcity',
+    description:
+      'Problems caused by lack of resources, information, or capabilities needed to achieve goals.',
+    icon: Target,
+  },
+  {
+    title: 'Moral Dilemmas',
+    description:
+      'Problems with no clear right answer, forcing characters to make difficult ethical choices.',
+    icon: Lightbulb,
+  },
+]
+
+const problemFramework = [
+  {
+    title: 'Clear Stakes',
+    description:
+      'Every problem needs clear consequences. What happens if the characters succeed? What happens if they fail?',
+    icon: Target,
+  },
+  {
+    title: 'Multiple Approaches',
+    description:
+      'Good problems can be solved in multiple ways. Give players choices in how they tackle challenges.',
+    icon: Brain,
+  },
+  {
+    title: 'Escalating Tension',
+    description:
+      'Problems should build tension over time. Start small and escalate based on player actions.',
+    icon: AlertTriangle,
+  },
+]
+---
+
+<MainLayout
+  title='D&D Campaign Problems - Create Compelling Conflicts | ArcAide'
+  showNav={true}
+  seo={{
+    description:
+      'Learn to create compelling campaign problems that drive your D&D stories. From immediate threats to complex moral dilemmas, build conflicts that engage players.',
+  }}
+>
+  <!-- Hero Section -->
+  <Hero
+    title='Campaign Problems That Matter'
+    subtitle='Create Conflicts That Drive Your Story'
+    description='Great campaigns are built on compelling problems. Learn to create conflicts that challenge your players and drive engaging stories forward.'
+    primaryCta={{
+      text: 'Start Creating Problems',
+      href: '/auth/register/',
+    }}
+    secondaryCta={{
+      text: 'Browse Problem Templates',
+      href: '/templates/',
+    }}
+    heroImage={{
+      src: '/images/hero-problems.png',
+      alt: 'Campaign Problems Dashboard',
+    }}
+  />
+
+  <!-- Problem Types -->
+  <FeatureBlock
+    title='Every Type of Campaign Problem'
+    description='From urgent crises to complex moral dilemmas, create problems that challenge and engage'
+    features={problemTypes}
+    layout='grid'
+    columns={3}
+    theme='default'
+  />
+
+  <!-- Problem Framework -->
+  <FeatureBlock
+    title='The Problem Design Framework'
+    description='Essential elements that make campaign problems compelling and engaging'
+    features={problemFramework}
+    layout='cards'
+    columns={3}
+    theme='fantasy'
+  />
+
+  <!-- Examples Section -->
+  <section class='bg-primary/15 py-20'>
+    <div class='container mx-auto px-4'>
+      <div class='mb-16 text-center'>
+        <h2 class='text-primary mb-4 text-3xl font-bold md:text-4xl'>
+          Problem Examples by Type
+        </h2>
+        <p class='text-muted-foreground mx-auto max-w-3xl text-lg'>
+          See how different types of problems create different gameplay
+          experiences
+        </p>
+      </div>
+
+      <div class='mx-auto grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-2'>
+        <div class='bg-card border-border rounded-lg border p-6 shadow-sm'>
+          <h3 class='mb-4 text-xl font-semibold'>The Plague Outbreak</h3>
+          <p class='text-muted-foreground mb-4'>
+            <strong>Type:</strong> Immediate Threat
+          </p>
+          <p class='text-muted-foreground mb-4 text-sm'>
+            A mysterious plague spreads through the capital. People are dying,
+            panic is rising, and the kingdom's stability hangs in the balance.
+          </p>
+          <p class='text-muted-foreground text-sm'>
+            <strong>Stakes:</strong> Failure means thousands die and the kingdom
+            falls into chaos. Success saves lives and brings stability.
+          </p>
+        </div>
+
+        <div class='bg-card border-border rounded-lg border p-6 shadow-sm'>
+          <h3 class='mb-4 text-xl font-semibold'>The Succession Crisis</h3>
+          <p class='text-muted-foreground mb-4'>
+            <strong>Type:</strong> Political Conflict
+          </p>
+          <p class='text-muted-foreground mb-4 text-sm'>
+            The king dies without a clear heir. Three claimants emerge, each
+            with legitimate claims and powerful supporters.
+          </p>
+          <p class='text-muted-foreground text-sm'>
+            <strong>Stakes:</strong> The characters must choose a side or find a
+            diplomatic solution. Their choice shapes the kingdom's future.
+          </p>
+        </div>
+
+        <div class='bg-card border-border rounded-lg border p-6 shadow-sm'>
+          <h3 class='mb-4 text-xl font-semibold'>The Vanishing Villages</h3>
+          <p class='text-muted-foreground mb-4'>
+            <strong>Type:</strong> Mystery & Investigation
+          </p>
+          <p class='text-muted-foreground mb-4 text-sm'>
+            Remote villages are found completely empty with no signs of
+            struggle. Where did everyone go? What force could move entire
+            populations?
+          </p>
+          <p class='text-muted-foreground text-sm'>
+            <strong>Stakes:</strong> More villages disappear each week. Without answers,
+            panic spreads and civilization retreats.
+          </p>
+        </div>
+
+        <div class='bg-card border-border rounded-lg border p-6 shadow-sm'>
+          <h3 class='mb-4 text-xl font-semibold'>The Cursed Artifact</h3>
+          <p class='text-muted-foreground mb-4'>
+            <strong>Type:</strong> Moral Dilemma
+          </p>
+          <p class='text-muted-foreground mb-4 text-sm'>
+            A powerful artifact could save the realm, but using it requires an
+            innocent's life. Do the needs of many outweigh one person's right to
+            live?
+          </p>
+          <p class='text-muted-foreground text-sm'>
+            <strong>Stakes:</strong> Either choice has profound consequences. There
+            is no "right" answer, only difficult trade-offs.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Problem Creation Callout -->
+  <div class='container mx-auto px-4 py-12'>
+    <Callout
+      title='Master Problem Creation'
+      description='Learn our proven techniques for creating campaign problems that engage players and drive compelling stories. From concept to resolution.'
+      type='warning'
+      icon={AlertTriangle}
+      ctaText='Learn Problem Design'
+      ctaLink='/documentation/user-guide/problem-creation/'
+      size='large'
+    />
+  </div>
+
+  <!-- CTA Banner -->
+  <CTABanner
+    title='Ready to Create Better Campaign Problems?'
+    description='Build conflicts that challenge your players and create memorable stories with professional problem design tools.'
+    primaryCta={{
+      text: 'Start Free Trial',
+      href: '/auth/register/',
+    }}
+    secondaryCta={{
+      text: 'Browse Templates',
+      href: '/templates/',
+    }}
+  />
+</MainLayout>

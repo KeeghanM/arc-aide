@@ -1,0 +1,217 @@
+---
+export const prerender = true
+
+import Callout from '@components/marketing/Callout.astro'
+import CTABanner from '@components/marketing/CTABanner.astro'
+import FeatureBlock from '@components/marketing/FeatureBlock.astro'
+import Hero from '@components/marketing/Hero.astro'
+import MainLayout from '@layouts/main-layout.astro'
+import {
+  BarChart3,
+  Book,
+  Calendar,
+  Globe,
+  Heart,
+  MapPin,
+  Network,
+  Scroll,
+  TrendingUp,
+  Users,
+} from 'lucide-react'
+
+const campaignFeatures = [
+  {
+    title: 'Campaign Dashboard',
+    description:
+      "Get a bird's-eye view of your entire campaign with visual timelines, active plot threads, and upcoming session notes all in one place.",
+    icon: BarChart3,
+  },
+  {
+    title: 'Session Planning Tools',
+    description:
+      'Plan sessions efficiently with encounter builders, NPC quick-references, and plot point reminders. Everything you need for smooth sessions.',
+    icon: Calendar,
+  },
+  {
+    title: 'Player Handouts',
+    description:
+      'Create professional-looking handouts, maps, and documents that immerse your players in the world. Share instantly or print beautifully.',
+    icon: Scroll,
+  },
+  {
+    title: 'Campaign Analytics',
+    description:
+      'Track which NPCs appear most, what locations matter, and how your arcs are progressing. Data-driven insights for better storytelling.',
+    icon: TrendingUp,
+  },
+  {
+    title: 'Collaboration Tools',
+    description:
+      'Co-DM with friends, let players contribute to world-building, or get feedback from other DMs. Flexible permissions for every use case.',
+    icon: Users,
+  },
+  {
+    title: 'Multi-Campaign Management',
+    description:
+      'Run multiple campaigns simultaneously with separate workspaces, shared resources, and cross-campaign character transfers.',
+    icon: Globe,
+  },
+]
+
+const organizationMethods = [
+  {
+    title: 'The Arc-Based Structure',
+    description:
+      'Organize your campaign into story arcs with clear beginnings, middles, and ends. Track how each arc connects to create epic overarching narratives.',
+    icon: Network,
+  },
+  {
+    title: 'Location-Centric Planning',
+    description:
+      'Build from locations outward. Create rich, detailed areas that feel lived-in, then populate them with relevant NPCs and story hooks.',
+    icon: MapPin,
+  },
+  {
+    title: 'Character-Driven Stories',
+    description:
+      'Let NPC motivations and player character backstories drive your plots. Create interconnected webs of relationships and conflicts.',
+    icon: Heart,
+  },
+]
+---
+
+<MainLayout
+  title='D&D Campaign Management Tool - Organize Your Campaign Like a Pro | ArcAide'
+  showNav={true}
+  seo={{
+    description:
+      'Professional campaign management for D&D Dungeon Masters. Organize storylines, NPCs, locations with proven frameworks. Transform chaotic notes into epic campaigns.',
+  }}
+>
+  <main>
+    <Hero
+      subtitle='Campaign Management'
+      title='Turn Campaign Chaos Into Epic Adventures'
+      description='Professional campaign management tools that help you create organized, compelling D&D campaigns. From session planning to world-building, everything you need in one place.'
+      primaryCta={{
+        text: 'Start Managing Your Campaign',
+        href: '/auth/register/',
+      }}
+      secondaryCta={{ text: 'See How It Works', href: '#features' }}
+      theme='fantasy'
+      size='large'
+    />
+
+    <section class='bg-primary/15 py-20'>
+      <div class='container mx-auto px-4 text-center'>
+        <h2 class='text-primary mb-8 text-3xl font-bold md:text-4xl'>
+          The Challenge Every DM Knows
+        </h2>
+        <div class='mx-auto grid max-w-4xl gap-8 md:grid-cols-3'>
+          <div class='bg-background rounded-lg border border-red-200 p-6'>
+            <div class='mb-4 text-4xl text-red-500'>😰</div>
+            <h3 class='mb-2 font-semibold'>Scattered Notes</h3>
+            <p class='text-muted-foreground text-sm'>
+              Sticky notes, notebooks, random documents - where did you write
+              that important detail?
+            </p>
+          </div>
+          <div class='bg-background rounded-lg border border-red-200 p-6'>
+            <div class='mb-4 text-4xl text-red-500'>🤔</div>
+            <h3 class='mb-2 font-semibold'>Forgotten Details</h3>
+            <p class='text-muted-foreground text-sm'>
+              "What was that NPC's name? Did we resolve that plot thread? Where
+              are they supposed to go next?"
+            </p>
+          </div>
+          <div class='bg-background rounded-lg border border-red-200 p-6'>
+            <div class='mb-4 text-4xl text-red-500'>⏰</div>
+            <h3 class='mb-2 font-semibold'>Session Prep Stress</h3>
+            <p class='text-muted-foreground text-sm'>
+              Hours before the session, frantically trying to remember what
+              happened last time and what should happen next.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <FeatureBlock
+      title='Complete Campaign Management Suite'
+      description='Everything you need to plan, run, and organize memorable D&D campaigns'
+      features={campaignFeatures}
+      layout='cards'
+      columns={3}
+      theme='default'
+    />
+
+    <FeatureBlock
+      title='Proven Organization Methods'
+      description='Learn the techniques that experienced DMs use to create consistently engaging campaigns'
+      features={organizationMethods}
+      layout='list'
+      theme='minimal'
+    />
+
+    <div class='container mx-auto px-4 py-12'>
+      <Callout
+        title='Campaign Templates to Get You Started'
+        description="Don't start from scratch. Choose from our library of campaign templates covering classic adventures, homebrew settings, and popular published modules."
+        type='fantasy'
+        icon={Book}
+        ctaText='Browse Templates'
+        ctaLink='/templates/'
+        size='large'
+      />
+    </div>
+
+    <section class='bg-card py-20'>
+      <div class='container mx-auto px-4'>
+        <div class='mx-auto max-w-4xl text-center'>
+          <h2 class='text-primary mb-8 text-3xl font-bold md:text-4xl'>
+            Campaign Management by the Numbers
+          </h2>
+          <div class='grid gap-8 md:grid-cols-4'>
+            <div>
+              <div class='text-primary mb-2 text-3xl font-bold'>73%</div>
+              <div class='text-muted-foreground text-sm'>
+                Less prep time needed
+              </div>
+            </div>
+            <div>
+              <div class='text-primary mb-2 text-3xl font-bold'>89%</div>
+              <div class='text-muted-foreground text-sm'>
+                Improved player engagement
+              </div>
+            </div>
+            <div>
+              <div class='text-primary mb-2 text-3xl font-bold'>95%</div>
+              <div class='text-muted-foreground text-sm'>
+                DMs feel more confident
+              </div>
+            </div>
+            <div>
+              <div class='text-primary mb-2 text-3xl font-bold'>∞</div>
+              <div class='text-muted-foreground text-sm'>
+                Campaign possibilities
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <CTABanner
+      title='Ready to Organize Your Campaign?'
+      description='Stop juggling scattered notes and forgotten details. Get your campaign organized and start creating epic adventures today.'
+      primaryCta={{ text: 'Start Free Campaign', href: '/auth/register/' }}
+      secondaryCta={{
+        text: 'View Documentation',
+        href: '/documentation/user-guide/getting-started/',
+      }}
+      theme='fantasy'
+      size='large'
+      backgroundPattern={true}
+    />
+  </main>
+</MainLayout>

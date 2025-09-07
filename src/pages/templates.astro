@@ -1,0 +1,314 @@
+---
+export const prerender = true
+
+import {
+  Book,
+  Brain,
+  Crown,
+  Heart,
+  Lightbulb,
+  Scroll,
+  Target,
+  Users,
+  Wand2,
+} from 'lucide-react'
+import Callout from '../components/marketing/Callout.astro'
+import CTABanner from '../components/marketing/CTABanner.astro'
+import FeatureBlock from '../components/marketing/FeatureBlock.astro'
+import Hero from '../components/marketing/Hero.astro'
+import MainLayout from '../layouts/main-layout.astro'
+
+const templateCategories = [
+  {
+    title: 'NPC Templates',
+    description:
+      'Pre-built character profiles with motivations, secrets, and plot hooks. From tavern keepers to noble lords.',
+    icon: Users,
+  },
+  {
+    title: 'Story Hook Templates',
+    description:
+      'Compelling adventure starts organized by theme and tone. Mystery, action, social, and environmental hooks.',
+    icon: Lightbulb,
+  },
+  {
+    title: 'Campaign Problem Templates',
+    description:
+      'Engaging conflicts and challenges that drive your stories forward. Political intrigue to natural disasters.',
+    icon: Target,
+  },
+  {
+    title: 'Solution Framework Templates',
+    description:
+      'Multiple approaches to common problems. Give your players meaningful choices in how they tackle challenges.',
+    icon: Brain,
+  },
+  {
+    title: 'Villain Templates',
+    description:
+      'Complex antagonists with clear motivations and detailed schemes. From masterminds to fallen heroes.',
+    icon: Crown,
+  },
+  {
+    title: 'Outcome Templates',
+    description:
+      'Meaningful consequences that make player choices matter. Short-term rewards to long-term campaign changes.',
+    icon: Scroll,
+  },
+]
+---
+
+<MainLayout
+  title='D&D Campaign Templates Library - Ready-to-Use Content | ArcAide'
+  showNav={true}
+  seo={{
+    description:
+      'Browse our library of professional D&D campaign templates. NPCs, story hooks, villains, and more. Automatically generate content for your campaigns.',
+  }}
+>
+  <!-- Hero Section -->
+  <Hero
+    title='Professional Campaign Templates'
+    subtitle='Ready-to-Use Content for Every Campaign'
+    description='Browse our growing library of professionally crafted templates. From NPCs to story arcs, get inspired by examples and automatically generate thousands more in your campaigns.'
+    primaryCta={{
+      text: 'Start Using Templates',
+      href: '/auth/register/',
+    }}
+    secondaryCta={{
+      text: 'Browse Examples',
+      href: '#examples',
+    }}
+    heroImage={{
+      src: '/images/hero-templates.png',
+      alt: 'Campaign Templates Library',
+    }}
+  />
+
+  <!-- Template Categories -->
+  <FeatureBlock
+    title='Every Type of Campaign Content'
+    description='Professional templates for every aspect of your D&D campaign'
+    features={templateCategories}
+    layout='grid'
+    columns={3}
+    theme='default'
+  />
+
+  <!-- Example Templates Section -->
+  <section
+    id='examples'
+    class='bg-primary/15 py-20'
+  >
+    <div class='container mx-auto px-4'>
+      <div class='mb-16 text-center'>
+        <h2 class='text-primary mb-4 text-3xl font-bold md:text-4xl'>
+          Template Examples
+        </h2>
+        <p class='text-muted-foreground mx-auto max-w-3xl text-lg'>
+          Get a taste of what's possible with our professional campaign
+          templates
+        </p>
+      </div>
+
+      <div class='mx-auto max-w-6xl space-y-12'>
+        <!-- NPC Template Example -->
+        <div class='bg-card border-border rounded-lg border p-8 shadow-sm'>
+          <div class='mb-6 flex items-center'>
+            <div
+              class='mr-4 flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 text-blue-600'
+            >
+              <Users className='h-5 w-5' />
+            </div>
+            <div>
+              <h3 class='text-xl font-semibold'>NPC Template Example</h3>
+              <p class='text-muted-foreground text-sm'>
+                Tavern Keeper Archetype
+              </p>
+            </div>
+          </div>
+
+          <div class='grid grid-cols-1 gap-6 md:grid-cols-2'>
+            <div>
+              <h4 class='text-primary mb-2 font-semibold'>Basics</h4>
+              <p class='text-muted-foreground mb-4 text-sm'>
+                <strong>Name:</strong> [Generated: Gareth Stormwind]<br />
+                <strong>Race:</strong> Human<br />
+                <strong>Age:</strong> Mid-40s<br />
+                <strong>Occupation:</strong> Tavern Owner
+              </p>
+
+              <h4 class='text-primary mb-2 font-semibold'>Personality</h4>
+              <p class='text-muted-foreground text-sm'>
+                Jovial exterior hiding financial worries. Quick with a joke but
+                sharp-eyed about customers. Values loyalty above all else.
+              </p>
+            </div>
+
+            <div>
+              <h4 class='text-primary mb-2 font-semibold'>Secrets & Hooks</h4>
+              <p class='text-muted-foreground mb-4 text-sm'>
+                <strong>Secret:</strong> Former soldier who deserted during a brutal
+                campaign<br />
+                <strong>Goal:</strong> Keep the tavern profitable to support his
+                aging mother<br />
+                <strong>Fear:</strong> His military past being discovered
+              </p>
+
+              <h4 class='text-primary mb-2 font-semibold'>Plot Hooks</h4>
+              <p class='text-muted-foreground text-sm'>
+                • Old war buddy shows up seeking help<br />
+                • Tavern used as secret meeting place<br />
+                • Owes money to dangerous creditors
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Story Hook Template Example -->
+        <div class='bg-card border-border rounded-lg border p-8 shadow-sm'>
+          <div class='mb-6 flex items-center'>
+            <div
+              class='mr-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-100 text-green-600'
+            >
+              <Lightbulb className='h-5 w-5' />
+            </div>
+            <div>
+              <h3 class='text-xl font-semibold'>Story Hook Template Example</h3>
+              <p class='text-muted-foreground text-sm'>
+                Mystery Hook - The Silent Bell
+              </p>
+            </div>
+          </div>
+
+          <div class='grid grid-cols-1 gap-6 md:grid-cols-2'>
+            <div>
+              <h4 class='text-primary mb-2 font-semibold'>The Hook</h4>
+              <p class='text-muted-foreground mb-4 text-sm'>
+                The temple bell that has rung every dawn for 200 years fell
+                silent three days ago. The priests claim nothing is wrong, but
+                townsfolk whisper of strange lights and shadows in the temple at
+                night.
+              </p>
+
+              <h4 class='text-primary mb-2 font-semibold'>Immediate Stakes</h4>
+              <p class='text-muted-foreground text-sm'>
+                Religious festivals are approaching. Without the bell's
+                blessing, the harvest ceremony cannot proceed, threatening the
+                town's spiritual and economic wellbeing.
+              </p>
+            </div>
+
+            <div>
+              <h4 class='text-primary mb-2 font-semibold'>
+                Investigation Leads
+              </h4>
+              <p class='text-muted-foreground mb-4 text-sm'>
+                • Young priest acting nervous<br />
+                • Ancient curse mentioned in temple records<br />
+                • Rival temple making power moves<br />
+                • Strange magical readings from the bell tower
+              </p>
+
+              <h4 class='text-primary mb-2 font-semibold'>
+                Potential Outcomes
+              </h4>
+              <p class='text-muted-foreground text-sm'>
+                Success strengthens relationship with the temple and town.
+                Failure leads to religious crisis and potential social unrest.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Premium Feature Callout -->
+  <div class='container mx-auto px-4 py-12'>
+    <Callout
+      title='Automatically Generate Thousands More'
+      description='These examples are just the beginning. With ArcAide Premium, automatically generate unlimited professional templates customized for your campaign setting, themes, and player preferences.'
+      type='fantasy'
+      icon={Wand2}
+      ctaText='Upgrade to Premium'
+      ctaLink='/auth/register/'
+      size='large'
+    />
+  </div>
+
+  <!-- Template Features Section -->
+  <section class='py-20'>
+    <div class='container mx-auto px-4'>
+      <div class='mb-16 text-center'>
+        <h2 class='text-primary mb-4 text-3xl font-bold md:text-4xl'>
+          What Makes Our Templates Special
+        </h2>
+        <p class='text-muted-foreground mx-auto max-w-3xl text-lg'>
+          Professional-quality content designed by experienced DMs
+        </p>
+      </div>
+
+      <div class='mx-auto grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-3'>
+        <div
+          class='bg-card border-border rounded-lg border p-6 text-center shadow-sm'
+        >
+          <div
+            class='mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-purple-100 text-purple-600'
+          >
+            <Book className='h-6 w-6' />
+          </div>
+          <h3 class='mb-4 text-xl font-semibold'>Professionally Crafted</h3>
+          <p class='text-muted-foreground text-sm'>
+            Created by experienced DMs and tested in real campaigns. Every
+            template follows proven storytelling principles.
+          </p>
+        </div>
+
+        <div
+          class='bg-card border-border rounded-lg border p-6 text-center shadow-sm'
+        >
+          <div
+            class='mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-orange-100 text-orange-600'
+          >
+            <Heart className='h-6 w-6' />
+          </div>
+          <h3 class='mb-4 text-xl font-semibold'>Easily Customizable</h3>
+          <p class='text-muted-foreground text-sm'>
+            Every template is designed to be modified for your specific
+            campaign. Change names, motivations, and details to fit your world.
+          </p>
+        </div>
+
+        <div
+          class='bg-card border-border rounded-lg border p-6 text-center shadow-sm'
+        >
+          <div
+            class='mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-teal-100 text-teal-600'
+          >
+            <Wand2 className='h-6 w-6' />
+          </div>
+          <h3 class='mb-4 text-xl font-semibold'>AI-Generated Variations</h3>
+          <p class='text-muted-foreground text-sm'>
+            Premium members can automatically generate unlimited variations of
+            any template, customized for their campaign.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Banner -->
+  <CTABanner
+    title='Ready to Access Professional Templates?'
+    description='Sign up for free and start using our growing library of D&D campaign templates today.'
+    primaryCta={{
+      text: 'Start Free Trial',
+      href: '/auth/register/',
+    }}
+    secondaryCta={{
+      text: 'Learn More',
+      href: '/landing/features/',
+    }}
+  />
+</MainLayout>

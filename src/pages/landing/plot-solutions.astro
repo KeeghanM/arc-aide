@@ -1,0 +1,277 @@
+---
+export const prerender = true
+
+import Callout from '@components/marketing/Callout.astro'
+import CTABanner from '@components/marketing/CTABanner.astro'
+import FeatureBlock from '@components/marketing/FeatureBlock.astro'
+import Hero from '@components/marketing/Hero.astro'
+import MainLayout from '@layouts/main-layout.astro'
+import {
+  Brain,
+  CheckCircle,
+  Lightbulb,
+  MapPin,
+  Network,
+  Target,
+} from 'lucide-react'
+
+const solutionTypes = [
+  {
+    title: 'Direct Action Solutions',
+    description:
+      'Straightforward approaches that involve combat, skill challenges, or immediate intervention.',
+    icon: Target,
+  },
+  {
+    title: 'Diplomatic Solutions',
+    description:
+      'Negotiation, persuasion, and relationship-building approaches that resolve conflicts through dialogue.',
+    icon: Network,
+  },
+  {
+    title: 'Investigative Solutions',
+    description:
+      'Research, exploration, and information-gathering approaches that solve problems through knowledge.',
+    icon: Lightbulb,
+  },
+  {
+    title: 'Creative Workarounds',
+    description:
+      'Unconventional approaches that sidestep the obvious solution in favor of innovative alternatives.',
+    icon: Brain,
+  },
+  {
+    title: 'Resource-Based Solutions',
+    description:
+      'Solutions that require gathering specific items, allies, or capabilities before confronting the problem.',
+    icon: MapPin,
+  },
+  {
+    title: 'Collaborative Solutions',
+    description:
+      'Multi-party approaches that require cooperation between different factions or groups.',
+    icon: CheckCircle,
+  },
+]
+
+const solutionDesign = [
+  {
+    title: 'Multiple Valid Paths',
+    description:
+      'Every problem should have multiple viable solutions. Give players meaningful choices in how they approach challenges.',
+    icon: Network,
+  },
+  {
+    title: 'Varying Difficulty',
+    description:
+      'Different solutions should require different resources and have different risk/reward profiles.',
+    icon: Target,
+  },
+  {
+    title: 'Player Strengths',
+    description:
+      'Design solutions that leverage different character abilities and player preferences.',
+    icon: Brain,
+  },
+]
+---
+
+<MainLayout
+  title='D&D Plot Solutions - Design Multiple Problem-Solving Paths | ArcAide'
+  showNav={true}
+  seo={{
+    description:
+      'Learn to create multiple viable solutions for campaign problems. From direct action to creative workarounds, give players meaningful choices in problem-solving.',
+  }}
+>
+  <!-- Hero Section -->
+  <Hero
+    title='Plot Solutions That Empower Players'
+    subtitle='Multiple Paths to Every Problem'
+    description='Great problems deserve great solutions. Learn to design multiple viable approaches that give players meaningful choices and leverage their unique strengths.'
+    primaryCta={{
+      text: 'Start Designing Solutions',
+      href: '/auth/register/',
+    }}
+    secondaryCta={{
+      text: 'View Examples',
+      href: '/documentation/user-guide/getting-started/',
+    }}
+    heroImage={{
+      src: '/images/hero-solutions.png',
+      alt: 'Plot Solutions Dashboard',
+    }}
+  />
+
+  <!-- Solution Types -->
+  <FeatureBlock
+    title='Every Type of Solution'
+    description="From direct action to creative workarounds, design solutions that match your players' strengths"
+    features={solutionTypes}
+    layout='grid'
+    columns={3}
+    theme='default'
+  />
+
+  <!-- Solution Design Principles -->
+  <FeatureBlock
+    title='Solution Design Principles'
+    description='Core principles for creating engaging, balanced solution options'
+    features={solutionDesign}
+    layout='cards'
+    columns={3}
+    theme='fantasy'
+  />
+
+  <!-- Solution Examples Section -->
+  <section class='bg-primary/15 py-20'>
+    <div class='container mx-auto px-4'>
+      <div class='mb-16 text-center'>
+        <h2 class='text-primary mb-4 text-3xl font-bold md:text-4xl'>
+          Multiple Solutions in Action
+        </h2>
+        <p class='text-muted-foreground mx-auto max-w-3xl text-lg'>
+          See how one problem can have many different solution paths
+        </p>
+      </div>
+
+      <div class='mx-auto max-w-6xl'>
+        <div class='bg-card border-border mb-8 rounded-lg border p-6 shadow-sm'>
+          <h3 class='mb-4 text-xl font-semibold'>
+            Problem: The Corrupted Forest
+          </h3>
+          <p class='text-muted-foreground mb-6'>
+            An ancient forest is being corrupted by dark magic. The corruption
+            spreads daily, threatening nearby settlements. The source appears to
+            be deep in the forest's heart.
+          </p>
+        </div>
+
+        <div class='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3'>
+          <div class='bg-card border-border rounded-lg border p-6 shadow-sm'>
+            <div
+              class='mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-100 text-red-600'
+            >
+              <Target className='h-5 w-5' />
+            </div>
+            <h4 class='mb-2 font-semibold'>Direct Assault</h4>
+            <p class='text-muted-foreground mb-4 text-sm'>
+              Fight through corrupted creatures to reach the source and destroy
+              it with force.
+            </p>
+            <p class='text-xs text-yellow-600'>
+              <strong>Risk:</strong> High combat difficulty, potential casualties
+            </p>
+          </div>
+
+          <div class='bg-card border-border rounded-lg border p-6 shadow-sm'>
+            <div
+              class='mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 text-blue-600'
+            >
+              <Lightbulb className='h-5 w-5' />
+            </div>
+            <h4 class='mb-2 font-semibold'>Research & Purification</h4>
+            <p class='text-muted-foreground mb-4 text-sm'>
+              Study the corruption, find ancient purification rituals, gather
+              rare components.
+            </p>
+            <p class='text-xs text-green-600'>
+              <strong>Benefit:</strong> Lower risk, potential to save corrupted creatures
+            </p>
+          </div>
+
+          <div class='bg-card border-border rounded-lg border p-6 shadow-sm'>
+            <div
+              class='mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-100 text-green-600'
+            >
+              <Network className='h-5 w-5' />
+            </div>
+            <h4 class='mb-2 font-semibold'>Diplomatic Alliance</h4>
+            <p class='text-muted-foreground mb-4 text-sm'>
+              Unite local druids, rangers, and nature spirits to combine efforts
+              against the corruption.
+            </p>
+            <p class='text-xs text-blue-600'>
+              <strong>Reward:</strong> Powerful allies, ongoing relationships
+            </p>
+          </div>
+
+          <div class='bg-card border-border rounded-lg border p-6 shadow-sm'>
+            <div
+              class='mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-purple-100 text-purple-600'
+            >
+              <Brain className='h-5 w-5' />
+            </div>
+            <h4 class='mb-2 font-semibold'>Magical Redirection</h4>
+            <p class='text-muted-foreground mb-4 text-sm'>
+              Use the corruption's own energy against itself by creating a
+              magical feedback loop.
+            </p>
+            <p class='text-xs text-purple-600'>
+              <strong>Requirement:</strong> High arcane knowledge, specific components
+            </p>
+          </div>
+
+          <div class='bg-card border-border rounded-lg border p-6 shadow-sm'>
+            <div
+              class='mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-orange-100 text-orange-600'
+            >
+              <MapPin className='h-5 w-5' />
+            </div>
+            <h4 class='mb-2 font-semibold'>Strategic Containment</h4>
+            <p class='text-muted-foreground mb-4 text-sm'>
+              Create magical barriers to contain the corruption while evacuating
+              threatened areas.
+            </p>
+            <p class='text-xs text-orange-600'>
+              <strong>Trade-off:</strong> Saves lives but loses the forest
+            </p>
+          </div>
+
+          <div class='bg-card border-border rounded-lg border p-6 shadow-sm'>
+            <div
+              class='mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-teal-100 text-teal-600'
+            >
+              <CheckCircle className='h-5 w-5' />
+            </div>
+            <h4 class='mb-2 font-semibold'>Time Travel Solution</h4>
+            <p class='text-muted-foreground mb-4 text-sm'>
+              Use ancient magic to go back and prevent the corruption from
+              starting.
+            </p>
+            <p class='text-xs text-teal-600'>
+              <strong>Consequence:</strong> Unpredictable timeline changes
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Solution Planning Callout -->
+  <div class='container mx-auto px-4 py-12'>
+    <Callout
+      title='Master Solution Design'
+      description='Learn our comprehensive approach to creating multiple viable solutions for every campaign problem. Give your players meaningful choices that matter.'
+      type='success'
+      icon={CheckCircle}
+      ctaText='Learn Solution Design'
+      ctaLink='/documentation/user-guide/solution-design/'
+      size='large'
+    />
+  </div>
+
+  <!-- CTA Banner -->
+  <CTABanner
+    title='Ready to Create Better Solutions?'
+    description='Design engaging problem-solving experiences that give players meaningful choices and leverage their unique strengths.'
+    primaryCta={{
+      text: 'Start Free Trial',
+      href: '/auth/register/',
+    }}
+    secondaryCta={{
+      text: 'Browse Solution Templates',
+      href: '/templates/',
+    }}
+  />
+</MainLayout>
