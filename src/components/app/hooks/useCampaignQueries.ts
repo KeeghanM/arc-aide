@@ -81,7 +81,7 @@ export function useCampaignQueries() {
 
       return await response.json()
     },
-    onSuccess: (variables) => {
+    onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['campaign', variables.slug] })
     },
   })

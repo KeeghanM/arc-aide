@@ -77,6 +77,42 @@ type Campaign = {
 }
 ```
 
+### User
+
+```typescript
+type User = {
+  id: string
+  name: string
+  email: string
+  username?: string
+  displayUsername?: string
+  createdAt: Timestamp
+  updatedAt: Timestamp
+}
+```
+
+#### User Profile Fields
+
+- **id**: Unique user identifier (UUID)
+- **name**: User's personal name
+- **email**: Account email address
+- **username**: Unique identifier for URL generation (optional, required for publishing)
+- **displayUsername**: Public-facing display name (defaults to username if not set)
+- **createdAt**: Account creation timestamp
+- **updatedAt**: Last profile update timestamp
+
+#### Username Validation
+
+```typescript
+type UsernameValidation = {
+  minLength: 3
+  maxLength: 30
+  pattern: /^[a-zA-Z0-9_-]+$/
+  unique: true
+  caseInsensitive: true
+}
+```
+
 ### Arc
 
 ```typescript
@@ -206,6 +242,21 @@ type UpdateThingTypeRequest = {
     name: string
   }
 }
+
+// User profile update
+type UpdateUserProfileRequest = {
+  name?: string
+  username?: string
+  displayUsername?: string
+}
+
+type UsernameAvailabilityRequest = {
+  username: string
+}
+
+type UsernameAvailabilityResponse = {
+  available: boolean
+}
 ```
 
 ### Search Types
@@ -269,3 +320,31 @@ All API endpoints use Zod schemas for request validation. Key validation rules:
 - **Rich text** fields accept null or valid Slate.js documents
 - **IDs** must be positive integers
 - **Relationships** are validated for existence and ownership
+
+### Username Validation
+
+```typescript
+const usernameSchema = z
+  .string()
+  .min(3, 'Username must be at least 3 characters')
+  .max(30, 'Username must be 30 characters or less')
+  .regex(
+    /^[a-zA-Z0-9_-]+$/,
+    'Username can only contain letters, numbers, underscores, and hyphens'
+  )
+
+const displayUsernameSchema = z
+  .string()
+  .max(50, 'Display name must be 50 characters or less')
+  .optional()
+```
+
+### Profile Update Validation
+
+```typescript
+const updateProfileSchema = z.object({
+  name: z.string().min(1, 'Name is required').optional(),
+  username: usernameSchema.optional(),
+  displayUsername: displayUsernameSchema,
+})
+```

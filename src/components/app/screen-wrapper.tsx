@@ -1,11 +1,13 @@
 import { useAppStore } from '@stores/appStore'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import type { User } from 'better-auth'
 import { useEffect } from 'react'
 
 const queryClient = new QueryClient()
 
-type TUser = {
-  name: string
+type TUser = User & {
+  username?: string
+  displayUsername?: string
 }
 
 export type TScreenWrapperProps = {

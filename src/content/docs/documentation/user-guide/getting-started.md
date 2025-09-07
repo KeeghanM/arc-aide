@@ -16,10 +16,15 @@ Ready to jump right in? Follow the steps below to create your first campaign in 
 ## Creating Your First Campaign
 
 1. **Sign up or log in** to your ArcAide account
-2. **Click "Get Started"** or navigate to the dashboard
-3. **Create a new campaign** by clicking the "+" button
-4. **Enter your campaign name** (e.g., "Lost Mine of Phandelver")
-5. **Start creating arcs** to structure your storylines
+2. **Set up your profile** by choosing a username (optional now, required for publishing)
+3. **Click "Get Started"** or navigate to the dashboard
+4. **Create a new campaign** by clicking the "+" button
+5. **Enter your campaign name** (e.g., "Lost Mine of Phandelver")
+6. **Start creating arcs** to structure your storylines
+
+:::note[Profile Setup]
+You can create campaigns immediately after signing up, but you'll need to set a username before publishing any content publicly.
+:::
 
 :::note[Campaign Organization]
 Campaigns are the top-level containers for organizing your D&D adventures. Think of them as separate worlds or story series.
@@ -150,10 +155,11 @@ Once you're comfortable with the basics, explore:
 
 ArcAide's publishing system allows premium subscribers to share campaign content with players:
 
-1. **Toggle Publishing**: Use the publish button on any Arc, Thing, or Campaign
-2. **Control Visibility**: Mark specific paragraphs as "secret" to hide from players
-3. **Share Links**: Send public URLs to players for easy access
-4. **Update Anytime**: Changes to published content are reflected immediately
+1. **Set up your username** (required for publishing - prompted automatically)
+2. **Toggle Publishing**: Use the publish button on any Arc, Thing, or Campaign
+3. **Control Visibility**: Mark specific paragraphs as "secret" to hide from players
+4. **Share Links**: Send username-based URLs to players (e.g., `/{username}/campaign/{slug}/`)
+5. **Update Anytime**: Changes to published content are reflected immediately
 
 Publishing is perfect for:
 
@@ -161,6 +167,10 @@ Publishing is perfect for:
 - Providing location descriptions and maps
 - Creating player-accessible campaign wikis
 - Distributing session summaries and story updates
+
+:::tip[Username Required]
+You'll need to set a unique username before publishing any content. ArcAide will prompt you automatically when you first attempt to publish.
+:::
 
 :::note[Need Help?]
 If you run into any issues or have questions, check out our [documentation](/docs/) or reach out to our community for support.

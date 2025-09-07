@@ -72,37 +72,31 @@ interface Arc {
 Each arc follows a structured storytelling approach:
 
 1. **Hook** - What draws the characters into the story
-
    - The opening situation or event
    - Should immediately engage players
    - Sets the initial context and stakes
 
 2. **Protagonist** - The main character(s) driving the action
-
    - Usually the player characters
    - Can include important NPCs
    - Defines who the story is about
 
 3. **Antagonist** - The opposition or challenge to overcome
-
    - The primary opposition force
    - Can be characters, situations, or natural forces
    - Creates tension and conflict
 
 4. **Problem** - The central conflict or obstacle
-
    - The main challenge to be resolved
    - Should be clear and compelling
    - Drives the narrative forward
 
 5. **Key** - The method or solution to resolve the problem
-
    - How the problem can be solved
    - May involve specific items, knowledge, or actions
    - Provides direction for player agency
 
 6. **Outcome** - The result or consequences of the arc
-
    - Resolution of the central problem
    - Sets up future story elements
    - Can include both success and failure scenarios

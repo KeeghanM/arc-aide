@@ -58,3 +58,75 @@ Returned when the user is authenticated but doesn't have permission to access th
 - All authenticated requests are validated server-side
 - User permissions are checked for resource access
 - Campaign ownership is enforced for all campaign-specific operations
+
+## User Profile Endpoints
+
+### Update User Profile
+
+Update the authenticated user's profile information including username and display name.
+
+```typescript
+authClient.updateUser({
+  name?: string
+  username?: string
+  displayUsername?: string
+})
+```
+
+**Response:**
+
+```json
+{
+  "data": {
+    "id": "user_id",
+    "name": "John Doe",
+    "username": "johndoe",
+    "displayUsername": "John the DM",
+    "email": "john@example.com"
+  }
+}
+```
+
+### Check Username Availability
+
+Check if a username is available for use.
+
+```typescript
+authClient.isUsernameAvailable({
+  username: string,
+})
+```
+
+**Response:**
+
+```json
+{
+  "data": {
+    "available": true
+  }
+}
+```
+
+**Error Response:**
+
+```json
+{
+  "data": {
+    "available": false
+  }
+}
+```
+
+### Username Validation Rules
+
+- **Length**: 3-30 characters
+- **Characters**: Letters (a-z, A-Z), numbers (0-9), underscores (\_), hyphens (-)
+- **Uniqueness**: Must be unique across all users
+- **Case Sensitivity**: Usernames are case-insensitive for uniqueness checking
+
+### Profile Fields
+
+- **name**: User's display name (optional)
+- **username**: Unique identifier for URL generation (required for publishing)
+- **displayUsername**: Public-facing name (defaults to username)
+- **email**: Account email (read-only via profile update)

@@ -1,0 +1,79 @@
+---
+import MainLayout from '@layouts/main-layout.astro'
+import { db } from '@lib/db/db'
+import { campaign, user } from '@lib/db/schema'
+import { and, desc, eq } from 'drizzle-orm'
+
+const { username } = Astro.params
+
+if (!username) {
+  return Astro.redirect('/404')
+}
+
+// Fetch user by username
+const [userData] = await db
+  .select()
+  .from(user)
+  .where(eq(user.username, username))
+  .limit(1)
+
+if (!userData) {
+  return Astro.redirect('/404')
+}
+
+// Fetch published campaigns for this user
+const campaignData = await db
+  .select()
+  .from(campaign)
+  .where(and(eq(campaign.userId, userData.id), eq(campaign.published, true)))
+  .orderBy(desc(campaign.updatedAt))
+---
+
+<MainLayout title={`${username}'s Campaigns | ArcAide`}>
+  <div class='dnd-content min-h-screen'>
+    <h1>{username}'s Campaigns</h1>
+    <p class='text-muted-foreground mb-6'>
+      Published D&D campaigns and adventures
+    </p>
+
+    {
+      campaignData.length > 0 ? (
+        <div class='grid gap-6 md:grid-cols-2 lg:grid-cols-3'>
+          {campaignData.map((campaign) => (
+            <div class='card'>
+              <h2 class='mb-2 text-xl font-bold'>
+                <a
+                  href={`/${username}/campaign/${campaign.slug}`}
+                  class='hover:text-accent hover:underline'
+                >
+                  {campaign.name}
+                </a>
+              </h2>
+              {campaign.description && (
+                <p class='text-muted-foreground text-sm'>
+                  {typeof campaign.description === 'string'
+                    ? campaign.description
+                    : 'Campaign description'}
+                </p>
+              )}
+              <div class='mt-4'>
+                <a
+                  href={`/${username}/campaign/${campaign.slug}`}
+                  class='text-accent text-sm hover:underline'
+                >
+                  View Campaign →
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div class='py-12 text-center'>
+          <p class='text-muted-foreground text-lg'>
+            {username} hasn't published any campaigns yet.
+          </p>
+        </div>
+      )
+    }
+  </div>
+</MainLayout>

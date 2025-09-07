@@ -13,7 +13,7 @@ function Header() {
   return (
     <header className='w-full bg-gray-800 p-4 text-white shadow'>
       <div className='container mx-auto flex max-w-screen-lg items-center'>
-        {campaignSlug && campaignQuery.data && (
+        {campaignSlug && campaignQuery.data ? (
           <>
             <div className='flex min-w-0 items-center'>
               <h1 className='hover:text-primary max-w-[180px] truncate text-xl font-bold'>
@@ -26,6 +26,15 @@ function Header() {
               <SearchBar />
             </div>
           </>
+        ) : (
+          <div className='flex flex-1 justify-start'>
+            <a
+              href='/dashboard/'
+              className='hover:text-primary text-xl font-bold'
+            >
+              Dashboard
+            </a>
+          </div>
         )}
         <div className='ml-auto flex items-center space-x-4'>
           {user && (

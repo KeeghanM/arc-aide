@@ -220,9 +220,10 @@ Each publishable piece of content includes a publish toggle button that shows:
 
 Published content is accessible at predictable URLs:
 
-- **Campaigns**: `/campaign/[campaign-slug]/`
-- **Arcs**: `/campaign/[campaign-slug]/arc/[arc-slug]/`
-- **Things**: `/campaign/[campaign-slug]/thing/[thing-slug]/`
+- **User Profile**: `/{username}/` - Shows all published campaigns by a user
+- **Campaigns**: `/{username}/campaign/{campaign-slug}/`
+- **Arcs**: `/{username}/campaign/{campaign-slug}/arc/{arc-slug}/`
+- **Things**: `/{username}/campaign/{campaign-slug}/thing/{thing-slug}/`
 
 ### Secret Content System
 
@@ -454,3 +455,92 @@ Use the search bar to quickly find:
 - **Plan multiple Outcomes** for player choices
 - **Create backup NPCs** in case players go off-script
 - **Use entity links** to show story connections
+
+## Account Management & User Profiles
+
+### Setting Up Your Profile
+
+ArcAide provides comprehensive account management features to personalize your experience and enable content sharing:
+
+#### Username Configuration
+
+1. **Navigate to Account Settings** from the user menu
+2. **Set your unique username** (3-30 characters, letters, numbers, underscore, hyphen)
+3. **Choose a display name** (how others see your name in published content)
+4. **Save your changes** to update your profile
+
+#### Username Requirements
+
+- **3-30 characters long**
+- **Letters, numbers, underscores, and hyphens only**
+- **Must be unique** across all ArcAide users
+- **Required for publishing** content publicly
+
+#### Display Names
+
+- **Optional but recommended** for professional presentation
+- **Defaults to username** if not set
+- **Used in published content** and public displays
+- **Can include spaces and special characters**
+
+### Profile Management
+
+#### Editing Your Profile
+
+1. **Access Account Settings** from the dashboard
+2. **Click "Edit Profile"** to modify your information
+3. **Update fields** as needed (name, username, display name)
+4. **Real-time validation** ensures usernames are available
+5. **Save changes** to update your profile
+
+#### Profile Information
+
+Your profile includes:
+
+- **Name**: Your personal name (private)
+- **Username**: Your unique identifier (public in URLs)
+- **Display Name**: How you appear to others (public)
+- **Email**: Account email (read-only, managed separately)
+
+### Publishing and Usernames
+
+#### Why Usernames Matter
+
+Usernames are essential for content publishing because they:
+
+- **Prevent URL conflicts** between different users
+- **Create professional, shareable links** to your content
+- **Enable content attribution** and creator identification
+- **Support future community features** and collaboration
+
+#### Publishing URLs
+
+When you publish content, it becomes accessible via username-based URLs:
+
+- **Campaign**: `/{username}/campaign/{campaign-slug}/`
+- **Arc**: `/{username}/campaign/{campaign-slug}/arc/{arc-slug}/`
+- **Thing**: `/{username}/campaign/{campaign-slug}/thing/{thing-slug}/`
+
+#### Username Setup Process
+
+1. **Attempt to publish** any content without a username
+2. **Username prompt appears** automatically
+3. **Choose your username** with real-time availability checking
+4. **Complete setup** and return to publishing
+5. **Content publishes** with your new username-based URL
+
+### Best Practices
+
+#### Choosing a Username
+
+- **Keep it professional** for sharing with players
+- **Make it memorable** for easy recognition
+- **Consider your brand** if you create content for others
+- **Check availability early** to secure your preferred name
+
+#### Profile Maintenance
+
+- **Set display name** for better presentation
+- **Keep information current** for accurate attribution
+- **Use consistent branding** across your content
+- **Update as needed** for changes in your gaming identity

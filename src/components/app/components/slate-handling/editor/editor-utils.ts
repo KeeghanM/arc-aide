@@ -81,10 +81,10 @@ export const addPublishableClickListeners = (
       const currentlyIsSecret = node.isSecret
       if (currentlyIsSecret) {
         el.classList.remove('secret')
-        node.isSecret = false
+        Transforms.setNodes(editor, { isSecret: false }, { at: [i] })
       } else {
         el.classList.add('secret')
-        node.isSecret = true
+        Transforms.setNodes(editor, { isSecret: true }, { at: [i] })
       }
     })
   })

@@ -1,3 +1,4 @@
+import type { User } from 'better-auth'
 import { create } from 'zustand'
 
 /**
@@ -19,10 +20,18 @@ interface IAppState {
   setMode: (mode: 'edit' | 'view') => void
 
   // --- User Context ---
-  user: {
-    name: string
-  } | null
-  setUser: (user: { name: string }) => void
+  user:
+    | (User & {
+        username?: string
+        displayUsername?: string
+      })
+    | null
+  setUser: (
+    user: User & {
+      username?: string
+      displayUsername?: string
+    }
+  ) => void
 
   // --- Campaign Context ---
   // Current campaign slug is used for API calls and navigation
