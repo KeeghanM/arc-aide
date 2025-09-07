@@ -88,7 +88,6 @@ export default function Publish({ published, type, slug }: TPublish) {
         <UsernamePrompt
           onClose={() => setShowUsernamePrompt(false)}
           onSuccess={() => {
-            console.log('Username set, closing prompt')
             setShowUsernamePrompt(false)
             // Automatically trigger publish after username is set
             handlePublishToggle()
