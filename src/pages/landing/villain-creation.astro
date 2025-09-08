@@ -1,0 +1,186 @@
+---
+export const prerender = true
+
+import Callout from '@components/marketing/Callout.astro'
+import CTABanner from '@components/marketing/CTABanner.astro'
+import FeatureBlock from '@components/marketing/FeatureBlock.astro'
+import Hero from '@components/marketing/Hero.astro'
+import MainLayout from '@layouts/main-layout.astro'
+import {
+  Brain,
+  Crown,
+  Eye,
+  Map,
+  Network,
+  Scroll,
+  Shield,
+  Skull,
+  Target,
+  Zap,
+} from 'lucide-react'
+
+const villainFeatures = [
+  {
+    title: 'Motivation Builder',
+    description:
+      'Create compelling villain motivations that go beyond "destroy the world." Build complex, understandable antagonists with real goals.',
+    icon: Brain,
+  },
+  {
+    title: 'Resource Tracking',
+    description:
+      'Track villain resources, minions, strongholds, and assets. Know exactly what your villains have at their disposal.',
+    icon: Crown,
+  },
+  {
+    title: 'Scheme Planning',
+    description:
+      'Plan multi-layered villain schemes with contingencies. Create plots that adapt to player actions and stay one step ahead.',
+    icon: Target,
+  },
+  {
+    title: 'Minion Networks',
+    description:
+      'Organize villain hierarchies and minion networks. Track lieutenants, cultists, spies, and other underlings.',
+    icon: Network,
+  },
+  {
+    title: 'Secret Tracking',
+    description:
+      'Manage villain secrets, hidden identities, and information warfare. Control what players know and when they learn it.',
+    icon: Eye,
+  },
+  {
+    title: 'Backup Plans',
+    description:
+      'Prepare villain contingencies for every situation. Smart villains always have an escape plan or backup scheme.',
+    icon: Shield,
+  },
+]
+
+const villainTypes = [
+  {
+    title: 'Mastermind Villains',
+    description:
+      'Create intelligent villains who work from the shadows, manipulating events through careful planning and subtle influence.',
+    icon: Brain,
+  },
+  {
+    title: 'Power-Hungry Tyrants',
+    description:
+      'Build villains who seek control and dominion. Political schemers, conquering warlords, and corrupt nobles.',
+    icon: Crown,
+  },
+  {
+    title: 'Ancient Evils',
+    description:
+      'Develop timeless threats - liches, demons, ancient dragons, and other creatures with centuries of accumulated power.',
+    icon: Skull,
+  },
+  {
+    title: 'Corrupted Heroes',
+    description:
+      'Create fallen heroes and tragic villains. Former allies turned enemy make the most personal and emotional conflicts.',
+    icon: Scroll,
+  },
+]
+
+const villainMethods = [
+  {
+    title: 'The Escalation Method',
+    description:
+      'Start small and build up. Introduce villains through their minions and schemes before revealing the true threat.',
+    icon: Zap,
+  },
+  {
+    title: 'Personal Stakes',
+    description:
+      'Connect villains to player character backstories. Make conflicts personal to increase emotional investment.',
+    icon: Map,
+  },
+]
+---
+
+<MainLayout
+  title='D&D Villain Creation Tools - Build Memorable Antagonists | ArcAide'
+  showNav={true}
+  seo={{
+    description:
+      'Create compelling D&D villains with professional tools. Track motivations, schemes, resources, and minion networks. Build antagonists players will never forget.',
+  }}
+>
+  <!-- Hero Section -->
+  <Hero
+    title='Create Unforgettable Villains'
+    subtitle='Memorable Antagonists That Drive Your Story'
+    description='Build complex, compelling villains with clear motivations, detailed schemes, and the resources to challenge your players at every turn.'
+    primaryCta={{
+      text: 'Start Creating Villains',
+      href: '/auth/register/',
+    }}
+    secondaryCta={{
+      text: 'Villain Templates',
+      href: '/templates/',
+    }}
+    heroImage={{
+      src: '/images/hero-villains.png',
+      alt: 'Villain Creation Dashboard',
+    }}
+  />
+
+  <!-- Villain Features -->
+  <FeatureBlock
+    title='Professional Villain Development'
+    description='Everything you need to create villains that challenge and terrify your players'
+    features={villainFeatures}
+    layout='grid'
+    columns={3}
+    theme='default'
+  />
+
+  <!-- Villain Types -->
+  <FeatureBlock
+    title='Every Type of Villain'
+    description='From masterminds to monsters, create antagonists that fit your story'
+    features={villainTypes}
+    layout='cards'
+    columns={2}
+    theme='fantasy'
+  />
+
+  <!-- Villain Methods -->
+  <FeatureBlock
+    title='Proven Villain Techniques'
+    description='Time-tested methods for introducing and developing compelling antagonists'
+    features={villainMethods}
+    layout='list'
+    theme='minimal'
+  />
+
+  <!-- Villain Framework Callout -->
+  <div class='container mx-auto px-4 py-12'>
+    <Callout
+      title='The Villain Development Framework'
+      description='Learn our step-by-step process for creating memorable villains. From initial concept to final confrontation, build antagonists that drive your story forward.'
+      type='warning'
+      icon={Skull}
+      ctaText='Learn the Framework'
+      ctaLink='/documentation/user-guide/villain-creation/'
+      size='large'
+    />
+  </div>
+
+  <!-- CTA Banner -->
+  <CTABanner
+    title='Ready to Create Your Greatest Villain?'
+    description='Build antagonists that challenge your players and drive compelling stories with professional villain creation tools.'
+    primaryCta={{
+      text: 'Start Free Trial',
+      href: '/auth/register/',
+    }}
+    secondaryCta={{
+      text: 'Browse Villain Templates',
+      href: '/templates/',
+    }}
+  />
+</MainLayout>

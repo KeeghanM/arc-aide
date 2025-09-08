@@ -1,0 +1,148 @@
+---
+export interface CTABannerProps {
+  title: string
+  description: string
+  primaryCta: {
+    text: string
+    href: string
+  }
+  secondaryCta?: {
+    text: string
+    href: string
+  }
+  theme?: 'primary' | 'secondary' | 'fantasy' | 'gradient'
+  size?: 'default' | 'large' | 'compact'
+  backgroundPattern?: boolean
+}
+
+import { Button } from '../ui/button'
+
+const {
+  title,
+  description,
+  primaryCta,
+  secondaryCta,
+  theme = 'primary',
+  size = 'default',
+  backgroundPattern = false,
+} = Astro.props as CTABannerProps
+
+const themeClasses = {
+  primary: 'bg-primary text-primary-foreground',
+  secondary: 'bg-secondary text-secondary-foreground',
+  fantasy: 'bg-gradient-to-r from-orange-400 to-red-700 text-white',
+  gradient:
+    'bg-gradient-to-r from-primary via-secondary to-accent text-primary-foreground',
+}
+
+const sizeClasses = {
+  default: 'py-20',
+  large: 'py-32',
+  compact: 'py-16',
+}
+
+const titleSizes = {
+  default: 'text-3xl md:text-4xl',
+  large: 'text-4xl md:text-5xl lg:text-6xl',
+  compact: 'text-2xl md:text-3xl',
+}
+---
+
+<section
+  class={`relative overflow-hidden ${themeClasses[theme]} ${sizeClasses[size]}`}
+>
+  {
+    backgroundPattern && (
+      <div class='absolute inset-0 opacity-10'>
+        <svg
+          width='60'
+          height='60'
+          viewBox='0 0 60 60'
+          xmlns='http://www.w3.org/2000/svg'
+        >
+          <g
+            fill='none'
+            fill-rule='evenodd'
+          >
+            <g
+              fill='currentColor'
+              fill-opacity='0.1'
+            >
+              <circle
+                cx='30'
+                cy='30'
+                r='2'
+              />
+              <circle
+                cx='10'
+                cy='10'
+                r='2'
+              />
+              <circle
+                cx='50'
+                cy='10'
+                r='2'
+              />
+              <circle
+                cx='10'
+                cy='50'
+                r='2'
+              />
+              <circle
+                cx='50'
+                cy='50'
+                r='2'
+              />
+            </g>
+          </g>
+        </svg>
+      </div>
+    )
+  }
+
+  <div class='relative container mx-auto px-4 text-center'>
+    <div class='mx-auto max-w-4xl space-y-8'>
+      <h2 class={`font-bold ${titleSizes[size]}`}>
+        {title}
+      </h2>
+
+      <p
+        class={`mx-auto max-w-3xl opacity-90 ${size === 'compact' ? 'text-lg' : 'text-xl md:text-2xl'}`}
+      >
+        {description}
+      </p>
+
+      <div class='flex flex-col items-center justify-center gap-4 sm:flex-row'>
+        <Button
+          variant={theme === 'primary' ? 'secondary' : 'default'}
+          size='lg'
+          className='px-8 py-6 text-lg shadow-lg transition-shadow hover:shadow-xl'
+        >
+          <a href={primaryCta.href}>{primaryCta.text}</a>
+        </Button>
+
+        {
+          secondaryCta && (
+            <Button
+              variant='outline'
+              size='lg'
+              className={`border-current px-8 py-6 text-lg ${theme === 'primary' ? 'text-primary-foreground hover:bg-primary-foreground hover:text-primary' : ''}`}
+            >
+              <a href={secondaryCta.href}>{secondaryCta.text}</a>
+            </Button>
+          )
+        }
+      </div>
+
+      {
+        size === 'large' && (
+          <div class='pt-8'>
+            <p class='text-sm opacity-75'>
+              Join over 1,000 Dungeon Masters already using ArcAide
+            </p>
+          </div>
+        )
+      }
+    </div>
+  </div>
+</section>

@@ -1,4 +1,6 @@
 ---
+import Footer from '@components/marketing/Footer.astro'
+import Navigation from '@components/marketing/Navigation.astro'
 import HoneyBadger from '@lib/honeybadger/web-tracking.astro'
 import PostHog from '@lib/posthog/web-tracking.astro'
 import { Head } from 'astro-capo'
@@ -8,8 +10,10 @@ import '@styles/global.css'
 interface Props {
   title: string
   seo?: Omit<SEOProps, 'title'>
+  showNav?: boolean
+  showFooter?: boolean
 }
-const { title, seo } = Astro.props as Props
+const { title, seo, showNav = false, showFooter = true } = Astro.props as Props
 ---
 
 <html lang='en'>
@@ -34,7 +38,11 @@ const { title, seo } = Astro.props as Props
     <HoneyBadger />
     <script src='https://js.stripe.com/v3/'></script>
   </Head>
-  <body class='bg-background text-foreground'>
-    <slot />
+  <body class='bg-background text-foreground flex min-h-screen flex-col'>
+    {showNav && <Navigation />}
+    <main class='flex-1'>
+      <slot />
+    </main>
+    {showFooter && <Footer />}
   </body>
 </html>

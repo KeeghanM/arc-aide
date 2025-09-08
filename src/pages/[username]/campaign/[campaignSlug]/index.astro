@@ -1,7 +1,7 @@
 ---
 import MainLayout from '@layouts/main-layout.astro'
 import { db } from '@lib/db/db'
-import { arc, campaign, thing, user } from '@lib/db/schema'
+import { arc, campaign, thing, thingType, user } from '@lib/db/schema'
 import { and, desc, eq } from 'drizzle-orm'
 
 const { username, campaignSlug } = Astro.params
@@ -45,21 +45,44 @@ const arcData = await db
   .orderBy(desc(arc.updatedAt))
 
 const thingData = await db
-  .select()
+  .select({
+    id: thing.id,
+    slug: thing.slug,
+    name: thing.name,
+    typeId: thing.typeId,
+    typeName: thingType.name,
+    updatedAt: thing.updatedAt,
+  })
   .from(thing)
+  .leftJoin(thingType, eq(thing.typeId, thingType.id))
   .where(and(eq(thing.campaignId, campaignData.id), eq(thing.published, true)))
   .orderBy(desc(thing.updatedAt))
   .limit(20)
+
+// Group things by type
+const thingsByType = thingData.reduce(
+  (acc, thing) => {
+    const typeName = thing.typeName || 'Uncategorized'
+    if (!acc[typeName]) {
+      acc[typeName] = []
+    }
+    acc[typeName].push(thing)
+    return acc
+  },
+  {} as Record<string, typeof thingData>
+)
 ---
 
-<MainLayout title={`${campaignData.name} | ${username} | ArcAide`}>
+<MainLayout
+  title={`${campaignData.name} | ${userData.displayUsername} | ArcAide`}
+>
   <div class='dnd-content min-h-screen'>
     <div class='mb-4'>
       <a
         href={`/${username}`}
         class='text-accent text-sm hover:underline'
       >
-        ← Back to {username}'s campaigns
+        ← Back to {userData.displayUsername}'s campaigns
       </a>
     </div>
 
@@ -84,10 +107,10 @@ const thingData = await db
       )
     }
 
-    <section class='mb-8'>
-      <h2>Story Arcs</h2>
-      {
-        arcData.length > 0 ? (
+    {
+      arcData.length > 0 && (
+        <section class='mb-8'>
+          <h2>Story Arcs</h2>
           <div class='grid gap-4 md:grid-cols-2 lg:grid-cols-3'>
             {arcData.map((arc) => (
               <div class='card'>
@@ -99,41 +122,34 @@ const thingData = await db
                     {arc.name}
                   </a>
                 </h3>
-                {arc.hook && (
-                  <p class='text-muted-foreground text-sm'>
-                    {typeof arc.hook === 'string'
-                      ? arc.hook.slice(0, 100)
-                      : 'Arc content available'}
-                    ...
-                  </p>
-                )}
               </div>
             ))}
           </div>
-        ) : (
-          <p class='text-muted-foreground'>No published arcs available.</p>
-        )
-      }
-    </section>
+        </section>
+      )
+    }
 
     <section>
       <h2>Campaign Elements</h2>
       {
-        thingData.length > 0 ? (
-          <div class='grid gap-4 md:grid-cols-2 lg:grid-cols-4'>
-            {thingData.map((thing) => (
-              <div class='card'>
-                <h3 class='mb-1 font-semibold'>
-                  <a
-                    href={`/${username}/campaign/${campaignSlug}/thing/${thing.slug}`}
-                    class='hover:text-accent hover:underline'
-                  >
-                    {thing.name}
-                  </a>
-                </h3>
-              </div>
-            ))}
-          </div>
+        Object.keys(thingsByType).length > 0 ? (
+          Object.entries(thingsByType).map(([typeName, things]) => (
+            <div class='mb-6'>
+              <h3 class='text-lg font-semibold'>{typeName}</h3>
+              <ul>
+                {things.map((thing) => (
+                  <li>
+                    <a
+                      href={`/${username}/campaign/${campaignSlug}/thing/${thing.slug}`}
+                      class='hover:text-accent hover:underline'
+                    >
+                      {thing.name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
         ) : (
           <p class='text-muted-foreground'>No published elements available.</p>
         )

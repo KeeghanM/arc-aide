@@ -1,0 +1,308 @@
+---
+export const prerender = true
+
+import {
+  ArrowRight,
+  BarChart3,
+  Crown,
+  Heart,
+  Network,
+  Scroll,
+} from 'lucide-react'
+import Callout from '../../components/marketing/Callout.astro'
+import CTABanner from '../../components/marketing/CTABanner.astro'
+import FeatureBlock from '../../components/marketing/FeatureBlock.astro'
+import Hero from '../../components/marketing/Hero.astro'
+import MainLayout from '../../layouts/main-layout.astro'
+
+const outcomeTypes = [
+  {
+    title: 'Character Consequences',
+    description:
+      'How the story outcome affects individual characters - their relationships, reputation, resources, and personal growth.',
+    icon: Heart,
+  },
+  {
+    title: 'World Changes',
+    description:
+      'The broader impact on your campaign world - political shifts, environmental changes, new threats or opportunities.',
+    icon: Crown,
+  },
+  {
+    title: 'Relationship Shifts',
+    description:
+      'How the outcome affects relationships between NPCs, factions, and the player characters themselves.',
+    icon: Network,
+  },
+  {
+    title: 'Story Continuations',
+    description:
+      'New plot threads that emerge from the outcome - future adventures, ongoing consequences, and sequel hooks.',
+    icon: ArrowRight,
+  },
+  {
+    title: 'Mechanical Effects',
+    description:
+      'Concrete game mechanics - rewards, penalties, new abilities, or changes to available resources.',
+    icon: BarChart3,
+  },
+  {
+    title: 'Narrative Legacy',
+    description:
+      "How this outcome becomes part of your campaign's ongoing story and influences future adventures.",
+    icon: Scroll,
+  },
+]
+
+const outcomeFramework = [
+  {
+    title: 'Short-Term Impact',
+    description:
+      'Immediate consequences that affect the current session or next few sessions. Quick rewards and immediate changes.',
+    icon: ArrowRight,
+  },
+  {
+    title: 'Long-Term Effects',
+    description:
+      'Consequences that unfold over multiple sessions or entire story arcs. Deep changes to the campaign world.',
+    icon: Scroll,
+  },
+  {
+    title: 'Cascading Consequences',
+    description:
+      'How one outcome leads to another, creating a chain of meaningful story developments.',
+    icon: Network,
+  },
+]
+---
+
+<MainLayout
+  title='D&D Story Outcomes - Create Meaningful Consequences | ArcAide'
+  showNav={true}
+  seo={{
+    description:
+      'Learn to create meaningful story outcomes for your D&D campaigns. From character consequences to world changes, make every choice matter.',
+  }}
+>
+  <!-- Hero Section -->
+  <Hero
+    title='Story Outcomes That Matter'
+    subtitle='Make Every Choice Have Consequences'
+    description='Great stories are defined by their outcomes. Learn to create meaningful consequences that make player choices matter and drive your campaign forward.'
+    primaryCta={{
+      text: 'Start Tracking Outcomes',
+      href: '/auth/register/',
+    }}
+    secondaryCta={{
+      text: 'Outcome Templates',
+      href: '/templates/',
+    }}
+    heroImage={{
+      src: '/images/hero-outcomes.png',
+      alt: 'Story Outcomes Dashboard',
+    }}
+  />
+
+  <!-- Outcome Types -->
+  <FeatureBlock
+    title='Every Type of Story Outcome'
+    description='From personal consequences to world-changing events, track all the ways stories impact your campaign'
+    features={outcomeTypes}
+    layout='grid'
+    columns={3}
+    theme='default'
+  />
+
+  <!-- Outcome Framework -->
+  <FeatureBlock
+    title='The Outcome Timeline Framework'
+    description='Design consequences that unfold at different timescales for maximum narrative impact'
+    features={outcomeFramework}
+    layout='cards'
+    columns={3}
+    theme='fantasy'
+  />
+
+  <!-- Outcome Examples Section -->
+  <section class='bg-primary/15 py-20'>
+    <div class='container mx-auto px-4'>
+      <div class='mb-16 text-center'>
+        <h2 class='text-primary mb-4 text-3xl font-bold md:text-4xl'>
+          Layered Outcome Example
+        </h2>
+        <p class='text-muted-foreground mx-auto max-w-3xl text-lg'>
+          See how one story resolution creates multiple layers of consequences
+        </p>
+      </div>
+
+      <div class='mx-auto max-w-6xl'>
+        <div class='bg-card border-border mb-8 rounded-lg border p-6 shadow-sm'>
+          <h3 class='mb-4 text-xl font-semibold'>
+            Resolution: The Players Save the Corrupted Forest
+          </h3>
+          <p class='text-muted-foreground'>
+            Through careful research and alliance-building, the party
+            successfully purifies the corrupted forest using ancient druidic
+            rituals.
+          </p>
+        </div>
+
+        <div class='grid grid-cols-1 gap-8 lg:grid-cols-2'>
+          <div>
+            <h4 class='mb-6 text-lg font-semibold'>
+              Immediate Outcomes (This Session)
+            </h4>
+            <div class='space-y-4'>
+              <div
+                class='bg-card border-border rounded-lg border p-4 shadow-sm'
+              >
+                <h5 class='text-primary mb-2 font-medium'>Character Rewards</h5>
+                <p class='text-muted-foreground text-sm'>
+                  Experience points, druidic blessings, grateful forest spirits
+                  offer magical items
+                </p>
+              </div>
+              <div
+                class='bg-card border-border rounded-lg border p-4 shadow-sm'
+              >
+                <h5 class='text-primary mb-2 font-medium'>World Changes</h5>
+                <p class='text-muted-foreground text-sm'>
+                  Forest returns to health, corrupted creatures revert to
+                  normal, settlements are safe
+                </p>
+              </div>
+              <div
+                class='bg-card border-border rounded-lg border p-4 shadow-sm'
+              >
+                <h5 class='text-primary mb-2 font-medium'>New Relationships</h5>
+                <p class='text-muted-foreground text-sm'>
+                  Alliance with local druid circle, friendship with forest
+                  spirits, reputation as heroes
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h4 class='mb-6 text-lg font-semibold'>
+              Long-Term Outcomes (Future Sessions)
+            </h4>
+            <div class='space-y-4'>
+              <div
+                class='bg-card border-border rounded-lg border p-4 shadow-sm'
+              >
+                <h5 class='text-primary mb-2 font-medium'>
+                  Story Continuations
+                </h5>
+                <p class='text-muted-foreground text-sm'>
+                  Source of corruption leads to larger threat, druids request
+                  help with other problems
+                </p>
+              </div>
+              <div
+                class='bg-card border-border rounded-lg border p-4 shadow-sm'
+              >
+                <h5 class='text-primary mb-2 font-medium'>
+                  Political Ramifications
+                </h5>
+                <p class='text-muted-foreground text-sm'>
+                  Strengthened druid alliance affects regional politics,
+                  nature-focused factions gain influence
+                </p>
+              </div>
+              <div
+                class='bg-card border-border rounded-lg border p-4 shadow-sm'
+              >
+                <h5 class='text-primary mb-2 font-medium'>Campaign Legacy</h5>
+                <p class='text-muted-foreground text-sm'>
+                  Event becomes legend, NPCs reference it, players' reputation
+                  precedes them
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Alternative Outcomes Section -->
+  <section class='py-20'>
+    <div class='container mx-auto px-4'>
+      <div class='mb-16 text-center'>
+        <h2 class='text-primary mb-4 text-3xl font-bold md:text-4xl'>
+          How Different Choices Create Different Outcomes
+        </h2>
+        <p class='text-muted-foreground mx-auto max-w-3xl text-lg'>
+          The same problem can have vastly different outcomes based on player
+          choices
+        </p>
+      </div>
+
+      <div class='mx-auto grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-2'>
+        <div class='bg-card border-border rounded-lg border p-6 shadow-sm'>
+          <h3 class='mb-4 text-xl font-semibold'>If They Used Force Instead</h3>
+          <div class='space-y-3'>
+            <p class='text-muted-foreground text-sm'>
+              <strong>Immediate:</strong> Forest saved but many creatures died in
+              the assault
+            </p>
+            <p class='text-muted-foreground text-sm'>
+              <strong>Relationships:</strong> Druids disapprove of violent methods,
+              nature spirits remain wary
+            </p>
+            <p class='text-muted-foreground text-sm'>
+              <strong>Future:</strong> Players must prove themselves to nature-focused
+              allies, some forest areas remain scarred
+            </p>
+          </div>
+        </div>
+
+        <div class='bg-card border-border rounded-lg border p-6 shadow-sm'>
+          <h3 class='mb-4 text-xl font-semibold'>If They Failed Completely</h3>
+          <div class='space-y-3'>
+            <p class='text-muted-foreground text-sm'>
+              <strong>Immediate:</strong> Corruption spreads, settlements evacuated,
+              forest becomes a dangerous wasteland
+            </p>
+            <p class='text-muted-foreground text-sm'>
+              <strong>Relationships:</strong> Refugees blame the party, druids work
+              alone, spirits flee the region
+            </p>
+            <p class='text-muted-foreground text-sm'>
+              <strong>Future:</strong> Ongoing corruption threat, displaced populations
+              create new problems, second chance adventures
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Outcome Tracking Callout -->
+  <div class='container mx-auto px-4 py-12'>
+    <Callout
+      title='Master Outcome Design'
+      description='Learn our complete system for creating meaningful consequences that make every player choice matter. From immediate rewards to long-term campaign changes.'
+      type='info'
+      icon={BarChart3}
+      ctaText='Learn Outcome Design'
+      ctaLink='/documentation/user-guide/outcome-design/'
+      size='large'
+    />
+  </div>
+
+  <!-- CTA Banner -->
+  <CTABanner
+    title='Ready to Make Every Choice Matter?'
+    description='Create meaningful story outcomes that give weight to player decisions and drive your campaign forward.'
+    primaryCta={{
+      text: 'Start Free Trial',
+      href: '/auth/register/',
+    }}
+    secondaryCta={{
+      text: 'Browse Outcome Templates',
+      href: '/templates/',
+    }}
+  />
+</MainLayout>

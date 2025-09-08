@@ -77,23 +77,28 @@ Each arc follows a structured storytelling approach:
    - Sets the initial context and stakes
 
 2. **Protagonist** - The main character(s) driving the action
-   - Usually the player characters
-   - Can include important NPCs
-   - Defines who the story is about
+   - Not always the player characters!
+   - Can be NPCs the party is helping or working with
+   - Defines who the story is really about
+   - Example: "The temple priests trying to save their community" vs "The adventuring party"
 
 3. **Antagonist** - The opposition or challenge to overcome
    - The primary opposition force
    - Can be characters, situations, or natural forces
    - Creates tension and conflict
+   - Should have clear motivations and goals
 
 4. **Problem** - The central conflict or obstacle
    - The main challenge to be resolved
-   - Should be clear and compelling
+   - Should be clear, specific, and have stakes
+   - Explains what happens if not solved
    - Drives the narrative forward
 
-5. **Key** - The method or solution to resolve the problem
-   - How the problem can be solved
-   - May involve specific items, knowledge, or actions
+5. **Key** - The crucial discovery or revelation needed to solve the problem
+   - Often a twist or hidden piece of information
+   - **The one thing** that unlocks the solution
+   - Can be an item, knowledge, location, or realization
+   - Changes the protagonists' understanding or capabilities
    - Provides direction for player agency
 
 6. **Outcome** - The result or consequences of the arc

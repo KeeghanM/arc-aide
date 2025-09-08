@@ -1,0 +1,193 @@
+---
+export const prerender = true
+
+import Callout from '@components/marketing/Callout.astro'
+import CTABanner from '@components/marketing/CTABanner.astro'
+import FeatureBlock from '@components/marketing/FeatureBlock.astro'
+import Hero from '@components/marketing/Hero.astro'
+import MainLayout from '@layouts/main-layout.astro'
+import {
+  AlertTriangle,
+  ClipboardList,
+  Link,
+  MessageCircle,
+  Network,
+  RotateCcw,
+  Tag,
+  User,
+  Users,
+} from 'lucide-react'
+
+const npcFeatures = [
+  {
+    title: 'Visual Character Sheets',
+    description:
+      'Track stats, motivations, relationships, and secrets in beautifully organized character profiles that load instantly during sessions.',
+    icon: User,
+  },
+  {
+    title: 'Relationship Mapping',
+    description:
+      "Connect NPCs with visual relationship webs. Never forget who knows whom, who's married to whom, or who has a grudge against the party.",
+    icon: Network,
+  },
+  {
+    title: 'Smart Search & Tags',
+    description:
+      'Find any NPC in seconds using our intelligent search. Tag characters by location, role, faction, or any custom category you need.',
+    icon: Tag,
+  },
+  {
+    title: 'Linked References',
+    description:
+      'Type [[NPC Name]] in any note and instantly create clickable links. Reference characters seamlessly across all your campaign content.',
+    icon: Link,
+  },
+  {
+    title: 'Session Notes Integration',
+    description:
+      'Track what happened to each NPC during sessions. Record their reactions, decisions, and how the party affected their lives.',
+    icon: ClipboardList,
+  },
+]
+
+const managementTips = [
+  {
+    title: 'The NPC Triangle Method',
+    description:
+      'Every important NPC needs three things: a goal, an obstacle, and a secret. This simple framework makes every character memorable and useful.',
+    icon: AlertTriangle,
+  },
+  {
+    title: 'Recurring Character Arcs',
+    description:
+      'Track how NPCs grow and change based on party actions. Turn one-shot characters into beloved recurring allies or memorable villains.',
+    icon: RotateCcw,
+  },
+  {
+    title: 'Voice & Mannerism Notes',
+    description:
+      'Record speech patterns, catchphrases, and physical quirks. Your players will notice when NPCs feel consistent and alive.',
+    icon: MessageCircle,
+  },
+]
+---
+
+<MainLayout
+  title='D&D NPC Management Tool - Organize Your NPCs Like a Pro | ArcAide'
+  showNav={true}
+  seo={{
+    description:
+      "Professional NPC management for D&D campaigns. Track characters, relationships, and story arcs with visual tools. Never forget an NPC's name or motivation again.",
+  }}
+>
+  <main>
+    <Hero
+      subtitle='NPC Management'
+      title='Never Forget Another NPC Again'
+      description='Professional character tracking that transforms scattered notes into organized, searchable NPC databases. Build living worlds where every character matters.'
+      primaryCta={{ text: 'Start Managing NPCs Free', href: '/auth/register/' }}
+      secondaryCta={{ text: 'View Live Demo', href: '#demo' }}
+      theme='fantasy'
+    />
+
+    <FeatureBlock
+      title='Complete NPC Organization System'
+      description='Everything you need to create, track, and manage memorable non-player characters'
+      features={npcFeatures}
+      layout='cards'
+      columns={3}
+      theme='default'
+    />
+
+    <section class='bg-primary/15 py-20'>
+      <div class='container mx-auto px-4'>
+        <div class='mx-auto mb-16 max-w-4xl text-center'>
+          <h2 class='text-primary mb-6 text-3xl font-bold md:text-4xl'>
+            The Problem Every DM Faces
+          </h2>
+          <div class='grid gap-8 text-left md:grid-cols-2'>
+            <div class='rounded-lg border border-red-200 bg-red-50 p-6'>
+              <h3 class='mb-3 font-semibold text-red-900'>
+                Without Proper NPC Management:
+              </h3>
+              <ul class='space-y-2 text-red-800'>
+                <li>• "What was that shopkeeper's name again?"</li>
+                <li>• Players remember details you've forgotten</li>
+                <li>• NPCs feel inconsistent or flat</li>
+                <li>• Missed opportunities for recurring characters</li>
+                <li>• Searching through scattered notes mid-session</li>
+              </ul>
+            </div>
+            <div class='rounded-lg border border-green-200 bg-green-50 p-6'>
+              <h3 class='mb-3 font-semibold text-green-900'>
+                With ArcAide's NPC System:
+              </h3>
+              <ul class='space-y-2 text-green-800'>
+                <li>• Instant access to any character's details</li>
+                <li>• Consistent personalities and voices</li>
+                <li>• Rich relationship webs between characters</li>
+                <li>• NPCs that grow and evolve with your story</li>
+                <li>• Professional presentation for your players</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <FeatureBlock
+      title='Pro DM Tips for NPC Management'
+      description='Master techniques used by experienced Dungeon Masters to create unforgettable characters'
+      features={managementTips}
+      layout='list'
+      theme='fantasy'
+    />
+
+    <div class='container mx-auto px-4 py-12'>
+      <Callout
+        title='Start With Our NPC Templates'
+        description='Get 50+ pre-built NPC templates covering tavern keepers, guards, nobles, merchants, and villains. Each template includes personality traits, motivations, and plot hooks.'
+        type='fantasy'
+        icon={Users}
+        ctaText='Browse NPC Templates'
+        ctaLink='/templates/'
+        size='large'
+      />
+    </div>
+
+    <section class='bg-card py-20'>
+      <div class='container mx-auto px-4 text-center'>
+        <h2 class='text-primary mb-6 text-3xl font-bold md:text-4xl'>
+          Popular NPC Management Features
+        </h2>
+        <div class='mx-auto grid max-w-4xl gap-6 md:grid-cols-3'>
+          <div class='text-center'>
+            <div class='text-primary mb-2 text-2xl font-bold'>500+</div>
+            <div class='text-muted-foreground text-sm'>NPCs per campaign</div>
+          </div>
+          <div class='text-center'>
+            <div class='text-primary mb-2 text-2xl font-bold'>10+</div>
+            <div class='text-muted-foreground text-sm'>Relationship types</div>
+          </div>
+          <div class='text-center'>
+            <div class='text-primary mb-2 text-2xl font-bold'>∞</div>
+            <div class='text-muted-foreground text-sm'>Custom tags</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <CTABanner
+      title='Ready to Organize Your NPCs?'
+      description="Join hundreds of DMs who've transformed their character management with ArcAide's proven system."
+      primaryCta={{ text: 'Start Your Free Campaign', href: '/auth/register/' }}
+      secondaryCta={{
+        text: 'Learn More',
+        href: '/documentation/user-guide/getting-started/',
+      }}
+      theme='fantasy'
+      backgroundPattern={true}
+    />
+  </main>
+</MainLayout>

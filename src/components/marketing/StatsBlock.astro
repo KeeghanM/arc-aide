@@ -1,0 +1,92 @@
+---
+export interface StatsBlockProps {
+  title?: string
+  description?: string
+  stats: Array<{
+    number: string
+    label: string
+    description?: string
+  }>
+  theme?: 'default' | 'fantasy' | 'minimal'
+  layout?: 'horizontal' | 'grid'
+}
+
+const {
+  title,
+  description,
+  stats,
+  theme = 'default',
+  layout = 'horizontal',
+} = Astro.props as StatsBlockProps
+
+const themeClasses = {
+  default: 'bg-background',
+  fantasy: 'bg-gradient-to-b from-blue-50 to-orange-50  ',
+  minimal: 'bg-primary/15',
+}
+---
+
+<section class={`py-20 ${themeClasses[theme]}`}>
+  <div class='container mx-auto px-4'>
+    {
+      (title || description) && (
+        <div class='mb-16 text-center'>
+          {title && (
+            <h2 class='text-primary mb-4 text-3xl font-bold md:text-4xl'>
+              {title}
+            </h2>
+          )}
+          {description && (
+            <p class='text-muted-foreground mx-auto max-w-3xl text-lg'>
+              {description}
+            </p>
+          )}
+        </div>
+      )
+    }
+
+    {
+      layout === 'horizontal' && (
+        <div class='flex flex-wrap items-center justify-center gap-16 md:gap-24'>
+          {stats.map((stat) => (
+            <div class='text-center'>
+              <div class='text-primary mb-2 text-4xl font-bold md:text-5xl lg:text-6xl'>
+                {stat.number}
+              </div>
+              <div class='text-foreground mb-1 text-lg font-semibold'>
+                {stat.label}
+              </div>
+              {stat.description && (
+                <div class='text-muted-foreground text-sm'>
+                  {stat.description}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )
+    }
+
+    {
+      layout === 'grid' && (
+        <div class='grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4'>
+          {stats.map((stat) => (
+            <div class='bg-card border-border rounded-lg border p-6 text-center shadow-sm'>
+              <div class='text-primary mb-2 text-3xl font-bold md:text-4xl'>
+                {stat.number}
+              </div>
+              <div class='text-foreground mb-1 text-lg font-semibold'>
+                {stat.label}
+              </div>
+              {stat.description && (
+                <div class='text-muted-foreground text-sm'>
+                  {stat.description}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )
+    }
+  </div>
+</section>

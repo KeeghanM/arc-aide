@@ -29,13 +29,9 @@ const campaignData = await db
   .orderBy(desc(campaign.updatedAt))
 ---
 
-<MainLayout title={`${username}'s Campaigns | ArcAide`}>
+<MainLayout title={`${userData.displayUsername}'s Campaigns | ArcAide`}>
   <div class='dnd-content min-h-screen'>
-    <h1>{username}'s Campaigns</h1>
-    <p class='text-muted-foreground mb-6'>
-      Published D&D campaigns and adventures
-    </p>
-
+    <h1>{userData.displayUsername}'s Campaigns</h1>
     {
       campaignData.length > 0 ? (
         <div class='grid gap-6 md:grid-cols-2 lg:grid-cols-3'>
@@ -50,20 +46,22 @@ const campaignData = await db
                 </a>
               </h2>
               {campaign.description && (
-                <p class='text-muted-foreground text-sm'>
-                  {typeof campaign.description === 'string'
-                    ? campaign.description
-                    : 'Campaign description'}
-                </p>
+                <>
+                  <p class='text-muted-foreground text-sm'>
+                    {typeof campaign.description === 'string'
+                      ? campaign.description
+                      : 'Campaign description'}
+                  </p>
+                  <div class='mt-4'>
+                    <a
+                      href={`/${username}/campaign/${campaign.slug}`}
+                      class='text-accent text-sm hover:underline'
+                    >
+                      View Campaign →
+                    </a>
+                  </div>
+                </>
               )}
-              <div class='mt-4'>
-                <a
-                  href={`/${username}/campaign/${campaign.slug}`}
-                  class='text-accent text-sm hover:underline'
-                >
-                  View Campaign →
-                </a>
-              </div>
             </div>
           ))}
         </div>
