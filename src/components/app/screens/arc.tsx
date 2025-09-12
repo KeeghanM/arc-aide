@@ -3,6 +3,7 @@ import { useAppStore } from '@stores/appStore'
 import pDebounce from 'p-debounce'
 import type { Descendant } from 'slate'
 import ArcItem from '../components/arc/arc-item'
+import ArcSettings from '../components/arc/arc-settings/arc-settings'
 import ParentArc from '../components/arc/parent-arc/parent-arc'
 import Publish from '../components/publish/publish'
 import MarkdownEditor, {
@@ -18,8 +19,9 @@ type TArcProps = {
 
 function Arc({ arc }: TArcProps) {
   const { modifyArc, useArcQuery } = useArcQueries()
-  const { mode } = useAppStore()
+  const { mode, setCurrentArc: setArcSlug } = useAppStore()
   const arcQuery = useArcQuery(arc.slug)
+  setArcSlug(arc)
 
   const DEBOUNCE_DELAY = 300
   // --- Auto-save handlers ---
@@ -50,6 +52,7 @@ function Arc({ arc }: TArcProps) {
     <div className='space-y-4 pr-6 md:pr-12'>
       <ParentArc arc={arc} />
       <div className='flex items-center gap-2'>
+        <ArcSettings />
         <Publish
           published={arcQuery.data?.published ?? arc.published}
           type='arc'

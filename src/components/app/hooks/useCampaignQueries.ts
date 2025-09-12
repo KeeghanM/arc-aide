@@ -79,6 +79,10 @@ export function useCampaignQueries() {
         headers: { 'Content-Type': 'application/json' },
       })
 
+      posthog?.capture('campaign_modified', {
+        campaignSlug: updatedCampaign.slug,
+      })
+
       return await response.json()
     },
     onSuccess: (data, variables) => {

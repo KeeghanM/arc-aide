@@ -192,11 +192,40 @@ export const PUT: APIRoute = async ({ request, params }) => {
     if (parsedThing.data.published !== undefined)
       updateData.published = parsedThing.data.published
 
-    const result = await db
+    const [returnedThing] = await db
       .update(thing)
       .set(updateData)
       .where(eq(thing.id, existingThing[0].id))
       .returning()
+
+    if (updateData.slug) {
+      const oldLink = `[[arc#${thingSlug}]]`
+      const newLink = `[[arc#${updateData.slug}]]`
+      await db.run(`
+        UPDATE arc SET 
+          hook = REPLACE(hook, "${oldLink}", "${newLink}"),
+          protagonist = REPLACE(protagonist, "${oldLink}", "${newLink}"),
+          antagonist = REPLACE(antagonist, "${oldLink}", "${newLink}"),
+          problem = REPLACE(problem, "${oldLink}", "${newLink}"),
+          key = REPLACE(key, "${oldLink}", "${newLink}"),
+          outcome = REPLACE(outcome, "${oldLink}", "${newLink}"),
+          notes = REPLACE(notes, "${oldLink}", "${newLink}"),
+          hook_text = REPLACE(hook_text, "${oldLink}", "${newLink}"),
+          protagonist_text = REPLACE(protagonist_text, "${oldLink}", "${newLink}"),
+          antagonist_text = REPLACE(antagonist_text, "${oldLink}", "${newLink}"),
+          problem_text = REPLACE(problem_text, "${oldLink}", "${newLink}"),
+          outcome_text = REPLACE(outcome_text, "${oldLink}", "${newLink}"),
+          key_text = REPLACE(key_text, "${oldLink}", "${newLink}")
+          notes_text = REPLACE(notes_text, "${oldLink}", "${newLink}")
+        WHERE arc.campaign_id = ${returnedThing.campaignId}
+        `)
+      await db.run(`
+        UPDATE thing SET 
+          description = REPLACE(description, "${oldLink}", "${newLink}"),
+          description_text = REPLACE(description_text, "${oldLink}", "${newLink}")
+        WHERE thing.campaign_id = ${returnedThing.campaignId}
+        `)
+    }
 
     await db
       .update(campaign)
@@ -210,7 +239,7 @@ export const PUT: APIRoute = async ({ request, params }) => {
         )
       )
 
-    return new Response(JSON.stringify(result[0]), { status: 200 })
+    return new Response(JSON.stringify(returnedThing), { status: 200 })
   } catch (error) {
     console.error('Error updating thing:', error)
     Honeybadger.notify(error as Error)

@@ -211,13 +211,14 @@ export const PUT: APIRoute = async ({ request, params }) => {
       updatedAt: now,
     }
 
-    // Only update slug if it's different
-    if (parsedArc.data.name && parsedArc.data.slug !== arcSlug) {
-      updateData.slug = slugify(parsedArc.data.name)
-    }
-
     // Add optional fields if provided
-    if (parsedArc.data.name !== undefined) updateData.name = parsedArc.data.name
+    if (parsedArc.data.name !== undefined) {
+      updateData.name = parsedArc.data.name
+      // Only update slug if name is being changed
+      if (parsedArc.data.slug !== arcSlug) {
+        updateData.slug = slugify(parsedArc.data.name)
+      }
+    }
     if (parsedArc.data.parentArcId !== undefined)
       updateData.parentArcId = parsedArc.data.parentArcId
     if (parsedArc.data.hook !== undefined) {
@@ -261,6 +262,36 @@ export const PUT: APIRoute = async ({ request, params }) => {
       .set(updateData)
       .where(eq(arc.id, existingArc[0].id))
       .returning()
+
+    // If the Arcs slug has changed, we need to update all links to it in the entries
+    if (updateData.slug) {
+      const oldLink = `[[arc#${arcSlug}]]`
+      const newLink = `[[arc#${updateData.slug}]]`
+      await db.run(`
+        UPDATE arc SET 
+          hook = REPLACE(hook, "${oldLink}", "${newLink}"),
+          protagonist = REPLACE(protagonist, "${oldLink}", "${newLink}"),
+          antagonist = REPLACE(antagonist, "${oldLink}", "${newLink}"),
+          problem = REPLACE(problem, "${oldLink}", "${newLink}"),
+          key = REPLACE(key, "${oldLink}", "${newLink}"),
+          outcome = REPLACE(outcome, "${oldLink}", "${newLink}"),
+          notes = REPLACE(notes, "${oldLink}", "${newLink}"),
+          hook_text = REPLACE(hook_text, "${oldLink}", "${newLink}"),
+          protagonist_text = REPLACE(protagonist_text, "${oldLink}", "${newLink}"),
+          antagonist_text = REPLACE(antagonist_text, "${oldLink}", "${newLink}"),
+          problem_text = REPLACE(problem_text, "${oldLink}", "${newLink}"),
+          outcome_text = REPLACE(outcome_text, "${oldLink}", "${newLink}"),
+          key_text = REPLACE(key_text, "${oldLink}", "${newLink}")
+          notes_text = REPLACE(notes_text, "${oldLink}", "${newLink}")
+        WHERE arc.campaign_id = ${returnedArc.campaignId}
+        `)
+      await db.run(`
+        UPDATE thing SET 
+          description = REPLACE(description, "${oldLink}", "${newLink}"),
+          description_text = REPLACE(description_text, "${oldLink}", "${newLink}")
+        WHERE thing.campaign_id = ${returnedArc.campaignId}
+        `)
+    }
 
     // Fetch parent arc if parentArcId exists
     let parentArc = null

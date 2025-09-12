@@ -46,6 +46,7 @@ export const arc = sqliteTable(
     antagonistText: text('antagonist_text').default(''),
     problemText: text('problem_text').default(''),
     outcomeText: text('outcome_text').default(''),
+    keyText: text('key_text').default(''),
     notesText: text('notes_text').default(''),
     published: integer('published', {
       mode: 'boolean',

@@ -1,3 +1,5 @@
+import type { TArc } from '@hooks/useArcQueries'
+import type { TThing } from '@hooks/useThingQueries'
 import type { User } from 'better-auth'
 import { create } from 'zustand'
 
@@ -37,6 +39,10 @@ interface IAppState {
   // Current campaign slug is used for API calls and navigation
   campaignSlug: string | undefined
   setCampaignSlug: (slug: string | undefined) => void
+  currentThing: TThing | undefined
+  setCurrentThing: (thing: TThing | undefined) => void
+  currentArc: TArc | undefined
+  setCurrentArc: (arc: TArc | undefined) => void
 }
 
 export const useAppStore = create<IAppState>()((set) => ({
@@ -48,4 +54,8 @@ export const useAppStore = create<IAppState>()((set) => ({
   setUser: (user) => set({ user }),
   campaignSlug: undefined,
   setCampaignSlug: (slug) => set({ campaignSlug: slug }),
+  currentThing: undefined,
+  setCurrentThing: (thing) => set({ currentThing: thing }),
+  currentArc: undefined,
+  setCurrentArc: (arc) => set({ currentArc: arc }),
 }))

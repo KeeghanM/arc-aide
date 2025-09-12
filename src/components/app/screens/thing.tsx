@@ -6,6 +6,7 @@ import MarkdownEditor, {
   defaultEditorValue,
 } from '../components/slate-handling/editor/markdown-editor'
 import SlateViewer from '../components/slate-handling/viewer'
+import ThingSettings from '../components/thing/thing-settings/thing-settings'
 import type { TScreenWrapperProps } from '../screen-wrapper'
 import ScreenWrapper from '../screen-wrapper'
 import { useAppStore } from '../stores/appStore'
@@ -16,9 +17,10 @@ type TThingProps = {
 
 function Thing({ thing }: TThingProps) {
   const { modifyThing } = useThingQueries()
-  const { mode } = useAppStore()
+  const { mode, setCurrentThing: setThingSlug } = useAppStore()
   const { useThingQuery } = useThingQueries()
   const thingQuery = useThingQuery(thing.slug)
+  setThingSlug(thing)
 
   const handleDescriptionChange = pDebounce(async (value: Descendant[]) => {
     modifyThing.mutate({
@@ -29,6 +31,7 @@ function Thing({ thing }: TThingProps) {
   return (
     <div className='space-y-6 pr-6 md:pr-12'>
       <div className='flex items-center gap-2'>
+        <ThingSettings />
         <Publish
           published={thingQuery.data?.published ?? thing.published}
           type='thing'

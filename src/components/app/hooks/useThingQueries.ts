@@ -161,8 +161,8 @@ export function useThingQueries() {
       updatedThing,
     }: {
       updatedThing: Partial<TThing> & { slug: string }
-    }) => {
-      await fetch(
+    }): Promise<TThing> => {
+      const response = await fetch(
         `/api/campaigns/${campaignSlug}/things/${updatedThing.slug}`,
         {
           method: 'PUT',
@@ -175,6 +175,8 @@ export function useThingQueries() {
         thingSlug: updatedThing.slug,
         campaignSlug,
       })
+
+      return await response.json()
     },
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({
