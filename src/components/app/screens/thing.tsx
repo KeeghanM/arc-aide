@@ -1,4 +1,5 @@
 import { type TThing, useThingQueries } from '@hooks/useThingQueries'
+import { extractRelatedItems } from '@utils/slate-text-extractor'
 import pDebounce from 'p-debounce'
 import type { Descendant } from 'slate'
 import Publish from '../components/publish/publish'
@@ -25,6 +26,7 @@ function Thing({ thing }: TThingProps) {
   const handleDescriptionChange = pDebounce(async (value: Descendant[]) => {
     modifyThing.mutate({
       updatedThing: { slug: thing.slug, description: value },
+      relatedItems: extractRelatedItems(value),
     })
   }, 1000)
 

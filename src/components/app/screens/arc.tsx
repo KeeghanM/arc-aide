@@ -1,5 +1,6 @@
 import { type TArc, useArcQueries } from '@hooks/useArcQueries'
 import { useAppStore } from '@stores/appStore'
+import { extractRelatedItems } from '@utils/slate-text-extractor'
 import pDebounce from 'p-debounce'
 import type { Descendant } from 'slate'
 import ArcItem from '../components/arc/arc-item'
@@ -27,25 +28,46 @@ function Arc({ arc }: TArcProps) {
   // --- Auto-save handlers ---
   // Debounce saves to avoid excessive API calls while user types
   const handleHookChange = pDebounce(async (value: Descendant[]) => {
-    modifyArc.mutate({ updatedArc: { slug: arc.slug, hook: value } })
+    modifyArc.mutate({
+      updatedArc: { slug: arc.slug, hook: value },
+      relatedItems: extractRelatedItems(value),
+    })
   }, DEBOUNCE_DELAY)
   const handleProtagonistChange = pDebounce(async (value: Descendant[]) => {
-    modifyArc.mutate({ updatedArc: { slug: arc.slug, protagonist: value } })
+    modifyArc.mutate({
+      updatedArc: { slug: arc.slug, protagonist: value },
+      relatedItems: extractRelatedItems(value),
+    })
   }, DEBOUNCE_DELAY)
   const handleAntagonistChange = pDebounce(async (value: Descendant[]) => {
-    modifyArc.mutate({ updatedArc: { slug: arc.slug, antagonist: value } })
+    modifyArc.mutate({
+      updatedArc: { slug: arc.slug, antagonist: value },
+      relatedItems: extractRelatedItems(value),
+    })
   }, DEBOUNCE_DELAY)
   const handleProblemChange = pDebounce(async (value: Descendant[]) => {
-    modifyArc.mutate({ updatedArc: { slug: arc.slug, problem: value } })
+    modifyArc.mutate({
+      updatedArc: { slug: arc.slug, problem: value },
+      relatedItems: extractRelatedItems(value),
+    })
   }, DEBOUNCE_DELAY)
   const handleKeyChange = pDebounce(async (value: Descendant[]) => {
-    modifyArc.mutate({ updatedArc: { slug: arc.slug, key: value } })
+    modifyArc.mutate({
+      updatedArc: { slug: arc.slug, key: value },
+      relatedItems: extractRelatedItems(value),
+    })
   }, DEBOUNCE_DELAY)
   const handleOutcomeChange = pDebounce(async (value: Descendant[]) => {
-    modifyArc.mutate({ updatedArc: { slug: arc.slug, outcome: value } })
+    modifyArc.mutate({
+      updatedArc: { slug: arc.slug, outcome: value },
+      relatedItems: extractRelatedItems(value),
+    })
   }, DEBOUNCE_DELAY)
   const handleNotesChange = pDebounce(async (value: Descendant[]) => {
-    modifyArc.mutate({ updatedArc: { slug: arc.slug, notes: value } })
+    modifyArc.mutate({
+      updatedArc: { slug: arc.slug, notes: value },
+      relatedItems: extractRelatedItems(value),
+    })
   }, DEBOUNCE_DELAY)
 
   return (

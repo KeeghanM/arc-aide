@@ -11,6 +11,8 @@ export type TArc = typeof arc.$inferSelect & {
   things?: TThing[]
 }
 
+export type TRelatedItem = { type: 'arc' | 'thing'; slug: string }
+
 export function useArcQueries() {
   const posthog = usePostHog()
   const queryClient = useQueryClient()
@@ -82,14 +84,16 @@ export function useArcQueries() {
   const modifyArc = useSyncMutation({
     mutationFn: async ({
       updatedArc,
+      relatedItems,
     }: {
       updatedArc: Partial<TArc> & { slug: string }
+      relatedItems?: TRelatedItem[]
     }): Promise<TArc> => {
       const result = await fetch(
         `/api/campaigns/${campaignSlug}/arcs/${updatedArc.slug}`,
         {
           method: 'PUT',
-          body: JSON.stringify({ updatedArc }),
+          body: JSON.stringify({ updatedArc, relatedItems }),
           headers: { 'Content-Type': 'application/json' },
         }
       )

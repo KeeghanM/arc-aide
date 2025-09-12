@@ -3,7 +3,7 @@ import { useSyncMutation } from '@hooks/useSyncMutation'
 import { useAppStore } from '@stores/appStore'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { usePostHog } from 'posthog-js/react'
-import type { TArc } from './useArcQueries'
+import type { TArc, TRelatedItem } from './useArcQueries'
 
 export type TThing = typeof thing.$inferSelect
 
@@ -159,14 +159,16 @@ export function useThingQueries() {
   const modifyThing = useSyncMutation({
     mutationFn: async ({
       updatedThing,
+      relatedItems,
     }: {
       updatedThing: Partial<TThing> & { slug: string }
+      relatedItems?: TRelatedItem[]
     }): Promise<TThing> => {
       const response = await fetch(
         `/api/campaigns/${campaignSlug}/things/${updatedThing.slug}`,
         {
           method: 'PUT',
-          body: JSON.stringify({ updatedThing }),
+          body: JSON.stringify({ updatedThing, relatedItems }),
           headers: { 'Content-Type': 'application/json' },
         }
       )
