@@ -50,7 +50,6 @@ function SideBar() {
                   key={arc.id}
                   arc={arc}
                   allArcs={arcsQuery.data || []}
-                  thingTypesData={thingTypesQuery.data}
                 />
               )
             )}
