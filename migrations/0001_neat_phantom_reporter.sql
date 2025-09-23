@@ -46,16 +46,4 @@ ALTER TABLE `arc` ALTER COLUMN "antagonist" TO "antagonist" text;--> statement-b
 ALTER TABLE `arc` ALTER COLUMN "problem" TO "problem" text;--> statement-breakpoint
 ALTER TABLE `arc` ALTER COLUMN "key" TO "key" text;--> statement-breakpoint
 ALTER TABLE `arc` ALTER COLUMN "outcome" TO "outcome" text;--> statement-breakpoint
-ALTER TABLE `arc` ADD `key_text` text DEFAULT '';--> statement-breakpoint
-PRAGMA foreign_keys=OFF;--> statement-breakpoint
-CREATE TABLE `__new_search_vocabulary` (
-	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
-	`term` text NOT NULL,
-	`frequency` integer DEFAULT 1,
-	`created_at` integer NOT NULL
-);
---> statement-breakpoint
-INSERT INTO `__new_search_vocabulary`("id", "term", "frequency", "created_at") SELECT "id", "term", "frequency", "created_at" FROM `search_vocabulary`;--> statement-breakpoint
-DROP TABLE `search_vocabulary`;--> statement-breakpoint
-ALTER TABLE `__new_search_vocabulary` RENAME TO `search_vocabulary`;--> statement-breakpoint
-PRAGMA foreign_keys=ON;
+ALTER TABLE `arc` ADD `key_text` text DEFAULT '';

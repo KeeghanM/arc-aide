@@ -1,5 +1,7 @@
 -- Current sql file was generated after introspecting the database
 -- If you want to run this migration please uncomment this code before executing migrations
+select(1); -- We need at least one statement here otherwise the migration fails
+
 /*
 CREATE TABLE `account` (
 	`id` text PRIMARY KEY NOT NULL,
@@ -17,7 +19,7 @@ CREATE TABLE `account` (
 	`updated_at` integer NOT NULL,
 	FOREIGN KEY (`user_id`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE cascade
 );
---> statement-breakpoint
+--> statement breakpoint // SWAP ME TO HAVE HYPHEN IF YOU WANT TO ACTUALLY USE THIS FILE
 CREATE TABLE `arc` (
 	`id` integer PRIMARY KEY NOT NULL,
 	`slug` text NOT NULL,
@@ -42,16 +44,16 @@ CREATE TABLE `arc` (
 	`published` integer DEFAULT false NOT NULL,
 	FOREIGN KEY (`campaign_id`) REFERENCES `campaign`(`id`) ON UPDATE no action ON DELETE cascade
 );
---> statement-breakpoint
-CREATE UNIQUE INDEX `campaign_arcSlug_unique` ON `arc` (`campaign_id`,`slug`);--> statement-breakpoint
+--> statement breakpoint // SWAP ME TO HAVE HYPHEN IF YOU WANT TO ACTUALLY USE THIS FILE
+CREATE UNIQUE INDEX `campaign_arcSlug_unique` ON `arc` (`campaign_id`,`slug`);--> statement breakpoint // SWAP ME TO HAVE HYPHEN IF YOU WANT TO ACTUALLY USE THIS FILE
 CREATE TABLE `arc_thing` (
 	`arc_id` integer NOT NULL,
 	`thing_id` integer NOT NULL,
 	FOREIGN KEY (`thing_id`) REFERENCES `thing`(`id`) ON UPDATE no action ON DELETE cascade,
 	FOREIGN KEY (`arc_id`) REFERENCES `arc`(`id`) ON UPDATE no action ON DELETE cascade
 );
---> statement-breakpoint
-CREATE UNIQUE INDEX `arc_thing_unique` ON `arc_thing` (`arc_id`,`thing_id`);--> statement-breakpoint
+--> statement breakpoint // SWAP ME TO HAVE HYPHEN IF YOU WANT TO ACTUALLY USE THIS FILE
+CREATE UNIQUE INDEX `arc_thing_unique` ON `arc_thing` (`arc_id`,`thing_id`);--> statement breakpoint // SWAP ME TO HAVE HYPHEN IF YOU WANT TO ACTUALLY USE THIS FILE
 CREATE TABLE `campaign` (
 	`id` integer PRIMARY KEY NOT NULL,
 	`slug` text NOT NULL,
@@ -63,8 +65,8 @@ CREATE TABLE `campaign` (
 	`published` integer DEFAULT false NOT NULL,
 	FOREIGN KEY (`user_id`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE cascade
 );
---> statement-breakpoint
-CREATE UNIQUE INDEX `user_campaignSlug_unique` ON `campaign` (`user_id`,`slug`);--> statement-breakpoint
+--> statement breakpoint // SWAP ME TO HAVE HYPHEN IF YOU WANT TO ACTUALLY USE THIS FILE
+CREATE UNIQUE INDEX `user_campaignSlug_unique` ON `campaign` (`user_id`,`slug`);--> statement breakpoint // SWAP ME TO HAVE HYPHEN IF YOU WANT TO ACTUALLY USE THIS FILE
 CREATE TABLE `session` (
 	`id` text PRIMARY KEY NOT NULL,
 	`expires_at` integer NOT NULL,
@@ -76,8 +78,8 @@ CREATE TABLE `session` (
 	`user_id` text NOT NULL,
 	FOREIGN KEY (`user_id`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE cascade
 );
---> statement-breakpoint
-CREATE UNIQUE INDEX `session_token_unique` ON `session` (`token`);--> statement-breakpoint
+--> statement breakpoint // SWAP ME TO HAVE HYPHEN IF YOU WANT TO ACTUALLY USE THIS FILE
+CREATE UNIQUE INDEX `session_token_unique` ON `session` (`token`);--> statement breakpoint // SWAP ME TO HAVE HYPHEN IF YOU WANT TO ACTUALLY USE THIS FILE
 CREATE TABLE `thing` (
 	`id` integer PRIMARY KEY NOT NULL,
 	`slug` text NOT NULL,
@@ -92,15 +94,15 @@ CREATE TABLE `thing` (
 	FOREIGN KEY (`type_id`) REFERENCES `thing_type`(`id`) ON UPDATE no action ON DELETE cascade,
 	FOREIGN KEY (`campaign_id`) REFERENCES `campaign`(`id`) ON UPDATE no action ON DELETE cascade
 );
---> statement-breakpoint
-CREATE UNIQUE INDEX `campaign_thingSlug_unique` ON `thing` (`campaign_id`,`slug`);--> statement-breakpoint
+--> statement breakpoint // SWAP ME TO HAVE HYPHEN IF YOU WANT TO ACTUALLY USE THIS FILE
+CREATE UNIQUE INDEX `campaign_thingSlug_unique` ON `thing` (`campaign_id`,`slug`);--> statement breakpoint // SWAP ME TO HAVE HYPHEN IF YOU WANT TO ACTUALLY USE THIS FILE
 CREATE TABLE `thing_type` (
 	`id` integer PRIMARY KEY NOT NULL,
 	`name` text NOT NULL,
 	`campaign_id` integer NOT NULL,
 	FOREIGN KEY (`campaign_id`) REFERENCES `campaign`(`id`) ON UPDATE no action ON DELETE cascade
 );
---> statement-breakpoint
+--> statement breakpoint // SWAP ME TO HAVE HYPHEN IF YOU WANT TO ACTUALLY USE THIS FILE
 CREATE TABLE `user` (
 	`id` text PRIMARY KEY NOT NULL,
 	`name` text NOT NULL,
@@ -112,9 +114,9 @@ CREATE TABLE `user` (
 	`username` text,
 	`display_username` text
 );
---> statement-breakpoint
-CREATE UNIQUE INDEX `user_username_unique` ON `user` (`username`);--> statement-breakpoint
-CREATE UNIQUE INDEX `user_email_unique` ON `user` (`email`);--> statement-breakpoint
+--> statement breakpoint // SWAP ME TO HAVE HYPHEN IF YOU WANT TO ACTUALLY USE THIS FILE
+CREATE UNIQUE INDEX `user_username_unique` ON `user` (`username`);--> statement breakpoint // SWAP ME TO HAVE HYPHEN IF YOU WANT TO ACTUALLY USE THIS FILE
+CREATE UNIQUE INDEX `user_email_unique` ON `user` (`email`);--> statement breakpoint // SWAP ME TO HAVE HYPHEN IF YOU WANT TO ACTUALLY USE THIS FILE
 CREATE TABLE `verification` (
 	`id` text PRIMARY KEY NOT NULL,
 	`identifier` text NOT NULL,
@@ -123,15 +125,15 @@ CREATE TABLE `verification` (
 	`created_at` integer,
 	`updated_at` integer
 );
---> statement-breakpoint
+--> statement breakpoint // SWAP ME TO HAVE HYPHEN IF YOU WANT TO ACTUALLY USE THIS FILE
 CREATE TABLE `search_vocabulary` (
 	`id` integer PRIMARY KEY AUTOINCREMENT,
 	`term` text NOT NULL,
 	`frequency` integer DEFAULT 1,
 	`created_at` numeric DEFAULT (CURRENT_TIMESTAMP)
 );
---> statement-breakpoint
-CREATE INDEX `idx_search_vocabulary_term` ON `search_vocabulary` (`term`);--> statement-breakpoint
+--> statement breakpoint // SWAP ME TO HAVE HYPHEN IF YOU WANT TO ACTUALLY USE THIS FILE
+CREATE INDEX `idx_search_vocabulary_term` ON `search_vocabulary` (`term`);--> statement breakpoint // SWAP ME TO HAVE HYPHEN IF YOU WANT TO ACTUALLY USE THIS FILE
 CREATE TABLE `asset` (
 	`id` integer PRIMARY KEY NOT NULL,
 	`label` text NOT NULL,
@@ -143,6 +145,6 @@ CREATE TABLE `asset` (
 	FOREIGN KEY (`user_id`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE cascade,
 	FOREIGN KEY (`campaign_id`) REFERENCES `campaign`(`id`) ON UPDATE no action ON DELETE cascade
 );
---> statement-breakpoint
+--> statement breakpoint // SWAP ME TO HAVE HYPHEN IF YOU WANT TO ACTUALLY USE THIS FILE
 CREATE UNIQUE INDEX `asset_cloudflare_id_unique` ON `asset` (`cloudflare_id`);
 */
