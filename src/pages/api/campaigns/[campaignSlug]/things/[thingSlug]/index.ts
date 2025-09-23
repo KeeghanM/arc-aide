@@ -1,11 +1,11 @@
 import { auth } from '@auth/auth'
 import { db } from '@db/db'
-import { campaign, thing } from '@db/schema'
+import { arc, campaign, thing } from '@db/schema'
 import Honeybadger from '@honeybadger-io/js'
 import { slateToPlainText } from '@utils/slate-text-extractor'
 import { slugify } from '@utils/string'
 import type { APIRoute } from 'astro'
-import { and, eq } from 'drizzle-orm'
+import { and, eq, sql } from 'drizzle-orm'
 import * as z from 'zod'
 
 /**
@@ -199,58 +199,34 @@ export const PUT: APIRoute = async ({ request, params }) => {
       .returning()
 
     if (updateData.slug) {
-      const oldLink = `[[arc#${thingSlug}]]`
-      const newLink = `[[arc#${updateData.slug}]]`
-      await db.run(
-        `
-        UPDATE arc SET 
-          hook = REPLACE(hook, ?, ?),
-          protagonist = REPLACE(protagonist, ?, ?),
-          antagonist = REPLACE(antagonist, ?, ?),
-          problem = REPLACE(problem, ?, ?),
-          key = REPLACE(key, ?, ?),
-          outcome = REPLACE(outcome, ?, ?),
-          notes = REPLACE(notes, ?, ?),
-          hook_text = REPLACE(hook_text, ?, ?),
-          protagonist_text = REPLACE(protagonist_text, ?, ?),
-          antagonist_text = REPLACE(antagonist_text, ?, ?),
-          problem_text = REPLACE(problem_text, ?, ?),
-          outcome_text = REPLACE(outcome_text, ?, ?),
-          key_text = REPLACE(key_text, ?, ?),
-          notes_text = REPLACE(notes_text, ?, ?)
-        WHERE arc.campaign_id = ?
-        `,
-        [
-          oldLink, newLink, // hook
-          oldLink, newLink, // protagonist
-          oldLink, newLink, // antagonist
-          oldLink, newLink, // problem
-          oldLink, newLink, // key
-          oldLink, newLink, // outcome
-          oldLink, newLink, // notes
-          oldLink, newLink, // hook_text
-          oldLink, newLink, // protagonist_text
-          oldLink, newLink, // antagonist_text
-          oldLink, newLink, // problem_text
-          oldLink, newLink, // outcome_text
-          oldLink, newLink, // key_text
-          oldLink, newLink, // notes_text
-          returnedThing.campaignId // WHERE
-        ]
-      )
-      await db.run(
-        `
-        UPDATE thing SET 
-          description = REPLACE(description, ?, ?),
-          description_text = REPLACE(description_text, ?, ?)
-        WHERE thing.campaign_id = ?
-        `,
-        [
-          oldLink, newLink, // description
-          oldLink, newLink, // description_text
-          returnedThing.campaignId // WHERE
-        ]
-      )
+      const oldLink = `[[thing#${thingSlug}]]`
+      const newLink = `[[thing#${updateData.slug}]]`
+
+      await db.run(sql`
+        UPDATE ${arc} SET 
+          ${arc.hook} = REPLACE(${arc.hook}, ${oldLink}, ${newLink}),
+          ${arc.protagonist} = REPLACE(${arc.protagonist}, ${oldLink}, ${newLink}),
+          ${arc.antagonist} = REPLACE(${arc.antagonist}, ${oldLink}, ${newLink}),
+          ${arc.problem} = REPLACE(${arc.problem}, ${oldLink}, ${newLink}),
+          ${arc.key} = REPLACE(${arc.key}, ${oldLink}, ${newLink}),
+          ${arc.outcome} = REPLACE(${arc.outcome}, ${oldLink}, ${newLink}),
+          ${arc.notes} = REPLACE(${arc.notes}, ${oldLink}, ${newLink}),
+          ${arc.hookText} = REPLACE(${arc.hookText}, ${oldLink}, ${newLink}),
+          ${arc.protagonistText} = REPLACE(${arc.protagonistText}, ${oldLink}, ${newLink}),
+          ${arc.antagonistText} = REPLACE(${arc.antagonistText}, ${oldLink}, ${newLink}),
+          ${arc.problemText} = REPLACE(${arc.problemText}, ${oldLink}, ${newLink}),
+          ${arc.outcomeText} = REPLACE(${arc.outcomeText}, ${oldLink}, ${newLink}),
+          ${arc.keyText} = REPLACE(${arc.keyText}, ${oldLink}, ${newLink}),
+          ${arc.notesText} = REPLACE(${arc.notesText}, ${oldLink}, ${newLink})
+        WHERE ${arc.campaignId} = ${returnedThing.campaignId}
+      `)
+
+      await db.run(sql`
+        UPDATE ${thing} SET 
+          ${thing.description} = REPLACE(${thing.description}, ${oldLink}, ${newLink}),
+          ${thing.descriptionText} = REPLACE(${thing.descriptionText}, ${oldLink}, ${newLink})
+        WHERE ${thing.campaignId} = ${returnedThing.campaignId}
+      `)
     }
 
     await db
