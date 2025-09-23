@@ -105,6 +105,8 @@ export const GET: APIRoute = async ({ request, params }) => {
  * @param request.body.updatedArc.outcome - Outcome content (optional, Slate.js format)
  * @param request.body.updatedArc.notes - Notes content (optional, Slate.js format)
  * @param request.body.updatedArc.parentArcId - Parent Arc ID (optional, can be null)
+ * @param request.body.updatedArc.published - Published status (optional, boolean)
+ * @param request.body.relatedItems - Array of related items to link to this arc (optional)
  *
  * @example
  * ```json
@@ -114,7 +116,11 @@ export const GET: APIRoute = async ({ request, params }) => {
  *     "name": "The Goblin Ambush - Updated",
  *     "hook": [{"type": "paragraph", "children": [{"text": "The party encounters goblins..."}]}]
  *     "protagonist": [{"type": "paragraph", "children": [{"text": "A brave knight..."}]}],
- *   }
+ *   },
+ *   "relatedItems": [
+ *    { "type": "thing", "slug": "goblin-sword" },
+ *    { "type": "arc", "slug": "goblin-hideout" }
+ *    ]
  * }
  * ```
  *

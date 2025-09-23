@@ -58,7 +58,6 @@ export interface KBAccount {
   email: string
 }
 
-// KillBill Client following the Ruby example pattern
 class KillBillClient {
   private options = {
     username: KILLBILL_USERNAME,
@@ -73,7 +72,6 @@ class KillBillClient {
     comment: 'Triggered by Arc-Aide',
   }
 
-  // Create KB Account (equivalent to create_kb_account in Ruby)
   async createKbAccount(
     externalKey: string,
     name: string,
@@ -101,7 +99,6 @@ class KillBillClient {
     }
   }
 
-  // Find account by external key
   async findAccountByExternalKey(
     externalKey: string
   ): Promise<KBAccount | null> {
@@ -113,13 +110,14 @@ class KillBillClient {
         name: response.data.name!,
         email: response.data.email!,
       }
-    } catch (error) {
+    } catch (error: any) {
+      if (error.response?.status === 404) return null // Account not found is an expected case
+
       console.error('Error in findAccountByExternalKey:', error)
       return null
     }
   }
 
-  // Find or create account
   async findOrCreateAccount(
     externalKey: string,
     name: string,
@@ -130,7 +128,6 @@ class KillBillClient {
     return this.createKbAccount(externalKey, name, email)
   }
 
-  // Create Stripe session (equivalent to create_session in Ruby)
   async createSession(accountId: string, successUrl: string): Promise<string> {
     try {
       const pluginEndpoint = `${KILLBILL_URL}/plugins/killbill-stripe/checkout`
@@ -153,7 +150,6 @@ class KillBillClient {
         },
       })
 
-      // Extract session ID from response (following Ruby example)
       const formFields = response.data.formFields || []
       const sessionIdField = formFields.find((field: any) => field.key === 'id')
 
@@ -168,7 +164,6 @@ class KillBillClient {
     }
   }
 
-  // Create payment method (equivalent to create_kb_payment_method in Ruby)
   async createKbPaymentMethod(
     accountId: string,
     sessionId?: string,
@@ -179,7 +174,6 @@ class KillBillClient {
       pluginName: 'killbill-stripe',
     }
 
-    // Create plugin properties for Stripe (following Ruby example)
     const pluginProperties: string[] = []
     if (token) {
       pluginProperties.push(`token=${token}`)
@@ -200,7 +194,6 @@ class KillBillClient {
     return response.data
   }
 
-  // Create subscription (equivalent to create_subscription in Ruby)
   async createSubscription(
     accountId: string,
     productId: string = 'premium-monthly'
@@ -215,7 +208,6 @@ class KillBillClient {
       productCategory: 'BASE' as any,
       billingPeriod: 'MONTHLY' as any,
       priceList: 'DEFAULT',
-      // priceOverrides: [...]
     } as killbill.Subscription
 
     const response = await killBillSubscriptionApi.createSubscription(
@@ -233,7 +225,6 @@ class KillBillClient {
     return response.data
   }
 
-  // Add add-on to existing subscription
   async addAddonToSubscription(
     accountId: string,
     addonProductId: TPlanId
@@ -270,7 +261,6 @@ class KillBillClient {
     const productName =
       PRODUCTS[addonProductId as keyof typeof PRODUCTS] || 'AI'
 
-    // Create add-on subscription with both accountId and bundleId
     const addOnData = {
       accountId,
       bundleId: baseBundleId,
@@ -295,7 +285,6 @@ class KillBillClient {
     return response.data
   }
 
-  // Cancel subscription by subscription ID
   private async cancelSubscription(subscriptionId: string): Promise<void> {
     await killBillSubscriptionApi.cancelSubscriptionPlan(
       subscriptionId,
@@ -312,7 +301,6 @@ class KillBillClient {
     )
   }
 
-  // Cancel specific add-on subscription
   async cancelSubscriptionByType(
     userExternalKey: string,
     planId: TPlanId
@@ -347,7 +335,6 @@ class KillBillClient {
     throw new Error(`No active ${productName} subscription found`)
   }
 
-  // Complete charge process (equivalent to charge function in Ruby)
   async charge(
     accountId: string,
     sessionId?: string,
@@ -357,17 +344,14 @@ class KillBillClient {
     paymentMethod: killbill.PaymentMethod
     subscription: killbill.Subscription
   }> {
-    // Add a payment method associated with the Stripe token/session
     const paymentMethod = await this.createKbPaymentMethod(
       accountId,
       sessionId,
       token
     )
 
-    // Add a subscription
     const subscription = await this.createSubscription(accountId)
 
-    // Get the invoice (in the Ruby example they get account.invoices.first)
     const invoicesResponse =
       await killBillAccountApi.getInvoicesForAccount(accountId)
     const invoice = invoicesResponse.data[0] // Most recent invoice
@@ -375,7 +359,6 @@ class KillBillClient {
     return { invoice, paymentMethod, subscription }
   }
 
-  // Get subscription status
   async getSubscriptionStatus(
     userExternalKey: string
   ): Promise<SubscriptionStatus> {
@@ -401,7 +384,6 @@ class KillBillClient {
       )
       const hasActiveSubscription = activeSubscriptions.length > 0
 
-      // Determine features based on subscriptions
       let baseTier: 'free' | 'premium' = 'free'
       const activeAddons: string[] = []
       let isTrialActive = false
