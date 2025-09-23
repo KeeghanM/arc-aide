@@ -1,5 +1,9 @@
 import { auth } from '@auth/auth'
 import { db } from '@db/db'
+import {
+  createArcThingRelationship,
+  createThingRelationship,
+} from '@db/relationships'
 import { arc, campaign, thing } from '@db/schema'
 import Honeybadger from '@honeybadger-io/js'
 import { slateToPlainText } from '@utils/slate-text-extractor'
@@ -162,7 +166,7 @@ export const PUT: APIRoute = async ({ request, params }) => {
       published: z.boolean().optional(),
     })
 
-    const { updatedThing } = await request.json()
+    const { updatedThing, relatedItems } = await request.json()
     const parsedThing = UpdatedThing.safeParse(updatedThing)
 
     if (!parsedThing.success) {
@@ -227,6 +231,64 @@ export const PUT: APIRoute = async ({ request, params }) => {
           ${thing.descriptionText} = REPLACE(${thing.descriptionText}, ${oldLink}, ${newLink})
         WHERE ${thing.campaignId} = ${returnedThing.campaignId}
       `)
+    }
+
+    // Handle related items if provided
+    // We will do an UPSERT on these, as we don't want to remove existing relations
+    // incase they were added manually (i.e not in the text as links)
+    // but we also don't want to duplicate relations
+    const RelatedItems = z.array(
+      z.object({
+        type: z.enum(['thing', 'arc']),
+        slug: z.string().min(1).max(255),
+      })
+    )
+
+    const parsedRelatedItems = RelatedItems.safeParse(relatedItems)
+    if (relatedItems && !parsedRelatedItems.success) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid related items data' }),
+        {
+          status: 400,
+        }
+      )
+    }
+
+    if (parsedRelatedItems.success && parsedRelatedItems.data.length > 0) {
+      await Promise.all(
+        parsedRelatedItems.data.map(async (item) => {
+          // Items come in with Slugs, but we need IDs for the relationships
+          // So we need to look them up first, making sure they belong to this campaign
+          // If an item can't be found, we just skip it
+          const itemResult =
+            item.type === 'thing'
+              ? await db
+                  .select({ id: thing.id })
+                  .from(thing)
+                  .where(
+                    and(
+                      eq(thing.slug, item.slug),
+                      eq(thing.campaignId, returnedThing.campaignId)
+                    )
+                  )
+              : await db
+                  .select({ id: arc.id })
+                  .from(arc)
+                  .where(
+                    and(
+                      eq(arc.slug, item.slug),
+                      eq(arc.campaignId, returnedThing.campaignId)
+                    )
+                  )
+
+          if (itemResult.length === 0) return
+
+          const itemId = itemResult[0].id
+          item.type === 'arc'
+            ? await createArcThingRelationship(returnedThing.id, itemId)
+            : await createThingRelationship(returnedThing.id, itemId)
+        })
+      )
     }
 
     await db

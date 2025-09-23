@@ -1,6 +1,10 @@
 import { auth } from '@auth/auth'
 import type { TArc } from '@components/app/hooks/useArcQueries'
 import { db } from '@db/db'
+import {
+  createArcRelationship,
+  createArcThingRelationship,
+} from '@db/relationships'
 import { arc, campaign, thing } from '@db/schema'
 import Honeybadger from '@honeybadger-io/js'
 import { slateToPlainText } from '@utils/slate-text-extractor'
@@ -323,7 +327,40 @@ export const PUT: APIRoute = async ({ request, params }) => {
     }
 
     if (parsedRelatedItems.success && parsedRelatedItems.data.length > 0) {
-      // TODO: make this do something
+      await Promise.all(
+        parsedRelatedItems.data.map(async (item) => {
+          // Items come in with Slugs, but we need IDs for the relationships
+          // So we need to look them up first, making sure they belong to this campaign
+          // If an item can't be found, we just skip it
+          const itemResult =
+            item.type === 'thing'
+              ? await db
+                  .select({ id: thing.id })
+                  .from(thing)
+                  .where(
+                    and(
+                      eq(thing.slug, item.slug),
+                      eq(thing.campaignId, returnedArc.campaignId)
+                    )
+                  )
+              : await db
+                  .select({ id: arc.id })
+                  .from(arc)
+                  .where(
+                    and(
+                      eq(arc.slug, item.slug),
+                      eq(arc.campaignId, returnedArc.campaignId)
+                    )
+                  )
+
+          if (itemResult.length === 0) return
+
+          const itemId = itemResult[0].id
+          item.type === 'thing'
+            ? await createArcThingRelationship(returnedArc.id, itemId)
+            : await createArcRelationship(returnedArc.id, itemId)
+        })
+      )
     }
 
     // Fetch parent arc if parentArcId exists
