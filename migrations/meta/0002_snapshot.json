@@ -1,8 +1,8 @@
 {
+  "id": "c00d1424-8721-4ff7-b32e-adc9eec1f903",
+  "prevId": "9818494d-de1e-4173-93fc-a083e6577ee9",
   "version": "6",
   "dialect": "sqlite",
-  "id": "c8e7f166-2c38-4625-9634-15fcba891028",
-  "prevId": "f22f6306-d5c8-42e7-a605-7822541af35b",
   "tables": {
     "account": {
       "name": "account",
@@ -104,11 +104,11 @@
         "account_user_id_user_id_fk": {
           "name": "account_user_id_user_id_fk",
           "tableFrom": "account",
-          "tableTo": "user",
           "columnsFrom": ["user_id"],
+          "tableTo": "user",
           "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {},
@@ -228,6 +228,14 @@
           "autoincrement": false,
           "default": "''"
         },
+        "key_text": {
+          "name": "key_text",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "''"
+        },
         "notes_text": {
           "name": "notes_text",
           "type": "text",
@@ -284,16 +292,84 @@
         "arc_campaign_id_campaign_id_fk": {
           "name": "arc_campaign_id_campaign_id_fk",
           "tableFrom": "arc",
-          "tableTo": "campaign",
           "columnsFrom": ["campaign_id"],
+          "tableTo": "campaign",
           "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "checkConstraints": {}
+    },
+    "arc_arc": {
+      "name": "arc_arc",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "first_arc_id": {
+          "name": "first_arc_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "second_arc_id": {
+          "name": "second_arc_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "arc_arc_unique": {
+          "name": "arc_arc_unique",
+          "columns": ["first_arc_id", "second_arc_id"],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {
+        "arc_arc_first_arc_id_arc_id_fk": {
+          "name": "arc_arc_first_arc_id_arc_id_fk",
+          "tableFrom": "arc_arc",
+          "columnsFrom": ["first_arc_id"],
+          "tableTo": "arc",
+          "columnsTo": ["id"],
+          "onUpdate": "no action",
+          "onDelete": "cascade"
+        },
+        "arc_arc_second_arc_id_arc_id_fk": {
+          "name": "arc_arc_second_arc_id_arc_id_fk",
+          "tableFrom": "arc_arc",
+          "columnsFrom": ["second_arc_id"],
+          "tableTo": "arc",
+          "columnsTo": ["id"],
+          "onUpdate": "no action",
+          "onDelete": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "first_arc_less_than_second": {
+          "name": "first_arc_less_than_second",
+          "value": "first_arc_id < second_arc_id"
+        }
+      }
     },
     "arc_thing": {
       "name": "arc_thing",
@@ -324,20 +400,20 @@
         "arc_thing_arc_id_arc_id_fk": {
           "name": "arc_thing_arc_id_arc_id_fk",
           "tableFrom": "arc_thing",
-          "tableTo": "arc",
           "columnsFrom": ["arc_id"],
+          "tableTo": "arc",
           "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         },
         "arc_thing_thing_id_thing_id_fk": {
           "name": "arc_thing_thing_id_thing_id_fk",
           "tableFrom": "arc_thing",
-          "tableTo": "thing",
           "columnsFrom": ["thing_id"],
+          "tableTo": "thing",
           "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {},
@@ -408,20 +484,20 @@
         "asset_campaign_id_campaign_id_fk": {
           "name": "asset_campaign_id_campaign_id_fk",
           "tableFrom": "asset",
-          "tableTo": "campaign",
           "columnsFrom": ["campaign_id"],
+          "tableTo": "campaign",
           "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         },
         "asset_user_id_user_id_fk": {
           "name": "asset_user_id_user_id_fk",
           "tableFrom": "asset",
-          "tableTo": "user",
           "columnsFrom": ["user_id"],
+          "tableTo": "user",
           "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {},
@@ -500,13 +576,58 @@
         "campaign_user_id_user_id_fk": {
           "name": "campaign_user_id_user_id_fk",
           "tableFrom": "campaign",
-          "tableTo": "user",
           "columnsFrom": ["user_id"],
+          "tableTo": "user",
           "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "search_vocabulary": {
+      "name": "search_vocabulary",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "term": {
+          "name": "term",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "frequency": {
+          "name": "frequency",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": 1
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "idx_search_vocabulary_term": {
+          "name": "idx_search_vocabulary_term",
+          "columns": ["term"],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "checkConstraints": {}
@@ -582,11 +703,11 @@
         "session_user_id_user_id_fk": {
           "name": "session_user_id_user_id_fk",
           "tableFrom": "session",
-          "tableTo": "user",
           "columnsFrom": ["user_id"],
+          "tableTo": "user",
           "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {},
@@ -680,25 +801,93 @@
         "thing_type_id_thing_type_id_fk": {
           "name": "thing_type_id_thing_type_id_fk",
           "tableFrom": "thing",
-          "tableTo": "thing_type",
           "columnsFrom": ["type_id"],
+          "tableTo": "thing_type",
           "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         },
         "thing_campaign_id_campaign_id_fk": {
           "name": "thing_campaign_id_campaign_id_fk",
           "tableFrom": "thing",
-          "tableTo": "campaign",
           "columnsFrom": ["campaign_id"],
+          "tableTo": "campaign",
           "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "checkConstraints": {}
+    },
+    "thing_thing": {
+      "name": "thing_thing",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "first_thing_id": {
+          "name": "first_thing_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "second_thing_id": {
+          "name": "second_thing_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "thing_thing_unique": {
+          "name": "thing_thing_unique",
+          "columns": ["first_thing_id", "second_thing_id"],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {
+        "thing_thing_first_thing_id_thing_id_fk": {
+          "name": "thing_thing_first_thing_id_thing_id_fk",
+          "tableFrom": "thing_thing",
+          "columnsFrom": ["first_thing_id"],
+          "tableTo": "thing",
+          "columnsTo": ["id"],
+          "onUpdate": "no action",
+          "onDelete": "cascade"
+        },
+        "thing_thing_second_thing_id_thing_id_fk": {
+          "name": "thing_thing_second_thing_id_thing_id_fk",
+          "tableFrom": "thing_thing",
+          "columnsFrom": ["second_thing_id"],
+          "tableTo": "thing",
+          "columnsTo": ["id"],
+          "onUpdate": "no action",
+          "onDelete": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "first_thing_less_than_second": {
+          "name": "first_thing_less_than_second",
+          "value": "first_thing_id < second_thing_id"
+        }
+      }
     },
     "thing_type": {
       "name": "thing_type",
@@ -730,11 +919,11 @@
         "thing_type_campaign_id_campaign_id_fk": {
           "name": "thing_type_campaign_id_campaign_id_fk",
           "tableFrom": "thing_type",
-          "tableTo": "campaign",
           "columnsFrom": ["campaign_id"],
+          "tableTo": "campaign",
           "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {},
@@ -763,6 +952,20 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true,
+          "autoincrement": false
+        },
+        "username": {
+          "name": "username",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "display_username": {
+          "name": "display_username",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
           "autoincrement": false
         },
         "email_verified": {
@@ -798,6 +1001,11 @@
         "user_email_unique": {
           "name": "user_email_unique",
           "columns": ["email"],
+          "isUnique": true
+        },
+        "user_username_unique": {
+          "name": "user_username_unique",
+          "columns": ["username"],
           "isUnique": true
         }
       },
@@ -862,9 +1070,9 @@
   "views": {},
   "enums": {},
   "_meta": {
+    "columns": {},
     "schemas": {},
-    "tables": {},
-    "columns": {}
+    "tables": {}
   },
   "internal": {
     "indexes": {}

@@ -203,7 +203,7 @@ export const PUT: APIRoute = async ({ request, params }) => {
       published: z.boolean().optional(),
     })
 
-    const { updatedArc } = await request.json()
+    const { updatedArc, relatedItems } = await request.json()
     const parsedArc = UpdatedArc.safeParse(updatedArc)
 
     if (!parsedArc.success) {
@@ -299,6 +299,31 @@ export const PUT: APIRoute = async ({ request, params }) => {
           ${thing.descriptionText} = REPLACE(${thing.descriptionText}, ${oldLink}, ${newLink})
         WHERE ${thing.campaignId} = ${returnedArc.campaignId}
       `)
+    }
+
+    // Handle related items if provided
+    // We will do an UPSERT on these, as we don't want to remove existing relations
+    // incase they were added manually (i.e not in the text as links)
+    // but we also don't want to duplicate relations
+    const RelatedItems = z.array(
+      z.object({
+        type: z.enum(['thing', 'arc']),
+        slug: z.string().min(1).max(255),
+      })
+    )
+
+    const parsedRelatedItems = RelatedItems.safeParse(relatedItems)
+    if (relatedItems && !parsedRelatedItems.success) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid related items data' }),
+        {
+          status: 400,
+        }
+      )
+    }
+
+    if (parsedRelatedItems.success && parsedRelatedItems.data.length > 0) {
+      // TODO: make this do something
     }
 
     // Fetch parent arc if parentArcId exists

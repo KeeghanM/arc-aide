@@ -1,1 +1,0 @@
-ALTER TABLE `campaign` ADD `published` integer DEFAULT false NOT NULL;

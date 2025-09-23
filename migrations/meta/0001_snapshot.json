@@ -1,8 +1,8 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "4f05102c-fd5d-4ce0-a9da-22472254cf68",
-  "prevId": "7a966b1b-d192-4794-9790-2dc5e21cfedc",
+  "id": "9818494d-de1e-4173-93fc-a083e6577ee9",
+  "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "account": {
       "name": "account",
@@ -228,6 +228,14 @@
           "autoincrement": false,
           "default": "''"
         },
+        "key_text": {
+          "name": "key_text",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "''"
+        },
         "notes_text": {
           "name": "notes_text",
           "type": "text",
@@ -235,6 +243,14 @@
           "notNull": false,
           "autoincrement": false,
           "default": "''"
+        },
+        "published": {
+          "name": "published",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": false
         },
         "created_at": {
           "name": "created_at",
@@ -287,6 +303,74 @@
       "uniqueConstraints": {},
       "checkConstraints": {}
     },
+    "arc_arc": {
+      "name": "arc_arc",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "first_arc_id": {
+          "name": "first_arc_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "second_arc_id": {
+          "name": "second_arc_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "arc_arc_unique": {
+          "name": "arc_arc_unique",
+          "columns": ["first_arc_id", "second_arc_id"],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {
+        "arc_arc_first_arc_id_arc_id_fk": {
+          "name": "arc_arc_first_arc_id_arc_id_fk",
+          "tableFrom": "arc_arc",
+          "tableTo": "arc",
+          "columnsFrom": ["first_arc_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "arc_arc_second_arc_id_arc_id_fk": {
+          "name": "arc_arc_second_arc_id_arc_id_fk",
+          "tableFrom": "arc_arc",
+          "tableTo": "arc",
+          "columnsFrom": ["second_arc_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "first_arc_less_than_second": {
+          "name": "first_arc_less_than_second",
+          "value": "first_arc_id < second_arc_id"
+        }
+      }
+    },
     "arc_thing": {
       "name": "arc_thing",
       "columns": {
@@ -336,6 +420,90 @@
       "uniqueConstraints": {},
       "checkConstraints": {}
     },
+    "asset": {
+      "name": "asset",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "label": {
+          "name": "label",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "cloudflare_id": {
+          "name": "cloudflare_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "url": {
+          "name": "url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "campaign_id": {
+          "name": "campaign_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "asset_cloudflare_id_unique": {
+          "name": "asset_cloudflare_id_unique",
+          "columns": ["cloudflare_id"],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {
+        "asset_campaign_id_campaign_id_fk": {
+          "name": "asset_campaign_id_campaign_id_fk",
+          "tableFrom": "asset",
+          "tableTo": "campaign",
+          "columnsFrom": ["campaign_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "asset_user_id_user_id_fk": {
+          "name": "asset_user_id_user_id_fk",
+          "tableFrom": "asset",
+          "tableTo": "user",
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
     "campaign": {
       "name": "campaign",
       "columns": {
@@ -366,6 +534,14 @@
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
+        },
+        "published": {
+          "name": "published",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": false
         },
         "created_at": {
           "name": "created_at",
@@ -407,6 +583,51 @@
           "onUpdate": "no action"
         }
       },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "search_vocabulary": {
+      "name": "search_vocabulary",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "term": {
+          "name": "term",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "frequency": {
+          "name": "frequency",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": 1
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "idx_search_vocabulary_term": {
+          "name": "idx_search_vocabulary_term",
+          "columns": ["term"],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "checkConstraints": {}
@@ -539,6 +760,14 @@
           "autoincrement": false,
           "default": "''"
         },
+        "published": {
+          "name": "published",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": false
+        },
         "campaign_id": {
           "name": "campaign_id",
           "type": "integer",
@@ -591,6 +820,74 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "checkConstraints": {}
+    },
+    "thing_thing": {
+      "name": "thing_thing",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "first_thing_id": {
+          "name": "first_thing_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "second_thing_id": {
+          "name": "second_thing_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "thing_thing_unique": {
+          "name": "thing_thing_unique",
+          "columns": ["first_thing_id", "second_thing_id"],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {
+        "thing_thing_first_thing_id_thing_id_fk": {
+          "name": "thing_thing_first_thing_id_thing_id_fk",
+          "tableFrom": "thing_thing",
+          "tableTo": "thing",
+          "columnsFrom": ["first_thing_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "thing_thing_second_thing_id_thing_id_fk": {
+          "name": "thing_thing_second_thing_id_thing_id_fk",
+          "tableFrom": "thing_thing",
+          "tableTo": "thing",
+          "columnsFrom": ["second_thing_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "first_thing_less_than_second": {
+          "name": "first_thing_less_than_second",
+          "value": "first_thing_id < second_thing_id"
+        }
+      }
     },
     "thing_type": {
       "name": "thing_type",
@@ -657,6 +954,20 @@
           "notNull": true,
           "autoincrement": false
         },
+        "username": {
+          "name": "username",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "display_username": {
+          "name": "display_username",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
         "email_verified": {
           "name": "email_verified",
           "type": "integer",
@@ -690,6 +1001,11 @@
         "user_email_unique": {
           "name": "user_email_unique",
           "columns": ["email"],
+          "isUnique": true
+        },
+        "user_username_unique": {
+          "name": "user_username_unique",
+          "columns": ["username"],
           "isUnique": true
         }
       },
