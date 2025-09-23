@@ -273,30 +273,56 @@ export const PUT: APIRoute = async ({ request, params }) => {
     if (updateData.slug) {
       const oldLink = `[[arc#${arcSlug}]]`
       const newLink = `[[arc#${updateData.slug}]]`
-      await db.run(`
+      await db.run(
+        `
         UPDATE arc SET 
-          hook = REPLACE(hook, "${oldLink}", "${newLink}"),
-          protagonist = REPLACE(protagonist, "${oldLink}", "${newLink}"),
-          antagonist = REPLACE(antagonist, "${oldLink}", "${newLink}"),
-          problem = REPLACE(problem, "${oldLink}", "${newLink}"),
-          key = REPLACE(key, "${oldLink}", "${newLink}"),
-          outcome = REPLACE(outcome, "${oldLink}", "${newLink}"),
-          notes = REPLACE(notes, "${oldLink}", "${newLink}"),
-          hook_text = REPLACE(hook_text, "${oldLink}", "${newLink}"),
-          protagonist_text = REPLACE(protagonist_text, "${oldLink}", "${newLink}"),
-          antagonist_text = REPLACE(antagonist_text, "${oldLink}", "${newLink}"),
-          problem_text = REPLACE(problem_text, "${oldLink}", "${newLink}"),
-          outcome_text = REPLACE(outcome_text, "${oldLink}", "${newLink}"),
-          key_text = REPLACE(key_text, "${oldLink}", "${newLink}")
-          notes_text = REPLACE(notes_text, "${oldLink}", "${newLink}")
-        WHERE arc.campaign_id = ${returnedArc.campaignId}
-        `)
-      await db.run(`
+          hook = REPLACE(hook, ?, ?),
+          protagonist = REPLACE(protagonist, ?, ?),
+          antagonist = REPLACE(antagonist, ?, ?),
+          problem = REPLACE(problem, ?, ?),
+          key = REPLACE(key, ?, ?),
+          outcome = REPLACE(outcome, ?, ?),
+          notes = REPLACE(notes, ?, ?),
+          hook_text = REPLACE(hook_text, ?, ?),
+          protagonist_text = REPLACE(protagonist_text, ?, ?),
+          antagonist_text = REPLACE(antagonist_text, ?, ?),
+          problem_text = REPLACE(problem_text, ?, ?),
+          outcome_text = REPLACE(outcome_text, ?, ?),
+          key_text = REPLACE(key_text, ?, ?),
+          notes_text = REPLACE(notes_text, ?, ?)
+        WHERE arc.campaign_id = ?
+        `,
+        [
+          oldLink, newLink, // hook
+          oldLink, newLink, // protagonist
+          oldLink, newLink, // antagonist
+          oldLink, newLink, // problem
+          oldLink, newLink, // key
+          oldLink, newLink, // outcome
+          oldLink, newLink, // notes
+          oldLink, newLink, // hook_text
+          oldLink, newLink, // protagonist_text
+          oldLink, newLink, // antagonist_text
+          oldLink, newLink, // problem_text
+          oldLink, newLink, // outcome_text
+          oldLink, newLink, // key_text
+          oldLink, newLink, // notes_text
+          returnedArc.campaignId // WHERE
+        ]
+      )
+      await db.run(
+        `
         UPDATE thing SET 
-          description = REPLACE(description, "${oldLink}", "${newLink}"),
-          description_text = REPLACE(description_text, "${oldLink}", "${newLink}")
-        WHERE thing.campaign_id = ${returnedArc.campaignId}
-        `)
+          description = REPLACE(description, ?, ?),
+          description_text = REPLACE(description_text, ?, ?)
+        WHERE thing.campaign_id = ?
+        `,
+        [
+          oldLink, newLink, // description
+          oldLink, newLink, // description_text
+          returnedArc.campaignId // WHERE
+        ]
+      )
     }
 
     // Fetch parent arc if parentArcId exists

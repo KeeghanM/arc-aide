@@ -15,9 +15,9 @@ import { useEffect, useState } from 'react'
 import DeleteArc from './delete-arc'
 
 /**
- * Delete Arc Component
- * Renders a button that opens a confirmation dialog to delete the current arc.
- * Uses useArcQueries hook to perform the deletion and manage state.
+ * Arc Settings Component
+ * Renders a dialog for editing the current arc's name and managing arc settings.
+ * Also provides access to the DeleteArc component for deleting the arc.
  */
 export default function ArcSettings() {
   const { modifyArc, useArcQuery } = useArcQueries()
