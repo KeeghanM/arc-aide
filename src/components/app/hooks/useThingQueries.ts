@@ -178,7 +178,9 @@ export function useThingQueries() {
         campaignSlug,
       })
 
-      return await response.json()
+      const data = await response.json()
+      console.log({ data })
+      return data
     },
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({

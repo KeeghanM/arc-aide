@@ -2,6 +2,7 @@ import { type TArc, useArcQueries } from '@hooks/useArcQueries'
 import { useAppStore } from '@stores/appStore'
 import { extractRelatedItems } from '@utils/slate-text-extractor'
 import pDebounce from 'p-debounce'
+import { useEffect } from 'react'
 import type { Descendant } from 'slate'
 import ArcItem from '../components/arc/arc-item'
 import ArcSettings from '../components/arc/arc-settings/arc-settings'
@@ -20,9 +21,12 @@ type TArcProps = {
 
 function Arc({ arc }: TArcProps) {
   const { modifyArc, useArcQuery } = useArcQueries()
-  const { mode, setCurrentArc: setArcSlug } = useAppStore()
+  const { mode, setCurrentArc } = useAppStore()
   const arcQuery = useArcQuery(arc.slug)
-  setArcSlug(arc)
+
+  useEffect(() => {
+    setCurrentArc(arc)
+  }, [arc, setCurrentArc])
 
   const DEBOUNCE_DELAY = 300
   // --- Auto-save handlers ---

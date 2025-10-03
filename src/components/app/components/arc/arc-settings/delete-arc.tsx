@@ -19,7 +19,7 @@ import { useState } from 'react'
  */
 export default function DeleteArc() {
   const { deleteArc } = useArcQueries()
-  const { currentArc } = useAppStore()
+  const { currentArc, campaignSlug } = useAppStore()
   const [open, setOpen] = useState(false)
 
   // --- Form submission ---
@@ -30,6 +30,7 @@ export default function DeleteArc() {
     // Only clear form and close dialog on success
     if (!deleteArc.error) {
       setOpen(false)
+      window.location.href = `/dashboard/campaign/${campaignSlug}/`
     }
   }
 

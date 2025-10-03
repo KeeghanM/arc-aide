@@ -1,6 +1,7 @@
 import { type TThing, useThingQueries } from '@hooks/useThingQueries'
 import { extractRelatedItems } from '@utils/slate-text-extractor'
 import pDebounce from 'p-debounce'
+import { useEffect } from 'react'
 import type { Descendant } from 'slate'
 import Publish from '../components/publish/publish'
 import MarkdownEditor, {
@@ -18,10 +19,9 @@ type TThingProps = {
 
 function Thing({ thing }: TThingProps) {
   const { modifyThing } = useThingQueries()
-  const { mode, setCurrentThing: setThingSlug } = useAppStore()
+  const { mode, setCurrentThing } = useAppStore()
   const { useThingQuery } = useThingQueries()
   const thingQuery = useThingQuery(thing.slug)
-  setThingSlug(thing)
 
   const handleDescriptionChange = pDebounce(async (value: Descendant[]) => {
     modifyThing.mutate({
@@ -29,6 +29,10 @@ function Thing({ thing }: TThingProps) {
       relatedItems: extractRelatedItems(value),
     })
   }, 1000)
+
+  useEffect(() => {
+    setCurrentThing(thing)
+  }, [thing, setCurrentThing])
 
   return (
     <div className='space-y-6 pr-6 md:pr-12'>

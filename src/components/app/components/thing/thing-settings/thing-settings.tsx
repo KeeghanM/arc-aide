@@ -10,6 +10,7 @@ import {
   DialogTrigger,
 } from '@components/ui/dialog'
 import { Input } from '@components/ui/input'
+import { Label } from '@components/ui/label'
 import { useThingQueries } from '@hooks/useThingQueries'
 import { useEffect, useState } from 'react'
 import DeleteThing from './delete-thing'
@@ -40,7 +41,7 @@ export default function ThingSettings() {
         name: thingName,
       },
     })
-
+    console.log({ updatedThing, modifyThing })
     if (!modifyThing.error) {
       window.location.href = `/dashboard/thing/${updatedThing.slug}/`
       setOpen(false)
@@ -64,6 +65,7 @@ export default function ThingSettings() {
         <DialogHeader>
           <DialogTitle>Thing Settings</DialogTitle>
         </DialogHeader>
+        <Label>Thing Name</Label>
         <Input
           placeholder='Thing name'
           value={thingName}

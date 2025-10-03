@@ -10,6 +10,7 @@ import {
   DialogTrigger,
 } from '@components/ui/dialog'
 import { Input } from '@components/ui/input'
+import { Label } from '@components/ui/label'
 import { useArcQueries } from '@hooks/useArcQueries'
 import { useEffect, useState } from 'react'
 import DeleteArc from './delete-arc'
@@ -64,6 +65,7 @@ export default function ArcSettings() {
         <DialogHeader>
           <DialogTitle>Arc Settings</DialogTitle>
         </DialogHeader>
+        <Label>Arc Name</Label>
         <Input
           placeholder='Arc name'
           value={arcName}

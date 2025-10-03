@@ -19,7 +19,7 @@ import { useState } from 'react'
  */
 export default function DeleteThing() {
   const { deleteThing } = useThingQueries()
-  const { currentThing } = useAppStore()
+  const { currentThing, campaignSlug } = useAppStore()
   const [open, setOpen] = useState(false)
 
   // --- Form submission ---
@@ -30,6 +30,7 @@ export default function DeleteThing() {
     // Only clear form and close dialog on success
     if (!deleteThing.error) {
       setOpen(false)
+      window.location.href = `/dashboard/campaign/${campaignSlug}/`
     }
   }
 

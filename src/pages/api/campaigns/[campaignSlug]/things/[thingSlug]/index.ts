@@ -180,10 +180,7 @@ export const PUT: APIRoute = async ({ request, params }) => {
     // Only update fields if provided
     if (parsedThing.data.name !== undefined) {
       updateData.name = parsedThing.data.name
-      // Only update slug if name is being changed
-      if (parsedThing.data.slug !== thingSlug) {
-        updateData.slug = slugify(parsedThing.data.name)
-      }
+      updateData.slug = slugify(parsedThing.data.name)
     }
     if (parsedThing.data.typeId !== undefined)
       updateData.typeId = parsedThing.data.typeId
@@ -202,33 +199,33 @@ export const PUT: APIRoute = async ({ request, params }) => {
       .where(eq(thing.id, existingThing[0].id))
       .returning()
 
-    if (updateData.slug) {
+    if (updateData.slug !== thingSlug) {
       const oldLink = `[[thing#${thingSlug}]]`
       const newLink = `[[thing#${updateData.slug}]]`
 
       await db.run(sql`
         UPDATE ${arc} SET 
-          ${arc.hook} = REPLACE(${arc.hook}, ${oldLink}, ${newLink}),
-          ${arc.protagonist} = REPLACE(${arc.protagonist}, ${oldLink}, ${newLink}),
-          ${arc.antagonist} = REPLACE(${arc.antagonist}, ${oldLink}, ${newLink}),
-          ${arc.problem} = REPLACE(${arc.problem}, ${oldLink}, ${newLink}),
-          ${arc.key} = REPLACE(${arc.key}, ${oldLink}, ${newLink}),
-          ${arc.outcome} = REPLACE(${arc.outcome}, ${oldLink}, ${newLink}),
-          ${arc.notes} = REPLACE(${arc.notes}, ${oldLink}, ${newLink}),
-          ${arc.hookText} = REPLACE(${arc.hookText}, ${oldLink}, ${newLink}),
-          ${arc.protagonistText} = REPLACE(${arc.protagonistText}, ${oldLink}, ${newLink}),
-          ${arc.antagonistText} = REPLACE(${arc.antagonistText}, ${oldLink}, ${newLink}),
-          ${arc.problemText} = REPLACE(${arc.problemText}, ${oldLink}, ${newLink}),
-          ${arc.outcomeText} = REPLACE(${arc.outcomeText}, ${oldLink}, ${newLink}),
-          ${arc.keyText} = REPLACE(${arc.keyText}, ${oldLink}, ${newLink}),
-          ${arc.notesText} = REPLACE(${arc.notesText}, ${oldLink}, ${newLink})
+          "hook" = REPLACE(${arc.hook}, ${oldLink}, ${newLink}),
+          "protagonist" = REPLACE(${arc.protagonist}, ${oldLink}, ${newLink}),
+          "antagonist" = REPLACE(${arc.antagonist}, ${oldLink}, ${newLink}),
+          "problem" = REPLACE(${arc.problem}, ${oldLink}, ${newLink}),
+          "key" = REPLACE(${arc.key}, ${oldLink}, ${newLink}),
+          "outcome" = REPLACE(${arc.outcome}, ${oldLink}, ${newLink}),
+          "notes" = REPLACE(${arc.notes}, ${oldLink}, ${newLink}),
+          "hook_text" = REPLACE(${arc.hookText}, ${oldLink}, ${newLink}),
+          "protagonist_text" = REPLACE(${arc.protagonistText}, ${oldLink}, ${newLink}),
+          "antagonist_text" = REPLACE(${arc.antagonistText}, ${oldLink}, ${newLink}),
+          "problem_text" = REPLACE(${arc.problemText}, ${oldLink}, ${newLink}),
+          "outcome_text" = REPLACE(${arc.outcomeText}, ${oldLink}, ${newLink}),
+          "key_text" = REPLACE(${arc.keyText}, ${oldLink}, ${newLink}),
+          "notes_text" = REPLACE(${arc.notesText}, ${oldLink}, ${newLink})
         WHERE ${arc.campaignId} = ${returnedThing.campaignId}
       `)
 
       await db.run(sql`
         UPDATE ${thing} SET 
-          ${thing.description} = REPLACE(${thing.description}, ${oldLink}, ${newLink}),
-          ${thing.descriptionText} = REPLACE(${thing.descriptionText}, ${oldLink}, ${newLink})
+          "description" = REPLACE(${thing.description}, ${oldLink}, ${newLink}),
+          "description_text" = REPLACE(${thing.descriptionText}, ${oldLink}, ${newLink})
         WHERE ${thing.campaignId} = ${returnedThing.campaignId}
       `)
     }
