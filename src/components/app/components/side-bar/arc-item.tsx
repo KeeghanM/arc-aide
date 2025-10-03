@@ -1,6 +1,4 @@
 import type { TArc } from '@hooks/useArcQueries'
-import type { TThing } from '@hooks/useThingQueries'
-import type { TThingType } from '@hooks/useThingTypeQueries'
 import { cn } from '@lib/utils/cn'
 import { useAppStore } from '@stores/appStore'
 import { useState } from 'react'
@@ -8,16 +6,10 @@ import { useState } from 'react'
 type TArcItemProps = {
   arc: TArc
   allArcs: TArc[]
-  thingTypesData?: TThingType[]
   level?: number
 }
 
-export default function ArcItem({
-  arc,
-  allArcs,
-  thingTypesData,
-  level = 0,
-}: TArcItemProps) {
+export default function ArcItem({ arc, allArcs, level = 0 }: TArcItemProps) {
   const { campaignSlug } = useAppStore()
   const [isExpanded, setIsExpanded] = useState(false)
 
@@ -78,30 +70,8 @@ export default function ArcItem({
               key={childArc.id}
               arc={childArc}
               allArcs={allArcs}
-              thingTypesData={thingTypesData}
               level={level + 1}
             />
-          ))}
-        </ul>
-      )}
-      {/* Things belonging to this arc */}
-      {arc.things && arc.things.length > 0 && isExpanded && (
-        <ul className='mt-1'>
-          {arc.things.map((thing: TThing) => (
-            <li
-              key={thing.id}
-              className='text-sm'
-              style={{ paddingLeft: `${level * 16 + 24}px` }}
-            >
-              <a
-                className='hover:text-primary underline'
-                href={`/dashboard/campaign/${campaignSlug}/thing/${thing.slug}/`}
-              >
-                {thingTypesData?.find((type) => type.id === thing.typeId)
-                  ?.name + ': ' || ''}
-                {thing.name}
-              </a>
-            </li>
           ))}
         </ul>
       )}

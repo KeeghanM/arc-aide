@@ -1,11 +1,15 @@
 import { auth } from '@auth/auth'
 import { db } from '@db/db'
-import { campaign, thing } from '@db/schema'
+import {
+  createArcThingRelationship,
+  createThingRelationship,
+} from '@db/relationships'
+import { arc, campaign, thing } from '@db/schema'
 import Honeybadger from '@honeybadger-io/js'
 import { slateToPlainText } from '@utils/slate-text-extractor'
 import { slugify } from '@utils/string'
 import type { APIRoute } from 'astro'
-import { and, eq } from 'drizzle-orm'
+import { and, eq, sql } from 'drizzle-orm'
 import * as z from 'zod'
 
 /**
@@ -162,7 +166,7 @@ export const PUT: APIRoute = async ({ request, params }) => {
       published: z.boolean().optional(),
     })
 
-    const { updatedThing } = await request.json()
+    const { updatedThing, relatedItems } = await request.json()
     const parsedThing = UpdatedThing.safeParse(updatedThing)
 
     if (!parsedThing.success) {
@@ -176,10 +180,7 @@ export const PUT: APIRoute = async ({ request, params }) => {
     // Only update fields if provided
     if (parsedThing.data.name !== undefined) {
       updateData.name = parsedThing.data.name
-      // Only update slug if name is being changed
-      if (parsedThing.data.slug !== thingSlug) {
-        updateData.slug = slugify(parsedThing.data.name)
-      }
+      updateData.slug = slugify(parsedThing.data.name)
     }
     if (parsedThing.data.typeId !== undefined)
       updateData.typeId = parsedThing.data.typeId
@@ -192,11 +193,100 @@ export const PUT: APIRoute = async ({ request, params }) => {
     if (parsedThing.data.published !== undefined)
       updateData.published = parsedThing.data.published
 
-    const result = await db
+    const [returnedThing] = await db
       .update(thing)
       .set(updateData)
       .where(eq(thing.id, existingThing[0].id))
       .returning()
+
+    if (updateData.slug !== thingSlug) {
+      const oldLink = `[[thing#${thingSlug}]]`
+      const newLink = `[[thing#${updateData.slug}]]`
+
+      await db.run(sql`
+        UPDATE ${arc} SET 
+          "hook" = REPLACE(${arc.hook}, ${oldLink}, ${newLink}),
+          "protagonist" = REPLACE(${arc.protagonist}, ${oldLink}, ${newLink}),
+          "antagonist" = REPLACE(${arc.antagonist}, ${oldLink}, ${newLink}),
+          "problem" = REPLACE(${arc.problem}, ${oldLink}, ${newLink}),
+          "key" = REPLACE(${arc.key}, ${oldLink}, ${newLink}),
+          "outcome" = REPLACE(${arc.outcome}, ${oldLink}, ${newLink}),
+          "notes" = REPLACE(${arc.notes}, ${oldLink}, ${newLink}),
+          "hook_text" = REPLACE(${arc.hookText}, ${oldLink}, ${newLink}),
+          "protagonist_text" = REPLACE(${arc.protagonistText}, ${oldLink}, ${newLink}),
+          "antagonist_text" = REPLACE(${arc.antagonistText}, ${oldLink}, ${newLink}),
+          "problem_text" = REPLACE(${arc.problemText}, ${oldLink}, ${newLink}),
+          "outcome_text" = REPLACE(${arc.outcomeText}, ${oldLink}, ${newLink}),
+          "key_text" = REPLACE(${arc.keyText}, ${oldLink}, ${newLink}),
+          "notes_text" = REPLACE(${arc.notesText}, ${oldLink}, ${newLink})
+        WHERE ${arc.campaignId} = ${returnedThing.campaignId}
+      `)
+
+      await db.run(sql`
+        UPDATE ${thing} SET 
+          "description" = REPLACE(${thing.description}, ${oldLink}, ${newLink}),
+          "description_text" = REPLACE(${thing.descriptionText}, ${oldLink}, ${newLink})
+        WHERE ${thing.campaignId} = ${returnedThing.campaignId}
+      `)
+    }
+
+    // Handle related items if provided
+    // We will do an UPSERT on these, as we don't want to remove existing relations
+    // incase they were added manually (i.e not in the text as links)
+    // but we also don't want to duplicate relations
+    const RelatedItems = z.array(
+      z.object({
+        type: z.enum(['thing', 'arc']),
+        slug: z.string().min(1).max(255),
+      })
+    )
+
+    const parsedRelatedItems = RelatedItems.safeParse(relatedItems)
+    if (relatedItems && !parsedRelatedItems.success) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid related items data' }),
+        {
+          status: 400,
+        }
+      )
+    }
+
+    if (parsedRelatedItems.success && parsedRelatedItems.data.length > 0) {
+      await Promise.all(
+        parsedRelatedItems.data.map(async (item) => {
+          // Items come in with Slugs, but we need IDs for the relationships
+          // So we need to look them up first, making sure they belong to this campaign
+          // If an item can't be found, we just skip it
+          const itemResult =
+            item.type === 'thing'
+              ? await db
+                  .select({ id: thing.id })
+                  .from(thing)
+                  .where(
+                    and(
+                      eq(thing.slug, item.slug),
+                      eq(thing.campaignId, returnedThing.campaignId)
+                    )
+                  )
+              : await db
+                  .select({ id: arc.id })
+                  .from(arc)
+                  .where(
+                    and(
+                      eq(arc.slug, item.slug),
+                      eq(arc.campaignId, returnedThing.campaignId)
+                    )
+                  )
+
+          if (itemResult.length === 0) return
+
+          const itemId = itemResult[0].id
+          item.type === 'arc'
+            ? await createArcThingRelationship(returnedThing.id, itemId)
+            : await createThingRelationship(returnedThing.id, itemId)
+        })
+      )
+    }
 
     await db
       .update(campaign)
@@ -210,7 +300,7 @@ export const PUT: APIRoute = async ({ request, params }) => {
         )
       )
 
-    return new Response(JSON.stringify(result[0]), { status: 200 })
+    return new Response(JSON.stringify(returnedThing), { status: 200 })
   } catch (error) {
     console.error('Error updating thing:', error)
     Honeybadger.notify(error as Error)

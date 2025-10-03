@@ -1,14 +1,15 @@
 import { useSubscriptionQueries } from '@components/app/hooks/useSubscriptionQueries'
 import { cn } from '@lib/utils/cn.ts'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import { createEditor, type Descendant, Text } from 'slate'
 import { withHistory } from 'slate-history'
 import { Editable, type RenderLeafProps, Slate, withReact } from 'slate-react'
 import type { CustomEditor } from './custom-types'
 import { createDecorator } from './editor-decorations'
 import EditorLeaf from './editor-leaf'
+import EditorPublishing from './editor-publishing'
 import EditorToolbar from './editor-toolbar'
-import { addPublishableClickListeners, applyFormatting } from './editor-utils'
+import { applyFormatting } from './editor-utils'
 
 import './editor.css'
 
@@ -50,7 +51,6 @@ export default function MarkdownEditor({
 
       setValue(newValue)
       onChange(newValue)
-      addPublishableClickListeners(editorRef, editor)
     },
     [onChange]
   )
@@ -67,10 +67,6 @@ export default function MarkdownEditor({
 
   const decorate = useCallback(createDecorator(), [])
 
-  useEffect(() => {
-    addPublishableClickListeners(editorRef, editor)
-  }, [])
-
   return (
     <div
       ref={editorRef}
@@ -80,10 +76,14 @@ export default function MarkdownEditor({
       onBlur={() => {
         setIsFocused(false)
       }}
-      className={cn({
+      className={cn('relative', {
         publishable: features.hasPremium,
       })}
     >
+      <EditorPublishing
+        editor={editor}
+        editorRef={editorRef}
+      />
       <Slate
         editor={editor}
         initialValue={value}

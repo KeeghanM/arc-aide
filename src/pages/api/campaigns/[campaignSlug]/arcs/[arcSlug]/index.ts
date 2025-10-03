@@ -1,12 +1,16 @@
 import { auth } from '@auth/auth'
 import type { TArc } from '@components/app/hooks/useArcQueries'
 import { db } from '@db/db'
-import { arc, campaign } from '@db/schema'
+import {
+  createArcRelationship,
+  createArcThingRelationship,
+} from '@db/relationships'
+import { arc, campaign, thing } from '@db/schema'
 import Honeybadger from '@honeybadger-io/js'
 import { slateToPlainText } from '@utils/slate-text-extractor'
 import { slugify } from '@utils/string'
 import type { APIRoute } from 'astro'
-import { and, eq } from 'drizzle-orm'
+import { and, eq, sql } from 'drizzle-orm'
 import { alias } from 'drizzle-orm/sqlite-core'
 import type { Descendant } from 'slate'
 import * as z from 'zod'
@@ -105,6 +109,8 @@ export const GET: APIRoute = async ({ request, params }) => {
  * @param request.body.updatedArc.outcome - Outcome content (optional, Slate.js format)
  * @param request.body.updatedArc.notes - Notes content (optional, Slate.js format)
  * @param request.body.updatedArc.parentArcId - Parent Arc ID (optional, can be null)
+ * @param request.body.updatedArc.published - Published status (optional, boolean)
+ * @param request.body.relatedItems - Array of related items to link to this arc (optional)
  *
  * @example
  * ```json
@@ -114,7 +120,11 @@ export const GET: APIRoute = async ({ request, params }) => {
  *     "name": "The Goblin Ambush - Updated",
  *     "hook": [{"type": "paragraph", "children": [{"text": "The party encounters goblins..."}]}]
  *     "protagonist": [{"type": "paragraph", "children": [{"text": "A brave knight..."}]}],
- *   }
+ *   },
+ *   "relatedItems": [
+ *    { "type": "thing", "slug": "goblin-sword" },
+ *    { "type": "arc", "slug": "goblin-hideout" }
+ *    ]
  * }
  * ```
  *
@@ -197,7 +207,7 @@ export const PUT: APIRoute = async ({ request, params }) => {
       published: z.boolean().optional(),
     })
 
-    const { updatedArc } = await request.json()
+    const { updatedArc, relatedItems } = await request.json()
     const parsedArc = UpdatedArc.safeParse(updatedArc)
 
     if (!parsedArc.success) {
@@ -211,13 +221,11 @@ export const PUT: APIRoute = async ({ request, params }) => {
       updatedAt: now,
     }
 
-    // Only update slug if it's different
-    if (parsedArc.data.name && parsedArc.data.slug !== arcSlug) {
+    // Add optional fields if provided
+    if (parsedArc.data.name !== undefined) {
+      updateData.name = parsedArc.data.name
       updateData.slug = slugify(parsedArc.data.name)
     }
-
-    // Add optional fields if provided
-    if (parsedArc.data.name !== undefined) updateData.name = parsedArc.data.name
     if (parsedArc.data.parentArcId !== undefined)
       updateData.parentArcId = parsedArc.data.parentArcId
     if (parsedArc.data.hook !== undefined) {
@@ -261,6 +269,96 @@ export const PUT: APIRoute = async ({ request, params }) => {
       .set(updateData)
       .where(eq(arc.id, existingArc[0].id))
       .returning()
+
+    // If the Arcs slug has changed, we need to update all links to it in the entries
+    if (updateData.slug !== arcSlug) {
+      const oldLink = `[[arc#${arcSlug}]]`
+      const newLink = `[[arc#${updateData.slug}]]`
+
+      await db.run(sql`
+        UPDATE ${arc} SET 
+          "hook" = REPLACE(${arc.hook}, ${oldLink}, ${newLink}),
+          "protagonist" = REPLACE(${arc.protagonist}, ${oldLink}, ${newLink}),
+          "antagonist" = REPLACE(${arc.antagonist}, ${oldLink}, ${newLink}),
+          "problem" = REPLACE(${arc.problem}, ${oldLink}, ${newLink}),
+          "key" = REPLACE(${arc.key}, ${oldLink}, ${newLink}),
+          "outcome" = REPLACE(${arc.outcome}, ${oldLink}, ${newLink}),
+          "notes" = REPLACE(${arc.notes}, ${oldLink}, ${newLink}),
+          "hook_text" = REPLACE(${arc.hookText}, ${oldLink}, ${newLink}),
+          "protagonist_text" = REPLACE(${arc.protagonistText}, ${oldLink}, ${newLink}),
+          "antagonist_text" = REPLACE(${arc.antagonistText}, ${oldLink}, ${newLink}),
+          "problem_text" = REPLACE(${arc.problemText}, ${oldLink}, ${newLink}),
+          "outcome_text" = REPLACE(${arc.outcomeText}, ${oldLink}, ${newLink}),
+          "key_text" = REPLACE(${arc.keyText}, ${oldLink}, ${newLink}),
+          "notes_text" = REPLACE(${arc.notesText}, ${oldLink}, ${newLink})
+        WHERE ${arc.campaignId} = ${returnedArc.campaignId}
+      `)
+
+      await db.run(sql`
+        UPDATE ${thing} SET 
+          "description" = REPLACE(${thing.description}, ${oldLink}, ${newLink}),
+          "description_text" = REPLACE(${thing.descriptionText}, ${oldLink}, ${newLink})
+        WHERE ${thing.campaignId} = ${returnedArc.campaignId}
+      `)
+    }
+
+    // Handle related items if provided
+    // We will do an UPSERT on these, as we don't want to remove existing relations
+    // incase they were added manually (i.e not in the text as links)
+    // but we also don't want to duplicate relations
+    const RelatedItems = z.array(
+      z.object({
+        type: z.enum(['thing', 'arc']),
+        slug: z.string().min(1).max(255),
+      })
+    )
+
+    const parsedRelatedItems = RelatedItems.safeParse(relatedItems)
+    if (relatedItems && !parsedRelatedItems.success) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid related items data' }),
+        {
+          status: 400,
+        }
+      )
+    }
+
+    if (parsedRelatedItems.success && parsedRelatedItems.data.length > 0) {
+      await Promise.all(
+        parsedRelatedItems.data.map(async (item) => {
+          // Items come in with Slugs, but we need IDs for the relationships
+          // So we need to look them up first, making sure they belong to this campaign
+          // If an item can't be found, we just skip it
+          const itemResult =
+            item.type === 'thing'
+              ? await db
+                  .select({ id: thing.id })
+                  .from(thing)
+                  .where(
+                    and(
+                      eq(thing.slug, item.slug),
+                      eq(thing.campaignId, returnedArc.campaignId)
+                    )
+                  )
+              : await db
+                  .select({ id: arc.id })
+                  .from(arc)
+                  .where(
+                    and(
+                      eq(arc.slug, item.slug),
+                      eq(arc.campaignId, returnedArc.campaignId)
+                    )
+                  )
+
+          if (itemResult.length === 0) return
+
+          const itemId = itemResult[0].id
+          item.type === 'thing'
+            ? await createArcThingRelationship(returnedArc.id, itemId)
+            : await createArcRelationship(returnedArc.id, itemId)
+        })
+      )
+    }
 
     // Fetch parent arc if parentArcId exists
     let parentArc = null

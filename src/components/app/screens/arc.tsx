@@ -1,8 +1,11 @@
 import { type TArc, useArcQueries } from '@hooks/useArcQueries'
 import { useAppStore } from '@stores/appStore'
+import { extractRelatedItems } from '@utils/slate-text-extractor'
 import pDebounce from 'p-debounce'
+import { useEffect } from 'react'
 import type { Descendant } from 'slate'
 import ArcItem from '../components/arc/arc-item'
+import ArcSettings from '../components/arc/arc-settings/arc-settings'
 import ParentArc from '../components/arc/parent-arc/parent-arc'
 import Publish from '../components/publish/publish'
 import MarkdownEditor, {
@@ -18,38 +21,64 @@ type TArcProps = {
 
 function Arc({ arc }: TArcProps) {
   const { modifyArc, useArcQuery } = useArcQueries()
-  const { mode } = useAppStore()
+  const { mode, setCurrentArc } = useAppStore()
   const arcQuery = useArcQuery(arc.slug)
+
+  useEffect(() => {
+    setCurrentArc(arc)
+  }, [arc, setCurrentArc])
 
   const DEBOUNCE_DELAY = 300
   // --- Auto-save handlers ---
   // Debounce saves to avoid excessive API calls while user types
   const handleHookChange = pDebounce(async (value: Descendant[]) => {
-    modifyArc.mutate({ updatedArc: { slug: arc.slug, hook: value } })
+    modifyArc.mutate({
+      updatedArc: { slug: arc.slug, hook: value },
+      relatedItems: extractRelatedItems(value),
+    })
   }, DEBOUNCE_DELAY)
   const handleProtagonistChange = pDebounce(async (value: Descendant[]) => {
-    modifyArc.mutate({ updatedArc: { slug: arc.slug, protagonist: value } })
+    modifyArc.mutate({
+      updatedArc: { slug: arc.slug, protagonist: value },
+      relatedItems: extractRelatedItems(value),
+    })
   }, DEBOUNCE_DELAY)
   const handleAntagonistChange = pDebounce(async (value: Descendant[]) => {
-    modifyArc.mutate({ updatedArc: { slug: arc.slug, antagonist: value } })
+    modifyArc.mutate({
+      updatedArc: { slug: arc.slug, antagonist: value },
+      relatedItems: extractRelatedItems(value),
+    })
   }, DEBOUNCE_DELAY)
   const handleProblemChange = pDebounce(async (value: Descendant[]) => {
-    modifyArc.mutate({ updatedArc: { slug: arc.slug, problem: value } })
+    modifyArc.mutate({
+      updatedArc: { slug: arc.slug, problem: value },
+      relatedItems: extractRelatedItems(value),
+    })
   }, DEBOUNCE_DELAY)
   const handleKeyChange = pDebounce(async (value: Descendant[]) => {
-    modifyArc.mutate({ updatedArc: { slug: arc.slug, key: value } })
+    modifyArc.mutate({
+      updatedArc: { slug: arc.slug, key: value },
+      relatedItems: extractRelatedItems(value),
+    })
   }, DEBOUNCE_DELAY)
   const handleOutcomeChange = pDebounce(async (value: Descendant[]) => {
-    modifyArc.mutate({ updatedArc: { slug: arc.slug, outcome: value } })
+    modifyArc.mutate({
+      updatedArc: { slug: arc.slug, outcome: value },
+      relatedItems: extractRelatedItems(value),
+    })
   }, DEBOUNCE_DELAY)
   const handleNotesChange = pDebounce(async (value: Descendant[]) => {
-    modifyArc.mutate({ updatedArc: { slug: arc.slug, notes: value } })
+    modifyArc.mutate({
+      updatedArc: { slug: arc.slug, notes: value },
+      relatedItems: extractRelatedItems(value),
+    })
   }, DEBOUNCE_DELAY)
 
   return (
     <div className='space-y-4 pr-6 md:pr-12'>
       <ParentArc arc={arc} />
       <div className='flex items-center gap-2'>
+        <ArcSettings />
         <Publish
           published={arcQuery.data?.published ?? arc.published}
           type='arc'

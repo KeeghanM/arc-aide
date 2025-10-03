@@ -60,7 +60,10 @@ export function AuthForm({ type }: { type: 'login' | 'register' }) {
 
     if (error?.message) {
       setErrorMessage(error.message)
+      return
     }
+
+    window.location.href = '/dashboard'
   }
 
   return (

@@ -1,7 +1,16 @@
-import { relations } from 'drizzle-orm'
-import { integer, sqliteTable, text, unique } from 'drizzle-orm/sqlite-core'
+import { relations, sql } from 'drizzle-orm'
+import {
+  check,
+  index,
+  integer,
+  sqliteTable,
+  text,
+  unique,
+} from 'drizzle-orm/sqlite-core'
 
-// Core tables
+/* CORE TABLES
+These are the arc-aide core tables, for things like campaigns, arcs, and things. Modifying these may risk data loss, so be careful!
+*/
 export const campaign = sqliteTable(
   'campaign',
   {
@@ -46,6 +55,7 @@ export const arc = sqliteTable(
     antagonistText: text('antagonist_text').default(''),
     problemText: text('problem_text').default(''),
     outcomeText: text('outcome_text').default(''),
+    keyText: text('key_text').default(''),
     notesText: text('notes_text').default(''),
     published: integer('published', {
       mode: 'boolean',
@@ -114,6 +124,82 @@ export const thing = sqliteTable(
   ]
 )
 
+export const arcThing = sqliteTable(
+  'arc_thing',
+  {
+    arcId: integer('arc_id')
+      .notNull()
+      .references(() => arc.id, { onDelete: 'cascade' }),
+    thingId: integer('thing_id')
+      .notNull()
+      .references(() => thing.id, { onDelete: 'cascade' }),
+  },
+  (table) => [unique('arc_thing_unique').on(table.arcId, table.thingId)]
+)
+
+export const thingThing = sqliteTable(
+  'thing_thing',
+  {
+    id: integer('id').primaryKey(),
+    firstThingId: integer('first_thing_id')
+      .notNull()
+      .references(() => thing.id, { onDelete: 'cascade' }),
+    secondThingId: integer('second_thing_id')
+      .notNull()
+      .references(() => thing.id, { onDelete: 'cascade' }),
+    createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+  },
+  (table) => [
+    unique('thing_thing_unique').on(table.firstThingId, table.secondThingId),
+    // Ensure firstThingId < secondThingId to prevent duplicate relationships
+    check(
+      'first_thing_less_than_second',
+      sql`first_thing_id < second_thing_id`
+    ),
+  ]
+)
+export const arcArc = sqliteTable(
+  'arc_arc',
+  {
+    id: integer('id').primaryKey(),
+    firstArcId: integer('first_arc_id')
+      .notNull()
+      .references(() => arc.id, { onDelete: 'cascade' }),
+    secondArcId: integer('second_arc_id')
+      .notNull()
+      .references(() => arc.id, { onDelete: 'cascade' }),
+    createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+  },
+  (table) => [
+    unique('arc_arc_unique').on(table.firstArcId, table.secondArcId),
+    // Ensure firstArcId < secondArcId to prevent duplicate relationships
+    check('first_arc_less_than_second', sql`first_arc_id < second_arc_id`),
+  ]
+)
+
+/* FTS TABLES
+These are here to support full-text search.
+*/
+export const searchVocabulary = sqliteTable(
+  'search_vocabulary',
+  {
+    id: integer().primaryKey({ autoIncrement: true }),
+    term: text().notNull(),
+    frequency: integer().default(1),
+    createdAt: integer('created_at', {
+      mode: 'timestamp',
+    }).notNull(),
+  },
+  (table) => [index('idx_search_vocabulary_term').on(table.term)]
+)
+// The other FTS tables are created via migrations, as they require special handling because Drizzle doesn't support VIRTUAL tables yet.
+// CREATE VIRTUAL TABLE search_index_fts_aux USING fts5vocab
+// CREATE VIRTUAL TABLE search_index_fts
+// Check the Migrsations for details.
+
+/* OTHER TABLES
+These are other tables used by the app, like for assets.
+*/
 export const asset = sqliteTable('asset', {
   id: integer('id').primaryKey(),
   label: text('label').notNull(),
@@ -132,20 +218,9 @@ export const asset = sqliteTable('asset', {
   }).notNull(),
 })
 
-export const arcThing = sqliteTable(
-  'arc_thing',
-  {
-    arcId: integer('arc_id')
-      .notNull()
-      .references(() => arc.id, { onDelete: 'cascade' }),
-    thingId: integer('thing_id')
-      .notNull()
-      .references(() => thing.id, { onDelete: 'cascade' }),
-  },
-  (table) => [unique('arc_thing_unique').on(table.arcId, table.thingId)]
-)
-
-// Auth Tables
+/* AUTH TABLES
+These are the tables used by next-auth for authentication. These should never be modified unless absolutely necessary, as it may break auth functionality.
+*/
 export const user = sqliteTable('user', {
   id: text('id').primaryKey(),
   name: text('name').notNull(),
@@ -220,7 +295,9 @@ export const verification = sqliteTable('verification', {
   updatedAt: integer('updated_at', { mode: 'timestamp' }),
 })
 
-// Relations
+/* RELATIONSHIPS
+These define relationships between the tables, for easier querying.
+*/
 export const arcRelations = relations(arc, ({ one, many }) => ({
   parentArc: one(arc, {
     fields: [arc.parentArcId],
@@ -275,6 +352,32 @@ export const arcThingRelations = relations(arcThing, ({ one }) => ({
   thing: one(thing, {
     fields: [arcThing.thingId],
     references: [thing.id],
+  }),
+}))
+
+export const thingThingRelations = relations(thingThing, ({ one }) => ({
+  firstThing: one(thing, {
+    fields: [thingThing.firstThingId],
+    references: [thing.id],
+    relationName: 'firstThing',
+  }),
+  secondThing: one(thing, {
+    fields: [thingThing.secondThingId],
+    references: [thing.id],
+    relationName: 'secondThing',
+  }),
+}))
+
+export const arcArcRelations = relations(arcArc, ({ one }) => ({
+  firstArc: one(arc, {
+    fields: [arcArc.firstArcId],
+    references: [arc.id],
+    relationName: 'firstArc',
+  }),
+  secondArc: one(arc, {
+    fields: [arcArc.secondArcId],
+    references: [arc.id],
+    relationName: 'secondArc',
   }),
 }))
 

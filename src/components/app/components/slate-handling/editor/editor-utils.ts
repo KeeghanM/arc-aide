@@ -47,9 +47,10 @@ export const applyFormatting = (key: 'b' | 'i' | 'u', editor: CustomEditor) => {
   }
 }
 
-export const addPublishableClickListeners = (
+export const setPublishingMode = (
   editorRef: React.RefObject<HTMLDivElement | null>,
-  editor: CustomEditor
+  editor: CustomEditor,
+  publishModeOn: boolean
 ) => {
   const editorEl = editorRef.current
   if (!editorEl) return
@@ -59,7 +60,28 @@ export const addPublishableClickListeners = (
 
   const elements = editorEl.querySelectorAll('[data-slate-node="element"]')
 
+  console.log({ publishModeOn, elements })
+
   elements.forEach((el, i) => {
+    const eventListener = () => {
+      const node = editor.children[i] as any
+      const currentlyIsSecret = node.isSecret
+      if (currentlyIsSecret) {
+        el.classList.remove('secret')
+        Transforms.setNodes(editor, { isSecret: false }, { at: [i] })
+      } else {
+        el.classList.add('secret')
+        Transforms.setNodes(editor, { isSecret: true }, { at: [i] })
+      }
+    }
+
+    if (!publishModeOn) {
+      el.classList.remove('publishable-element')
+      el.removeEventListener('click', eventListener)
+      el.setAttribute('data-click-listener', 'false')
+
+      return
+    }
     el.classList.add('publishable-element')
     // First, set the initial state based on the editor's AST
     if ((editor.children[i] as any).isSecret) {
@@ -76,16 +98,6 @@ export const addPublishableClickListeners = (
     el.setAttribute('data-click-listener', 'true')
 
     // The event listener checks the current state in the AST, toggles it, and updates the class
-    el.addEventListener('click', () => {
-      const node = editor.children[i] as any
-      const currentlyIsSecret = node.isSecret
-      if (currentlyIsSecret) {
-        el.classList.remove('secret')
-        Transforms.setNodes(editor, { isSecret: false }, { at: [i] })
-      } else {
-        el.classList.add('secret')
-        Transforms.setNodes(editor, { isSecret: true }, { at: [i] })
-      }
-    })
+    el.addEventListener('click', eventListener)
   })
 }

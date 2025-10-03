@@ -1,3 +1,4 @@
+import type { TRelatedItem } from '@hooks/useArcQueries'
 import showdown from 'showdown'
 import type { Descendant } from 'slate'
 import { properCase } from './string'
@@ -88,4 +89,23 @@ export function slateToHtml(nodes: Descendant[], campaignSlug: string): string {
       return `[[${content}]]`
     }
   })
+}
+
+export function extractRelatedItems(value: Descendant[]): TRelatedItem[] {
+  const relatedItems: TRelatedItem[] = []
+  const text = slateToPlainText(value)
+  const linkRegex = /\[\[([^\]]*)\]\]/g
+  let linkMatch
+  while ((linkMatch = linkRegex.exec(text)) !== null) {
+    const content = linkMatch[1].trim()
+    if (content.includes('#')) {
+      const [type, slug] = content.split('#', 2)
+      if (type === 'arc' || type === 'thing')
+        relatedItems.push({
+          type: type,
+          slug: slug,
+        })
+    }
+  }
+  return relatedItems
 }

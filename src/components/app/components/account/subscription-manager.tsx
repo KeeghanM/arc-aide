@@ -94,7 +94,7 @@ function Manager() {
               <div className='flex flex-col gap-2 md:flex-row'>
                 {!features.hasAI && (
                   <Tooltip>
-                    <TooltipTrigger>
+                    <TooltipTrigger asChild>
                       <Button
                         disabled={true}
                         className='justify-start'

@@ -4,93 +4,23 @@
   "entries": [
     {
       "idx": 0,
-      "version": "7",
-      "when": 1724544000000,
-      "tag": "0000_initial_setup",
+      "version": "6",
+      "when": 1758620530288,
+      "tag": "0000_worried_jackpot",
       "breakpoints": true
     },
     {
       "idx": 1,
-      "version": "7",
-      "when": 1724544001000,
-      "tag": "0001_fts",
+      "version": "6",
+      "when": 1758622013997,
+      "tag": "0001_neat_phantom_reporter",
       "breakpoints": true
     },
     {
       "idx": 2,
-      "version": "7",
-      "when": 1724544004000,
-      "tag": "0002_spellfix_setup",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1724544005000,
-      "tag": "0003_add_search_text_columns",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1724544006000,
-      "tag": "0004_update_fts_triggers",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
       "version": "6",
-      "when": 1756162087758,
-      "tag": "0005_silent_wind_dancer",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "6",
-      "when": 1756162108843,
-      "tag": "0006_mute_blink",
-      "breakpoints": true
-    },
-    {
-      "idx": 7,
-      "version": "6",
-      "when": 1756203883404,
-      "tag": "0007_complete_proudstar",
-      "breakpoints": true
-    },
-    {
-      "idx": 8,
-      "version": "6",
-      "when": 1756479235980,
-      "tag": "0008_lucky_kronos",
-      "breakpoints": true
-    },
-    {
-      "idx": 9,
-      "version": "6",
-      "when": 1757082077006,
-      "tag": "0009_long_exiles",
-      "breakpoints": true
-    },
-    {
-      "idx": 10,
-      "version": "6",
-      "when": 1757084460210,
-      "tag": "0010_huge_switch",
-      "breakpoints": true
-    },
-    {
-      "idx": 11,
-      "version": "6",
-      "when": 1757089741409,
-      "tag": "0011_brown_devos",
-      "breakpoints": true
-    },
-    {
-      "idx": 12,
-      "version": "6",
-      "when": 1757265504918,
-      "tag": "0012_useful_captain_flint",
+      "when": 1758622148987,
+      "tag": "0002_fts_setup",
       "breakpoints": true
     }
   ]
