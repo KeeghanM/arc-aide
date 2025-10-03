@@ -98,7 +98,7 @@ export default function Publish({ published, type, slug }: TPublish) {
         {published ? (
           <div className='flex items-center gap-2'>
             <Tooltip>
-              <TooltipTrigger>
+              <TooltipTrigger asChild>
                 <Button
                   disabled={somethingPending}
                   variant='success'
@@ -131,7 +131,7 @@ export default function Publish({ published, type, slug }: TPublish) {
           </div>
         ) : (
           <Tooltip>
-            <TooltipTrigger>
+            <TooltipTrigger asChild>
               <Button
                 disabled={somethingPending}
                 variant='destructive'
