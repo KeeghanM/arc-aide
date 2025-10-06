@@ -13,7 +13,7 @@ import {
   thingType,
 } from '@db/schema'
 import MainLayout from '@layouts/main-layout.astro'
-import { eq } from 'drizzle-orm'
+import { and, eq } from 'drizzle-orm'
 
 const { campaignSlug, thingSlug } = Astro.params
 
@@ -38,7 +38,12 @@ const ThingData = await db
   })
   .from(thingSchema)
   .fullJoin(thingType, eq(thingSchema.typeId, thingType.id))
-  .where(eq(thingSchema.slug, thingSlug))
+  .where(
+    and(
+      eq(thingSchema.slug, thingSlug as string),
+      eq(thingSchema.campaignId, campaignResult[0].id)
+    )
+  )
   .limit(1)
 
 if (!ThingData[0]?.thing) {
@@ -52,7 +57,12 @@ const arcs = (await db
   .select({ id: arc.id, name: arc.name, slug: arc.slug })
   .from(arc)
   .fullJoin(arcThing, eq(arc.id, arcThing.arcId))
-  .where(eq(arcThing.thingId, thing.id))) as {
+  .where(
+    and(
+      eq(arcThing.thingId, thing.id),
+      eq(arc.campaignId, campaignResult[0].id)
+    )
+  )) as {
   id: number
   name: string
   slug: string
