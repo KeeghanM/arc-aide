@@ -37,7 +37,7 @@ export default function CampaignSettings() {
     if (!campaignSlug || !campaignName) return
 
     const updatedCampaign = await modifyCampaign.mutateAsync({
-      campaignSlug,
+      slug: campaignSlug,
       name: campaignName,
     })
 

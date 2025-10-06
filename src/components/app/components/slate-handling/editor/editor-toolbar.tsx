@@ -6,14 +6,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@components/ui/select'
+import { useTranscription } from '@hooks/useTranscription'
 import {
   BoldIcon,
   ImageIcon,
   ItalicIcon,
   Link2Icon,
+  Mic,
+  MicOff,
   Table,
   UnderlineIcon,
 } from 'lucide-react'
+import { useEffect } from 'react'
 import { Transforms } from 'slate'
 import type { CustomEditor } from './custom-types'
 import { applyFormatting } from './editor-utils'
@@ -27,6 +31,18 @@ export default function EditorToolbar({
   editor,
   isFocused,
 }: EditorToolbarProps) {
+  const { isRecording, startRecording, stopRecording, setOnResult } =
+    useTranscription()
+
+  useEffect(() => {
+    setOnResult((event) => {
+      const result = event.results[0]
+      if (!result.isFinal) return
+
+      Transforms.insertText(editor, result[0].transcript)
+    })
+  }, [setOnResult])
+
   if (!isFocused) return null
 
   return (
@@ -107,6 +123,23 @@ export default function EditorToolbar({
         }}
       >
         <Table className='h-4 w-4' />
+      </Button>
+      <Button
+        variant={isRecording ? 'default' : 'ghost'}
+        onMouseDown={(e) => {
+          e.preventDefault()
+          if (isRecording) {
+            stopRecording()
+          } else {
+            startRecording()
+          }
+        }}
+      >
+        {isRecording ? (
+          <MicOff className='h-4 w-4' />
+        ) : (
+          <Mic className='h-4 w-4' />
+        )}
       </Button>
     </div>
   )
