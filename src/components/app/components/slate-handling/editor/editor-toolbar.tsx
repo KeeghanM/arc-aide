@@ -36,10 +36,10 @@ export default function EditorToolbar({
 
   useEffect(() => {
     setOnResult((event) => {
-      const result = event.results[0]
+      const result = event.results[event.results.length - 1]
       if (!result.isFinal) return
 
-      Transforms.insertText(editor, result[0].transcript)
+      Transforms.insertText(editor, `${result[0].transcript} `)
     })
   }, [setOnResult])
 

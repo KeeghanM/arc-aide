@@ -143,7 +143,7 @@ export default function Publish({ published, type, slug }: TPublish) {
                 ) : (
                   <X className='h-2 w-2' />
                 )}
-              </Button>{' '}
+              </Button>
             </TooltipTrigger>
             <TooltipContent>
               Currently unpublished. Click to publish.
