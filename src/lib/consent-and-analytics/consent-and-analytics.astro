@@ -9,6 +9,10 @@ if (!PUBLIC_POSTHOG_KEY || !PUBLIC_POSTHOG_HOST) {
 ---
 
 <script
+  is:inline
+  src='/silktide-consent-manager.js'
+></script>
+<script
   type='text/partytown'
   is:inline
   define:vars={{
@@ -16,6 +20,7 @@ if (!PUBLIC_POSTHOG_KEY || !PUBLIC_POSTHOG_HOST) {
     PUBLIC_POSTHOG_HOST,
   }}
 >
+  /* eslint-disable no-undef */
   !(function (t, e) {
     var o, n, p, r
     e.__SV ||
@@ -66,9 +71,70 @@ if (!PUBLIC_POSTHOG_KEY || !PUBLIC_POSTHOG_HOST) {
       (e.__SV = 1))
   })(document, window.posthog || [])
 
-  /* eslint-disable-next-line no-undef */
   posthog.init(PUBLIC_POSTHOG_KEY, {
     api_host: PUBLIC_POSTHOG_HOST,
     defaults: '2025-05-24',
   })
+
+  posthog.opt_out_capturing()
+
+  silktideCookieBannerManager.updateCookieBannerConfig({
+    background: {
+      showBackground: true,
+    },
+    cookieIcon: {
+      position: 'bottomRight',
+    },
+    cookieTypes: [
+      {
+        id: 'necessary',
+        name: 'Necessary',
+        description:
+          '<p>These cookies are necessary for the website to function properly and cannot be switched off. They help with things like logging in and setting your privacy preferences.</p>',
+        required: true,
+        onAccept: function () {},
+      },
+      {
+        id: 'analytics',
+        name: 'Analytics',
+        description:
+          '<p>These cookies help us improve the site by tracking which pages are most popular and how visitors move around the site.</p>',
+        defaultValue: true,
+        onAccept: function () {
+          posthog.opt_in_capturing()
+        },
+        onReject: function () {
+          posthog.opt_out_capturing()
+        },
+      },
+    ],
+    text: {
+      banner: {
+        description:
+          '<p>We use cookies on our site to enhance your user experience, provide personalized content, and analyse our traffic. <a href="/cookies" target="_blank">Cookie Policy.</a></p>',
+        acceptAllButtonText: 'Accept all',
+        acceptAllButtonAccessibleLabel: 'Accept all cookies',
+        rejectNonEssentialButtonText: 'Reject non-essential',
+        rejectNonEssentialButtonAccessibleLabel: 'Reject non-essential',
+        preferencesButtonText: 'Preferences',
+        preferencesButtonAccessibleLabel: 'Toggle preferences',
+      },
+      preferences: {
+        title: 'Customize your cookie preferences',
+        description:
+          '<p>We respect your right to privacy. You can choose not to allow some types of cookies. Your cookie preferences will apply across our website.</p>',
+        creditLinkText: 'Get this banner for free',
+        creditLinkAccessibleLabel: 'Get this banner for free',
+      },
+    },
+    position: {
+      banner: 'center',
+    },
+  })
 </script>
+
+<style is:global>
+  #silktide-cookie-icon {
+    display: none !important;
+  }
+</style>
