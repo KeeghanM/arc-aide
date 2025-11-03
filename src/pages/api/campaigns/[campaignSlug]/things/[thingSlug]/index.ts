@@ -199,7 +199,7 @@ export const PUT: APIRoute = async ({ request, params }) => {
       .where(eq(thing.id, existingThing[0].id))
       .returning()
 
-    if (updateData.slug !== thingSlug) {
+    if (updateData.slug && updateData.slug !== thingSlug) {
       const oldLink = `[[thing#${thingSlug}]]`
       const newLink = `[[thing#${updateData.slug}]]`
 
@@ -219,15 +219,34 @@ export const PUT: APIRoute = async ({ request, params }) => {
           "outcome_text" = REPLACE(${arc.outcomeText}, ${oldLink}, ${newLink}),
           "key_text" = REPLACE(${arc.keyText}, ${oldLink}, ${newLink}),
           "notes_text" = REPLACE(${arc.notesText}, ${oldLink}, ${newLink})
-        WHERE ${arc.campaignId} = ${returnedThing.campaignId}
-      `)
+        WHERE 
+        ${arc.campaignId} = ${returnedThing.campaignId}
+        AND (
+              "hook" LIKE '%' || ${oldLink} || '%' OR
+              "protagonist" LIKE '%' || ${oldLink} || '%' OR
+              "antagonist" LIKE '%' || ${oldLink} || '%' OR
+              "problem" LIKE '%' || ${oldLink} || '%' OR
+              "key" LIKE '%' || ${oldLink} || '%' OR
+              "outcome" LIKE '%' || ${oldLink} || '%' OR
+              "notes" LIKE '%' || ${oldLink} || '%' OR
+              "hook_text" LIKE '%' || ${oldLink} || '%' OR
+              "protagonist_text" LIKE '%' || ${oldLink} || '%' OR
+              "antagonist_text" LIKE '%' || ${oldLink} || '%' OR
+              "problem_text" LIKE '%' || ${oldLink} || '%' OR
+              "outcome_text" LIKE '%' || ${oldLink} || '%' OR
+              "key_text" LIKE '%' || ${oldLink} || '%' OR
+              "notes_text" LIKE '%' || ${oldLink} || '%'
+            )`)
 
       await db.run(sql`
         UPDATE ${thing} SET 
           "description" = REPLACE(${thing.description}, ${oldLink}, ${newLink}),
           "description_text" = REPLACE(${thing.descriptionText}, ${oldLink}, ${newLink})
         WHERE ${thing.campaignId} = ${returnedThing.campaignId}
-      `)
+        AND (
+          "description" LIKE '%' || ${oldLink} || '%' OR
+          "description_text" LIKE '%' || ${oldLink} || '%'
+        )`)
     }
 
     // Handle related items if provided
