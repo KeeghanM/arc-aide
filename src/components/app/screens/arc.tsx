@@ -1,8 +1,8 @@
+import { Button } from '@components/ui/button'
 import { type TArc, useArcQueries } from '@hooks/useArcQueries'
 import { useAppStore } from '@stores/appStore'
 import { extractRelatedItems } from '@utils/slate-text-extractor'
-import pDebounce from 'p-debounce'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import type { Descendant } from 'slate'
 import ArcItem from '../components/arc/arc-item'
 import ArcSettings from '../components/arc/arc-settings/arc-settings'
@@ -23,56 +23,41 @@ function Arc({ arc }: TArcProps) {
   const { modifyArc, useArcQuery } = useArcQueries()
   const { mode, setCurrentArc } = useAppStore()
   const arcQuery = useArcQuery(arc.slug)
+  const [hookValue, setHookValue] = useState(arc.hook)
+  const [protagonistValue, setProtagonistValue] = useState(arc.hook)
+  const [antagonistValue, setAntagonistValue] = useState(arc.hook)
+  const [problemValue, setProblemValue] = useState(arc.hook)
+  const [keyValue, setKeyValue] = useState(arc.hook)
+  const [outcomeValue, setOutcomeValue] = useState(arc.hook)
+  const [notesValue, setNotesValue] = useState(arc.hook)
 
   useEffect(() => {
     setCurrentArc(arc)
   }, [arc, setCurrentArc])
 
-  const DEBOUNCE_DELAY = 300
-  // --- Auto-save handlers ---
-  // Debounce saves to avoid excessive API calls while user types
-  const handleHookChange = pDebounce(async (value: Descendant[]) => {
+  const handleSave = async () => {
     modifyArc.mutate({
-      updatedArc: { slug: arc.slug, hook: value },
-      relatedItems: extractRelatedItems(value),
+      updatedArc: {
+        slug: arc.slug,
+        hook: hookValue,
+        protagonist: protagonistValue,
+        antagonist: antagonistValue,
+        problem: problemValue,
+        key: keyValue,
+        outcome: outcomeValue,
+        notes: notesValue,
+      },
+      relatedItems: [
+        ...extractRelatedItems(hookValue as Descendant[]),
+        ...extractRelatedItems(protagonistValue as Descendant[]),
+        ...extractRelatedItems(antagonistValue as Descendant[]),
+        ...extractRelatedItems(problemValue as Descendant[]),
+        ...extractRelatedItems(keyValue as Descendant[]),
+        ...extractRelatedItems(outcomeValue as Descendant[]),
+        ...extractRelatedItems(notesValue as Descendant[]),
+      ],
     })
-  }, DEBOUNCE_DELAY)
-  const handleProtagonistChange = pDebounce(async (value: Descendant[]) => {
-    modifyArc.mutate({
-      updatedArc: { slug: arc.slug, protagonist: value },
-      relatedItems: extractRelatedItems(value),
-    })
-  }, DEBOUNCE_DELAY)
-  const handleAntagonistChange = pDebounce(async (value: Descendant[]) => {
-    modifyArc.mutate({
-      updatedArc: { slug: arc.slug, antagonist: value },
-      relatedItems: extractRelatedItems(value),
-    })
-  }, DEBOUNCE_DELAY)
-  const handleProblemChange = pDebounce(async (value: Descendant[]) => {
-    modifyArc.mutate({
-      updatedArc: { slug: arc.slug, problem: value },
-      relatedItems: extractRelatedItems(value),
-    })
-  }, DEBOUNCE_DELAY)
-  const handleKeyChange = pDebounce(async (value: Descendant[]) => {
-    modifyArc.mutate({
-      updatedArc: { slug: arc.slug, key: value },
-      relatedItems: extractRelatedItems(value),
-    })
-  }, DEBOUNCE_DELAY)
-  const handleOutcomeChange = pDebounce(async (value: Descendant[]) => {
-    modifyArc.mutate({
-      updatedArc: { slug: arc.slug, outcome: value },
-      relatedItems: extractRelatedItems(value),
-    })
-  }, DEBOUNCE_DELAY)
-  const handleNotesChange = pDebounce(async (value: Descendant[]) => {
-    modifyArc.mutate({
-      updatedArc: { slug: arc.slug, notes: value },
-      relatedItems: extractRelatedItems(value),
-    })
-  }, DEBOUNCE_DELAY)
+  }
 
   return (
     <div className='space-y-4 pr-6 md:pr-12'>
@@ -84,6 +69,13 @@ function Arc({ arc }: TArcProps) {
           type='arc'
           slug={arc.slug}
         />
+        <Button
+          variant={'success'}
+          onClick={handleSave}
+          disabled={modifyArc.isPending}
+        >
+          Save
+        </Button>
       </div>
       <div className='space-y-4'>
         {/* 
@@ -149,7 +141,7 @@ function Arc({ arc }: TArcProps) {
                   ((arcQuery.data?.hook ?? arc.hook) as Descendant[]) ??
                   defaultEditorValue
                 }
-                onChange={handleHookChange}
+                onChange={setHookValue}
               />
             </div>
             <div>
@@ -161,7 +153,7 @@ function Arc({ arc }: TArcProps) {
                   ((arcQuery.data?.protagonist ??
                     arc.protagonist) as Descendant[]) ?? defaultEditorValue
                 }
-                onChange={handleProtagonistChange}
+                onChange={setProtagonistValue}
               />
             </div>
             <div>
@@ -173,7 +165,7 @@ function Arc({ arc }: TArcProps) {
                   ((arcQuery.data?.antagonist ??
                     arc.antagonist) as Descendant[]) ?? defaultEditorValue
                 }
-                onChange={handleAntagonistChange}
+                onChange={setAntagonistValue}
               />
             </div>
             <div>
@@ -185,7 +177,7 @@ function Arc({ arc }: TArcProps) {
                   ((arcQuery.data?.problem ?? arc.problem) as Descendant[]) ??
                   defaultEditorValue
                 }
-                onChange={handleProblemChange}
+                onChange={setProblemValue}
               />
             </div>
             <div>
@@ -197,7 +189,7 @@ function Arc({ arc }: TArcProps) {
                   ((arcQuery.data?.key ?? arc.key) as Descendant[]) ??
                   defaultEditorValue
                 }
-                onChange={handleKeyChange}
+                onChange={setKeyValue}
               />
             </div>
             <div>
@@ -209,7 +201,7 @@ function Arc({ arc }: TArcProps) {
                   ((arcQuery.data?.outcome ?? arc.outcome) as Descendant[]) ??
                   defaultEditorValue
                 }
-                onChange={handleOutcomeChange}
+                onChange={setOutcomeValue}
               />
             </div>
             <div className='md:col-span-2'>
@@ -221,7 +213,7 @@ function Arc({ arc }: TArcProps) {
                   ((arcQuery.data?.notes ?? arc.notes) as Descendant[]) ??
                   defaultEditorValue
                 }
-                onChange={handleNotesChange}
+                onChange={setNotesValue}
               />
             </div>
           </>
