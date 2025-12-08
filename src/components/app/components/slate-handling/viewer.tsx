@@ -20,7 +20,7 @@ export default function SlateViewer({ content }: TSlateViewerProps) {
     <div
       className='dnd-content max-w-none rounded-lg bg-[#ead9cd] p-12 shadow-lg'
       dangerouslySetInnerHTML={{
-        __html: slateToHtml(content, campaignSlug ?? ''),
+        __html: slateToHtml(content, campaignSlug ?? '', 'dashboard'),
       }}
     />
   )
