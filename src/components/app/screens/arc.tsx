@@ -24,29 +24,46 @@ function Arc({ arc }: TArcProps) {
   const { mode, setCurrentArc } = useAppStore()
   const arcQuery = useArcQuery(arc.slug)
   const [hookValue, setHookValue] = useState(arc.hook)
-  const [protagonistValue, setProtagonistValue] = useState(arc.hook)
-  const [antagonistValue, setAntagonistValue] = useState(arc.hook)
-  const [problemValue, setProblemValue] = useState(arc.hook)
-  const [keyValue, setKeyValue] = useState(arc.hook)
-  const [outcomeValue, setOutcomeValue] = useState(arc.hook)
-  const [notesValue, setNotesValue] = useState(arc.hook)
+  const [protagonistValue, setProtagonistValue] = useState(arc.protagonist)
+  const [antagonistValue, setAntagonistValue] = useState(arc.antagonist)
+  const [problemValue, setProblemValue] = useState(arc.problem)
+  const [keyValue, setKeyValue] = useState(arc.key)
+  const [outcomeValue, setOutcomeValue] = useState(arc.outcome)
+  const [notesValue, setNotesValue] = useState(arc.notes)
 
   useEffect(() => {
     setCurrentArc(arc)
   }, [arc, setCurrentArc])
 
   const handleSave = async () => {
+    const updatedArc: Partial<TArc> & { slug: string } = {
+      slug: arc.slug,
+    }
+
+    if (JSON.stringify(hookValue) !== JSON.stringify(arc.hook)) {
+      updatedArc.hook = hookValue
+    }
+    if (JSON.stringify(protagonistValue) !== JSON.stringify(arc.protagonist)) {
+      updatedArc.protagonist = protagonistValue
+    }
+    if (JSON.stringify(antagonistValue) !== JSON.stringify(arc.antagonist)) {
+      updatedArc.antagonist = antagonistValue
+    }
+    if (JSON.stringify(problemValue) !== JSON.stringify(arc.problem)) {
+      updatedArc.problem = problemValue
+    }
+    if (JSON.stringify(keyValue) !== JSON.stringify(arc.key)) {
+      updatedArc.key = keyValue
+    }
+    if (JSON.stringify(outcomeValue) !== JSON.stringify(arc.outcome)) {
+      updatedArc.outcome = outcomeValue
+    }
+    if (JSON.stringify(notesValue) !== JSON.stringify(arc.notes)) {
+      updatedArc.notes = notesValue
+    }
+
     modifyArc.mutate({
-      updatedArc: {
-        slug: arc.slug,
-        hook: hookValue,
-        protagonist: protagonistValue,
-        antagonist: antagonistValue,
-        problem: problemValue,
-        key: keyValue,
-        outcome: outcomeValue,
-        notes: notesValue,
-      },
+      updatedArc,
       relatedItems: [
         ...extractRelatedItems(hookValue as Descendant[]),
         ...extractRelatedItems(protagonistValue as Descendant[]),
