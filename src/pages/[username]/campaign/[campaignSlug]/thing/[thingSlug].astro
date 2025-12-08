@@ -92,6 +92,6 @@ const publicDescription = filterSecrets(thingData.description as Descendant[])
       </p>
     </div>
 
-    <div set:html={slateToHtml(publicDescription, campaignSlug)} />
+    <div set:html={slateToHtml(publicDescription, campaignSlug, username)} />
   </div>
 </MainLayout>

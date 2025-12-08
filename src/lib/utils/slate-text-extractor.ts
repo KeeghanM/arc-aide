@@ -43,7 +43,11 @@ export function slateToPlainText(nodes: Descendant[]): string {
  * 2. Convert markdown to HTML using Showdown
  * 3. Return formatted HTML for browser display
  */
-export function slateToHtml(nodes: Descendant[], campaignSlug: string): string {
+export function slateToHtml(
+  nodes: Descendant[],
+  campaignSlug: string,
+  root: string
+): string {
   if (!nodes) {
     return ''
   }
@@ -83,7 +87,7 @@ export function slateToHtml(nodes: Descendant[], campaignSlug: string): string {
   return html.replace(linkRegex, (_, content) => {
     const [type, slug] = content.split('#', 2)
     if (type && slug) {
-      return `<a href="/dashboard/campaign/${campaignSlug}/${type}/${slug}/">${properCase(slug)}</a>`
+      return `<a href="/${root}/campaign/${campaignSlug}/${type}/${slug}/">${properCase(slug)}</a>`
     } else {
       // If format is invalid, just return the raw text
       return `[[${content}]]`
