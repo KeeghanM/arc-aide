@@ -41,7 +41,6 @@ export default function ThingSettings() {
         name: thingName,
       },
     })
-    console.log({ updatedThing, modifyThing })
     if (!modifyThing.error) {
       window.location.href = `/dashboard/thing/${updatedThing.slug}/`
       setOpen(false)

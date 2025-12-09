@@ -49,6 +49,7 @@ jobs:
             PUBLIC_HONEYBADGER_KEY=${{ vars.PUBLIC_HONEYBADGER_KEY }}
             PUBLIC_POSTHOG_KEY=${{ vars.PUBLIC_POSTHOG_KEY }}
             PUBLIC_POSTHOG_HOST=${{ vars.PUBLIC_POSTHOG_HOST }}
+            PUBLIC_STRIPE_PUBLISHABLE_KEY=${{ vars.PUBLIC_STRIPE_PUBLISHABLE_KEY }}
 
       - name: Trigger redeploy
         run: |
