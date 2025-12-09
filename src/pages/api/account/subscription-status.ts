@@ -9,9 +9,20 @@ export const GET: APIRoute = async ({ request }) => {
       return new Response('Unauthorized', { status: 401 })
     }
 
-    const subscriptionStatus = await killBillClient.getSubscriptionStatus(
-      session.user.id
-    )
+    const subscriptionStatus =
+      import.meta.env.NODE_ENV === 'production'
+        ? await killBillClient.getSubscriptionStatus(session.user.id)
+        : {
+            hasActiveSubscription: true,
+            baseTier: 'free',
+            activeAddons: [],
+            isTrialActive: false,
+            features: {
+              hasPremium: true,
+              hasPublishing: true,
+              hasAI: true,
+            },
+          }
 
     return new Response(JSON.stringify(subscriptionStatus), {
       headers: { 'Content-Type': 'application/json' },

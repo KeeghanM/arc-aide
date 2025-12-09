@@ -1,9 +1,20 @@
--- FTS5 table for searching https://www.sqlite.org/fts5.html
-CREATE TABLE IF NOT EXISTS search_vocabulary (
-    term TEXT PRIMARY KEY,
-    frequency INTEGER DEFAULT 1
-);
---> statement-breakpoint
+-- Drop the triggers that caused the "GLOB/LIKE pattern too complex" crash
+DROP TRIGGER IF EXISTS vocabulary_sync_arc_insert;
+DROP TRIGGER IF EXISTS vocabulary_sync_arc_update;
+DROP TRIGGER IF EXISTS vocabulary_sync_thing_insert;
+DROP TRIGGER IF EXISTS vocabulary_sync_thing_update;
+
+-- Drop the manual table that required constant updating
+DROP TABLE IF EXISTS search_vocabulary;
+
+-- Drop any previous versions of the View (if re-running this script)
+DROP VIEW IF EXISTS search_vocabulary;
+
+-- Drop the old auxiliary table if it exists to avoid confusion
+DROP TABLE IF EXISTS search_index_fts_aux;
+
+
+-- Ensure the main FTS5 index exists
 CREATE VIRTUAL TABLE IF NOT EXISTS search_index_fts USING fts5(
     type,
     entity_id UNINDEXED,
@@ -12,27 +23,24 @@ CREATE VIRTUAL TABLE IF NOT EXISTS search_index_fts USING fts5(
     content,
     slug
 );
---> statement-breakpoint
 
--- Create auxiliary table to extract FTS terms  
-CREATE VIRTUAL TABLE IF NOT EXISTS search_index_fts_aux USING fts5vocab('search_index_fts', 'instance');
---> statement-breakpoint
+-- Create a native virtual table that reads directly from the index.
+-- This is instant, requires no triggers, and handles large text automatically.
+CREATE VIRTUAL TABLE IF NOT EXISTS search_vocabulary_native USING fts5vocab('search_index_fts', 'row');
 
--- Create the triggers which keep the FTS table in sync with the main table
-DROP TRIGGER IF EXISTS arc_search_delete;
---> statement-breakpoint
-CREATE TRIGGER arc_search_delete AFTER DELETE ON arc BEGIN
-  DELETE FROM search_index_fts WHERE type = 'arc' AND entity_id = OLD.id;
-END;
---> statement-breakpoint
-DROP TRIGGER IF EXISTS thing_search_delete;
---> statement-breakpoint
-CREATE TRIGGER thing_search_delete AFTER DELETE ON thing BEGIN
-  DELETE FROM search_index_fts WHERE type = 'thing' AND entity_id = OLD.id;
-END;
---> statement-breakpoint
+-- Create a Compatibility View.
+-- This tricks your application code into thinking the 'search_vocabulary' table 
+-- still exists with 'term' and 'frequency' columns.
+CREATE VIEW search_vocabulary AS 
+SELECT 
+    term, 
+    cnt AS frequency 
+FROM search_vocabulary_native;
+
+
+
+-- --- ARC TRIGGERS ---
 DROP TRIGGER IF EXISTS arc_search_insert;
---> statement-breakpoint
 CREATE TRIGGER arc_search_insert AFTER INSERT ON arc BEGIN
   INSERT INTO search_index_fts(type, entity_id, campaign_id, title, content, slug)
   VALUES(
@@ -50,9 +58,8 @@ CREATE TRIGGER arc_search_insert AFTER INSERT ON arc BEGIN
     NEW.slug
   );
 END;
---> statement-breakpoint
+
 DROP TRIGGER IF EXISTS arc_search_update;
---> statement-breakpoint
 CREATE TRIGGER arc_search_update AFTER UPDATE ON arc BEGIN
   UPDATE search_index_fts SET
     title = NEW.name,
@@ -66,9 +73,16 @@ CREATE TRIGGER arc_search_update AFTER UPDATE ON arc BEGIN
     slug = NEW.slug
   WHERE type = 'arc' AND entity_id = NEW.id;
 END;
---> statement-breakpoint
+
+DROP TRIGGER IF EXISTS arc_search_delete;
+CREATE TRIGGER arc_search_delete AFTER DELETE ON arc BEGIN
+  DELETE FROM search_index_fts WHERE type = 'arc' AND entity_id = OLD.id;
+END;
+
+
+-- --- THING TRIGGERS ---
+
 DROP TRIGGER IF EXISTS thing_search_insert;
---> statement-breakpoint
 CREATE TRIGGER thing_search_insert AFTER INSERT ON thing BEGIN
   INSERT INTO search_index_fts(type, entity_id, campaign_id, title, content, slug)
   VALUES(
@@ -80,9 +94,8 @@ CREATE TRIGGER thing_search_insert AFTER INSERT ON thing BEGIN
     NEW.slug
   );
 END;
---> statement-breakpoint
+
 DROP TRIGGER IF EXISTS thing_search_update;
---> statement-breakpoint
 CREATE TRIGGER thing_search_update AFTER UPDATE ON thing BEGIN
   UPDATE search_index_fts SET
     title = COALESCE(NEW.name, ''),
@@ -90,76 +103,8 @@ CREATE TRIGGER thing_search_update AFTER UPDATE ON thing BEGIN
     slug = NEW.slug
   WHERE type = 'thing' AND entity_id = NEW.id;
 END;
---> statement-breakpoint
-DROP TRIGGER IF EXISTS vocabulary_sync_arc_insert;
---> statement-breakpoint
-CREATE TRIGGER vocabulary_sync_arc_insert 
-AFTER INSERT ON arc 
-BEGIN
-  -- Simply increment frequency counters for any terms that might match
-  -- Let the FTS system handle the actual word extraction
-  UPDATE search_vocabulary 
-  SET frequency = frequency + 1 
-  WHERE search_vocabulary.term IN (
-    SELECT DISTINCT term FROM search_index_fts_aux 
-    WHERE search_index_fts_aux.term LIKE '%' || LOWER(NEW.name) || '%'
-       OR search_index_fts_aux.term LIKE '%' || LOWER(COALESCE(NEW.hook_text, '')) || '%'
-       OR search_index_fts_aux.term LIKE '%' || LOWER(COALESCE(NEW.protagonist_text, '')) || '%'
-       OR search_index_fts_aux.term LIKE '%' || LOWER(COALESCE(NEW.antagonist_text, '')) || '%'
-       OR search_index_fts_aux.term LIKE '%' || LOWER(COALESCE(NEW.problem_text, '')) || '%'
-       OR search_index_fts_aux.term LIKE '%' || LOWER(COALESCE(NEW.key_text, '')) || '%'
-       OR search_index_fts_aux.term LIKE '%' || LOWER(COALESCE(NEW.outcome_text, '')) || '%'
-       OR search_index_fts_aux.term LIKE '%' || LOWER(COALESCE(NEW.notes_text, '')) || '%'
-  );
-END;
---> statement-breakpoint
-DROP TRIGGER IF EXISTS vocabulary_sync_arc_update;
---> statement-breakpoint
-CREATE TRIGGER vocabulary_sync_arc_update
-AFTER UPDATE ON arc 
-BEGIN
-  -- Simply increment frequency counters for any terms that might match
-  UPDATE search_vocabulary 
-  SET frequency = frequency + 1 
-  WHERE search_vocabulary.term IN (
-    SELECT DISTINCT term FROM search_index_fts_aux 
-    WHERE search_index_fts_aux.term LIKE '%' || LOWER(NEW.name) || '%'
-       OR search_index_fts_aux.term LIKE '%' || LOWER(COALESCE(NEW.hook_text, '')) || '%'
-       OR search_index_fts_aux.term LIKE '%' || LOWER(COALESCE(NEW.protagonist_text, '')) || '%'
-       OR search_index_fts_aux.term LIKE '%' || LOWER(COALESCE(NEW.antagonist_text, '')) || '%'
-       OR search_index_fts_aux.term LIKE '%' || LOWER(COALESCE(NEW.problem_text, '')) || '%'
-       OR search_index_fts_aux.term LIKE '%' || LOWER(COALESCE(NEW.key_text, '')) || '%'
-       OR search_index_fts_aux.term LIKE '%' || LOWER(COALESCE(NEW.outcome_text, '')) || '%'
-       OR search_index_fts_aux.term LIKE '%' || LOWER(COALESCE(NEW.notes_text, '')) || '%'
-  );
-END;
---> statement-breakpoint
-DROP TRIGGER IF EXISTS vocabulary_sync_thing_insert;
---> statement-breakpoint
-CREATE TRIGGER vocabulary_sync_thing_insert 
-AFTER INSERT ON thing 
-BEGIN
-  -- Simply increment frequency counters for any terms that might match
-  UPDATE search_vocabulary 
-  SET frequency = frequency + 1 
-  WHERE search_vocabulary.term IN (
-    SELECT DISTINCT term FROM search_index_fts_aux 
-    WHERE search_index_fts_aux.term LIKE '%' || LOWER(NEW.name) || '%'
-       OR search_index_fts_aux.term LIKE '%' || LOWER(COALESCE(NEW.description_text, '')) || '%'
-  );
-END;
---> statement-breakpoint
-DROP TRIGGER IF EXISTS vocabulary_sync_thing_update;
---> statement-breakpoint
-CREATE TRIGGER vocabulary_sync_thing_update
-AFTER UPDATE ON thing 
-BEGIN
-  -- Simply increment frequency counters for any terms that might match
-  UPDATE search_vocabulary 
-  SET frequency = frequency + 1 
-  WHERE search_vocabulary.term IN (
-    SELECT DISTINCT term FROM search_index_fts_aux 
-    WHERE search_index_fts_aux.term LIKE '%' || LOWER(NEW.name) || '%'
-       OR search_index_fts_aux.term LIKE '%' || LOWER(COALESCE(NEW.description_text, '')) || '%'
-  );
+
+DROP TRIGGER IF EXISTS thing_search_delete;
+CREATE TRIGGER thing_search_delete AFTER DELETE ON thing BEGIN
+  DELETE FROM search_index_fts WHERE type = 'thing' AND entity_id = OLD.id;
 END;

@@ -1,7 +1,7 @@
+import { Button } from '@components/ui/button'
 import { type TThing, useThingQueries } from '@hooks/useThingQueries'
 import { extractRelatedItems } from '@utils/slate-text-extractor'
-import pDebounce from 'p-debounce'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import type { Descendant } from 'slate'
 import Publish from '../components/publish/publish'
 import MarkdownEditor, {
@@ -22,13 +22,14 @@ function Thing({ thing }: TThingProps) {
   const { mode, setCurrentThing } = useAppStore()
   const { useThingQuery } = useThingQueries()
   const thingQuery = useThingQuery(thing.slug)
+  const [descriptionValue, setDesctipionValue] = useState(thing.description)
 
-  const handleDescriptionChange = pDebounce(async (value: Descendant[]) => {
+  const handleSave = async () => {
     modifyThing.mutate({
-      updatedThing: { slug: thing.slug, description: value },
-      relatedItems: extractRelatedItems(value),
+      updatedThing: { slug: thing.slug, description: descriptionValue },
+      relatedItems: extractRelatedItems(descriptionValue as Descendant[]),
     })
-  }, 1000)
+  }
 
   useEffect(() => {
     setCurrentThing(thing)
@@ -43,6 +44,13 @@ function Thing({ thing }: TThingProps) {
           type='thing'
           slug={thing.slug}
         />
+        <Button
+          variant={'success'}
+          onClick={handleSave}
+          disabled={modifyThing.isPending}
+        >
+          Save
+        </Button>
       </div>
       <div>
         <h2 className='mb-2 flex items-center gap-2 text-2xl font-semibold'>
@@ -61,7 +69,7 @@ function Thing({ thing }: TThingProps) {
               ((thingQuery.data?.description ??
                 thing.description) as Descendant[]) ?? defaultEditorValue
             }
-            onChange={handleDescriptionChange}
+            onChange={setDesctipionValue}
             height='lg'
           />
         )}

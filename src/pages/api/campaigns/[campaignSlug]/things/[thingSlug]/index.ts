@@ -198,13 +198,12 @@ export const PUT: APIRoute = async ({ request, params }) => {
       .set(updateData)
       .where(eq(thing.id, existingThing[0].id))
       .returning()
-
     if (updateData.slug && updateData.slug !== thingSlug) {
       const oldLink = `[[thing#${thingSlug}]]`
       const newLink = `[[thing#${updateData.slug}]]`
 
       await db.run(sql`
-        UPDATE ${arc} SET 
+        UPDATE ${arc} SET
           "hook" = REPLACE(${arc.hook}, ${oldLink}, ${newLink}),
           "protagonist" = REPLACE(${arc.protagonist}, ${oldLink}, ${newLink}),
           "antagonist" = REPLACE(${arc.antagonist}, ${oldLink}, ${newLink}),
@@ -219,7 +218,7 @@ export const PUT: APIRoute = async ({ request, params }) => {
           "outcome_text" = REPLACE(${arc.outcomeText}, ${oldLink}, ${newLink}),
           "key_text" = REPLACE(${arc.keyText}, ${oldLink}, ${newLink}),
           "notes_text" = REPLACE(${arc.notesText}, ${oldLink}, ${newLink})
-        WHERE 
+        WHERE
         ${arc.campaignId} = ${returnedThing.campaignId}
         AND (
               "hook" LIKE '%' || ${oldLink} || '%' OR
@@ -239,7 +238,7 @@ export const PUT: APIRoute = async ({ request, params }) => {
             )`)
 
       await db.run(sql`
-        UPDATE ${thing} SET 
+        UPDATE ${thing} SET
           "description" = REPLACE(${thing.description}, ${oldLink}, ${newLink}),
           "description_text" = REPLACE(${thing.descriptionText}, ${oldLink}, ${newLink})
         WHERE ${thing.campaignId} = ${returnedThing.campaignId}
