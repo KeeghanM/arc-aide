@@ -57,6 +57,7 @@ export default function ThingTypeSettings({
         <Button
           className='m-0 p-0'
           variant='ghost'
+          aria-label={`Edit ${thingType.name} settings`}
         >
           <Pencil />
         </Button>
@@ -65,8 +66,9 @@ export default function ThingTypeSettings({
         <DialogHeader>
           <DialogTitle>Thing Type Settings</DialogTitle>
         </DialogHeader>
-        <Label>Thing Type Name</Label>
+        <Label htmlFor='thing-type-name'>Thing Type Name</Label>
         <Input
+          id='thing-type-name'
           placeholder='Thing Type name'
           value={thingName}
           onChange={(e) => setThingName(e.target.value)}
@@ -80,7 +82,9 @@ export default function ThingTypeSettings({
         {/* Display mutation errors to user */}
         {modifyThingType.error && (
           <div className='mt-2 text-sm text-red-500'>
-            {modifyThingType.error.message}
+            {modifyThingType.error.message.includes('duplicate')
+              ? 'A thing type with this name already exists.'
+              : 'Failed to save changes. Please try again.'}
           </div>
         )}
         <DialogFooter>

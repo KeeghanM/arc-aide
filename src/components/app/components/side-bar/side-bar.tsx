@@ -70,9 +70,10 @@ function SideBar() {
                 key={type.id}
                 className='mb-4'
               >
-                <h3 className='text-md mb-2 font-semibold'>
-                  {type.name} <ThingTypeSettings thingType={type} />
-                </h3>
+                <div className='mb-2 flex items-center gap-2'>
+                  <h3 className='text-md font-semibold'>{type.name}</h3>
+                  <ThingTypeSettings thingType={type} />
+                </div>
                 {thingsOfType && thingsOfType.length > 0 ? (
                   <ul>
                     {thingsOfType.map((thing) => (

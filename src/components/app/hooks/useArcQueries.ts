@@ -27,6 +27,7 @@ export function useArcQueries() {
       const response = await fetch(`/api/campaigns/${slug}/arcs`)
       return response.json()
     },
+    enabled: !!campaignSlug,
   })
 
   // Factory function for individual arc queries
@@ -40,6 +41,7 @@ export function useArcQueries() {
         )
         return response.json()
       },
+      enabled: !!campaignSlug,
     })
 
   // --- Mutations ---

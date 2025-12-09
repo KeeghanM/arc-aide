@@ -14,7 +14,7 @@ This document outlines the coding standards and best practices for our project. 
 
 - **Apply the DRY-3 rule**: Refactor code into a reusable function or component once it needs writing for the third time.
 - Keep files under 300 lines as a general rule of thumb.
-  - If a files exceeds the size limit, break it down into smaller sub-files or extract logic into custom hooks.
+  - If a file exceeds the size limit, break it down into smaller sub-files or extract logic into custom hooks.
 
 ### 🛡️ Guard Clauses & Validation
 
