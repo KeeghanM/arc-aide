@@ -17,7 +17,7 @@ import { useState } from 'react'
  * Renders a button that opens a confirmation dialog to delete the current campaign.
  * Uses useCampaignQueries hook to perform the deletion and manage state.
  */
-export default function DeleteCampaign() {
+export function DeleteCampaign() {
   const { deleteCampaign } = useCampaignQueries()
   const { campaignSlug } = useAppStore()
   const [open, setOpen] = useState(false)

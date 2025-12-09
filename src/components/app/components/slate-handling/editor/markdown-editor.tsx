@@ -26,7 +26,7 @@ export type TMarkdownEditorProps = {
   height?: 'sm' | 'md' | 'lg'
 }
 
-export default function MarkdownEditor({
+export function MarkdownEditor({
   initialValue,
   onChange,
   height = 'sm',

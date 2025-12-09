@@ -17,7 +17,7 @@ import { useState } from 'react'
  * Renders a button that opens a confirmation dialog to delete the current Arc.
  * Uses useArcQueries hook to perform the deletion and manage state.
  */
-export default function DeleteArc() {
+export function DeleteArc() {
   const { deleteArc } = useArcQueries()
   const { currentArc, campaignSlug } = useAppStore()
   const [open, setOpen] = useState(false)

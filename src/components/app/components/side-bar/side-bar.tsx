@@ -1,13 +1,15 @@
-import ScreenWrapper, {
+import { ThingTypeSettings } from '@components/app/components/side-bar/thing-type-settings'
+import {
+  ScreenWrapper,
   type TScreenWrapperProps,
 } from '@components/app/screen-wrapper'
 import { useArcQueries } from '@hooks/useArcQueries'
 import { useThingQueries } from '@hooks/useThingQueries'
 import { useThingTypeQueries } from '@hooks/useThingTypeQueries'
 import { useAppStore } from '@stores/appStore'
-import ArcItem from './arc-item'
-import CreateArc from '../arc/create-arc/create-arc'
-import CreateThing from '../thing/create-thing/create-thing'
+import { ArcItem } from './arc-item'
+import { CreateArc } from '../arc/create-arc/create-arc'
+import { CreateThing } from '../thing/create-thing/create-thing'
 
 type TSideBarProps = {}
 
@@ -69,7 +71,10 @@ function SideBar() {
                 key={type.id}
                 className='mb-4'
               >
-                <h3 className='text-md mb-2 font-semibold'>{type.name}</h3>
+                <div className='mb-2 flex items-center gap-2'>
+                  <h3 className='text-md font-semibold'>{type.name}</h3>
+                  <ThingTypeSettings thingType={type} />
+                </div>
                 {thingsOfType && thingsOfType.length > 0 ? (
                   <ul>
                     {thingsOfType.map((thing) => (
@@ -98,7 +103,7 @@ function SideBar() {
   )
 }
 
-export default function SideBarWrapper({
+export function SideBarWrapper({
   user,
   campaignSlug,
 }: TSideBarProps & TScreenWrapperProps) {

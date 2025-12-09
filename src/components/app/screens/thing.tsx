@@ -3,14 +3,15 @@ import { type TThing, useThingQueries } from '@hooks/useThingQueries'
 import { extractRelatedItems } from '@utils/slate-text-extractor'
 import { useEffect, useState } from 'react'
 import type { Descendant } from 'slate'
-import Publish from '../components/publish/publish'
-import MarkdownEditor, {
+import { Publish } from '../components/publish/publish'
+import {
   defaultEditorValue,
+  MarkdownEditor,
 } from '../components/slate-handling/editor/markdown-editor'
-import SlateViewer from '../components/slate-handling/viewer'
-import ThingSettings from '../components/thing/thing-settings/thing-settings'
+import { SlateViewer } from '../components/slate-handling/viewer'
+import { ThingSettings } from '../components/thing/thing-settings/thing-settings'
 import type { TScreenWrapperProps } from '../screen-wrapper'
-import ScreenWrapper from '../screen-wrapper'
+import { ScreenWrapper } from '../screen-wrapper'
 import { useAppStore } from '../stores/appStore'
 
 type TThingProps = {
@@ -78,7 +79,7 @@ function Thing({ thing }: TThingProps) {
   )
 }
 
-export default function ThingScreen({
+export function ThingScreen({
   thing,
   campaignSlug,
   user,

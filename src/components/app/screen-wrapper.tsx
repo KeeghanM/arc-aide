@@ -16,7 +16,7 @@ export type TScreenWrapperProps = {
   campaignSlug: string | undefined
 }
 
-export default function ScreenWrapper({
+export function ScreenWrapper({
   user,
   children,
   campaignSlug,

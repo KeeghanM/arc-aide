@@ -3,7 +3,7 @@ import { Card } from '@components/ui/card'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@components/ui/tooltip'
 import { useSubscriptionQueries } from '@hooks/useSubscriptionQueries'
 import { CheckCircle, CircleX } from 'lucide-react'
-import ScreenWrapper, { type TScreenWrapperProps } from '../../screen-wrapper'
+import { ScreenWrapper, type TScreenWrapperProps } from '../../screen-wrapper'
 
 function Manager() {
   const {

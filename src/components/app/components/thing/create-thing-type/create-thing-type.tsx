@@ -13,7 +13,7 @@ import { useThingTypeQueries } from '@hooks/useThingTypeQueries'
 import { useAppStore } from '@stores/appStore'
 import { useState } from 'react'
 
-export default function CreateThingType() {
+export function CreateThingType() {
   const { campaignSlug } = useAppStore()
   const { createThingType } = useThingTypeQueries()
   const [thingTypeName, setThingTypeName] = useState('')

@@ -9,7 +9,7 @@ import {
   DialogTrigger,
 } from '@components/ui/dialog'
 import { Input } from '@components/ui/input'
-import PremiumPrompt from '@components/ui/premium-prompt'
+import { PremiumPrompt } from '@components/ui/premium-prompt'
 import { useCampaignQueries } from '@hooks/useCampaignQueries'
 import { useSubscriptionQueries } from '@hooks/useSubscriptionQueries'
 import { useState } from 'react'
@@ -21,7 +21,7 @@ import { useState } from 'react'
  * and automatically closes on successful creation. The campaign name
  * becomes the primary identifier and navigation slug.
  */
-export default function CreateCampaign() {
+export function CreateCampaign() {
   const { createCampaign, campaignsQuery } = useCampaignQueries()
   const [campaignName, setCampaignName] = useState('')
   const [open, setOpen] = useState(false)

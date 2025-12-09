@@ -11,7 +11,7 @@ import {
   DialogTrigger,
 } from '@components/ui/dialog'
 import { useState } from 'react'
-import SearchBar from '../../search-bar/search-bar'
+import { SearchBar } from '../../search-bar/search-bar'
 
 type TParentArcProps = {
   arc: TArc
@@ -23,7 +23,7 @@ type TParentArcProps = {
  * to add the current arc to an arc. It uses a search bar to find and select
  * an arc, creating a parent-child relationship between arcs.
  */
-export default function ParentArc({ arc }: TParentArcProps) {
+export function ParentArc({ arc }: TParentArcProps) {
   const { campaignSlug } = useAppStore()
   const { modifyArc } = useArcQueries()
   const [parentArc, setParentArc] = useState<TArc | undefined>(arc.parentArc)

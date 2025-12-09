@@ -10,10 +10,7 @@ type EditorPublishingProps = {
   editor: CustomEditor
 }
 
-export default function EditorPublishing({
-  editor,
-  editorRef,
-}: EditorPublishingProps) {
+export function EditorPublishing({ editor, editorRef }: EditorPublishingProps) {
   const [isPublishOn, setIsPublishOn] = useState(false)
 
   if (!editor || !editorRef) return null

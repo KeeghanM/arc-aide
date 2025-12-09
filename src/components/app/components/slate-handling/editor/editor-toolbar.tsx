@@ -27,10 +27,7 @@ type EditorToolbarProps = {
   isFocused: boolean
 }
 
-export default function EditorToolbar({
-  editor,
-  isFocused,
-}: EditorToolbarProps) {
+export function EditorToolbar({ editor, isFocused }: EditorToolbarProps) {
   const { isRecording, startRecording, stopRecording, setOnResult } =
     useTranscription()
 

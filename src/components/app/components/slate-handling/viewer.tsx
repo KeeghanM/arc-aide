@@ -14,7 +14,7 @@ type TSlateViewerProps = {
  * rendered out without the Markdown tags.
  */
 
-export default function SlateViewer({ content }: TSlateViewerProps) {
+export function SlateViewer({ content }: TSlateViewerProps) {
   const { campaignSlug } = useAppStore()
   return (
     <div

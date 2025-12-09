@@ -41,7 +41,7 @@ export function useSearchQueries() {
 
         return response.json()
       },
-      enabled: searchTerm.length > 0, // Only search with actual input
+      enabled: searchTerm.length > 0 && !!campaignSlug, // Only search with actual input
     })
 
   return { useSearchQuery }

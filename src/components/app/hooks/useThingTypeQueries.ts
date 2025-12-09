@@ -18,6 +18,7 @@ export function useThingTypeQueries() {
       const response = await fetch(`/api/campaigns/${slug}/thing-types`)
       return response.json()
     },
+    enabled: !!campaignSlug,
   })
 
   const useThingTypeQuery = (campaignSlug: string, thingTypeId: number) =>
@@ -30,6 +31,7 @@ export function useThingTypeQueries() {
         )
         return response.json()
       },
+      enabled: !!campaignSlug,
     })
 
   const createThingType = useSyncMutation({

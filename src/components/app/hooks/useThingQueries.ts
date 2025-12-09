@@ -47,6 +47,7 @@ export function useThingQueries() {
         const response = await fetch(url)
         return response.json()
       },
+      enabled: !!campaignSlug,
     })
 
   // Individual thing query factory
@@ -60,6 +61,7 @@ export function useThingQueries() {
         )
         return response.json()
       },
+      enabled: !!campaignSlug,
     })
 
   // Get all arcs that contain a specific thing (many-to-many relationship)

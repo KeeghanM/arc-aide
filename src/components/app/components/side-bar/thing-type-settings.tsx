@@ -11,40 +11,37 @@ import {
 } from '@components/ui/dialog'
 import { Input } from '@components/ui/input'
 import { Label } from '@components/ui/label'
-import { useThingQueries } from '@hooks/useThingQueries'
+import {
+  type TThingType,
+  useThingTypeQueries,
+} from '@hooks/useThingTypeQueries'
+import { Pencil } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import DeleteThing from './delete-thing'
 
-/**
- * Delete Thing Component
- * Renders a button that opens a confirmation dialog to delete the current thing.
- * Uses useThingQueries hook to perform the deletion and manage state.
- */
-export function ThingSettings() {
-  const { modifyThing, useThingQuery } = useThingQueries()
-  const { currentThing } = useAppStore()
-  const thingQuery = useThingQuery(currentThing?.slug ?? '')
-  const [thingName, setThingName] = useState(thingQuery.data?.name ?? '')
+export function ThingTypeSettings({ thingType }: { thingType: TThingType }) {
+  const { modifyThingType, useThingTypeQuery } = useThingTypeQueries()
+  const { campaignSlug } = useAppStore()
+  const thingTypeQuery = useThingTypeQuery(campaignSlug ?? '', thingType.id)
+  const [thingName, setThingName] = useState(thingTypeQuery.data?.name ?? '')
   const [open, setOpen] = useState(false)
 
   useEffect(() => {
-    setThingName(thingQuery.data?.name ?? '')
-  }, [thingQuery.data])
+    setThingName(thingTypeQuery.data?.name ?? '')
+  }, [thingTypeQuery.data])
 
   // --- Form submission ---
   const handleSave = async () => {
-    if (!thingName || !currentThing?.slug) return
+    if (!thingName || !campaignSlug) return
 
-    const updatedThing = await modifyThing.mutateAsync({
-      updatedThing: {
-        slug: currentThing?.slug,
+    await modifyThingType.mutateAsync({
+      campaignSlug,
+      updatedThingType: {
+        id: thingType.id,
         name: thingName,
       },
     })
-    if (!modifyThing.error) {
-      window.location.href = `/dashboard/thing/${updatedThing.slug}/`
-      setOpen(false)
-    }
+
+    if (!modifyThingType.error) setOpen(false)
   }
 
   return (
@@ -55,18 +52,20 @@ export function ThingSettings() {
       <DialogTrigger asChild>
         <Button
           className='m-0 p-0'
-          variant='link'
+          variant='ghost'
+          aria-label={`Edit ${thingType.name} settings`}
         >
-          Thing Settings
+          <Pencil />
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Thing Settings</DialogTitle>
+          <DialogTitle>Thing Type Settings</DialogTitle>
         </DialogHeader>
-        <Label>Thing Name</Label>
+        <Label htmlFor='thing-type-name'>Thing Type Name</Label>
         <Input
-          placeholder='Thing name'
+          id='thing-type-name'
+          placeholder='Thing Type name'
           value={thingName}
           onChange={(e) => setThingName(e.target.value)}
           onKeyDown={(e) => {
@@ -77,19 +76,20 @@ export function ThingSettings() {
         />
 
         {/* Display mutation errors to user */}
-        {modifyThing.error && (
+        {modifyThingType.error && (
           <div className='mt-2 text-sm text-red-500'>
-            {modifyThing.error.message}
+            {modifyThingType.error.message.includes('duplicate')
+              ? 'A thing type with this name already exists.'
+              : 'Failed to save changes. Please try again.'}
           </div>
         )}
         <DialogFooter>
-          <DeleteThing />
           <Button
             variant='default'
-            disabled={modifyThing.isPending || !thingName}
+            disabled={modifyThingType.isPending || !thingName}
             onClick={handleSave}
           >
-            {modifyThing.isPending ? 'Saving...' : 'Save'}
+            {modifyThingType.isPending ? 'Saving...' : 'Save'}
           </Button>
           <DialogClose asChild>
             <Button variant='outline'>Cancel</Button>

@@ -1,4 +1,4 @@
-import TimeAgo from '@components/ui/time-ago'
+import { TimeAgo } from '@components/ui/time-ago'
 import type { TArc } from '@hooks/useArcQueries'
 import { useAppStore } from '../../stores/appStore'
 
@@ -8,7 +8,7 @@ import { useAppStore } from '../../stores/appStore'
  * Displays a clickable card for an individual arc with its name and last update time.
  * Uses absolute positioning overlay pattern for full-card clickability while maintaining accessibility.
  */
-export default function ArcItem({ arc }: { arc: TArc }) {
+export function ArcItem({ arc }: { arc: TArc }) {
   const { campaignSlug } = useAppStore()
   return (
     <div className='bg-background relative cursor-pointer rounded border p-4 shadow transition hover:shadow-lg'>

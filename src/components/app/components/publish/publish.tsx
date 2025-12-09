@@ -1,8 +1,8 @@
 import { Button } from '@components/ui/button'
-import PremiumPrompt from '@components/ui/premium-prompt'
-import SavingSpinner from '@components/ui/saving-spinner'
+import { PremiumPrompt } from '@components/ui/premium-prompt'
+import { SavingSpinner } from '@components/ui/saving-spinner'
 import { Tooltip, TooltipContent } from '@components/ui/tooltip'
-import UsernamePrompt from '@components/ui/username-prompt'
+import { UsernamePrompt } from '@components/ui/username-prompt'
 import { useArcQueries } from '@hooks/useArcQueries'
 import { useCampaignQueries } from '@hooks/useCampaignQueries'
 import { useSubscriptionQueries } from '@hooks/useSubscriptionQueries'
@@ -18,7 +18,7 @@ type TPublish = {
   slug: string
 }
 
-export default function Publish({ published, type, slug }: TPublish) {
+export function Publish({ published, type, slug }: TPublish) {
   const { modifyArc } = useArcQueries()
   const { modifyThing } = useThingQueries()
   const { modifyCampaign } = useCampaignQueries()

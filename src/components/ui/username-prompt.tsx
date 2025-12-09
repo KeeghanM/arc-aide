@@ -17,10 +17,7 @@ type TUsernamePromptProps = {
   onSuccess: () => void
 }
 
-export default function UsernamePrompt({
-  onClose,
-  onSuccess,
-}: TUsernamePromptProps) {
+export function UsernamePrompt({ onClose, onSuccess }: TUsernamePromptProps) {
   const [username, setUsername] = useState('')
   const [displayUsername, setDisplayUsername] = useState('')
   const { setupUsername } = useUserQueries()

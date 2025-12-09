@@ -2,7 +2,7 @@ import { useSearchQueries } from '@hooks/useSearchQueries'
 import { useAppStore } from '@stores/appStore'
 import { properCase } from '@utils/string'
 import { useState } from 'react'
-import ScreenWrapper, { type TScreenWrapperProps } from '../../screen-wrapper'
+import { ScreenWrapper, type TScreenWrapperProps } from '../../screen-wrapper'
 
 type TSearchBarProps = {
   searchType?: 'thing' | 'arc' | 'any'
@@ -24,7 +24,7 @@ type TSearchBarProps = {
     }
 )
 
-export default function SearchBar({
+export function SearchBar({
   searchType = 'any',
   returnType = 'link',
   onSelect,

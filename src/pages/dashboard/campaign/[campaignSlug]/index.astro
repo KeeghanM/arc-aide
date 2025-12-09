@@ -1,13 +1,13 @@
 ---
-import SideBarWrapper from '@components/app/components/side-bar/side-bar'
-import CampaignScreen from '@components/app/screens/campaign'
+import { SideBarWrapper } from '@components/app/components/side-bar/side-bar'
+import { CampaignScreen } from '@components/app/screens/campaign'
 import { ModeToggle } from '@components/ui/mode-toggle'
 import { db } from '@db/db'
 import { arc, campaign as campaignSchema, thing } from '@db/schema'
 import MainLayout from '@layouts/main-layout.astro'
 import { desc } from 'drizzle-orm'
 import { and, eq } from 'drizzle-orm'
-import NavBar from '@/components/app/components/nav-bar/nav-bar'
+import { NavBar } from '@/components/app/components/nav-bar/nav-bar'
 
 const { campaignSlug } = Astro.params
 const { user } = Astro.locals

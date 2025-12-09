@@ -20,7 +20,7 @@ import { useThingQueries } from '@hooks/useThingQueries'
 import { useThingTypeQueries } from '@hooks/useThingTypeQueries'
 import { useAppStore } from '@stores/appStore'
 import { useState } from 'react'
-import CreateThingType from '../create-thing-type/create-thing-type'
+import { CreateThingType } from '../create-thing-type/create-thing-type'
 
 /**
  * Create Thing Dialog Component
@@ -29,7 +29,7 @@ import CreateThingType from '../create-thing-type/create-thing-type'
  * Requires selecting a Thing Type first, which categorizes the entity.
  * Includes inline Thing Type creation for better UX flow.
  */
-export default function CreateThing() {
+export function CreateThing() {
   const { thingTypesQuery } = useThingTypeQueries()
   const { campaignSlug } = useAppStore()
 

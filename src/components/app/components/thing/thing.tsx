@@ -9,7 +9,7 @@ import { useAppStore } from '@stores/appStore'
  * In D&D terms, a "Thing" represents any trackable entity in the campaign world.
  * Uses the same card pattern as Arc component for consistency.
  */
-export default function Thing({ thing }: { thing: TThing }) {
+export function Thing({ thing }: { thing: TThing }) {
   const { campaignSlug } = useAppStore()
   return (
     <div className='bg-background relative cursor-pointer rounded border p-4 shadow transition hover:shadow-lg'>

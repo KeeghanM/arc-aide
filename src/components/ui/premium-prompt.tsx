@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Button } from './button'
 import { Dialog, DialogContent, DialogTrigger } from './dialog'
 
-export default function PremiumPrompt({
+export function PremiumPrompt({
   children,
   onClose,
   trigger,

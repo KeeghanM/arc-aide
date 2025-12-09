@@ -12,7 +12,7 @@ import { Input } from '@components/ui/input'
 import { useArcQueries } from '@hooks/useArcQueries'
 import { useState } from 'react'
 
-export default function CreateArc() {
+export function CreateArc() {
   const { createArc } = useArcQueries()
   const [arcName, setArcName] = useState('')
   const [open, setOpen] = useState(false)

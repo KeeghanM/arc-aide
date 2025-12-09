@@ -17,7 +17,7 @@ import { useState } from 'react'
  * Renders a button that opens a confirmation dialog to delete the current Thing.
  * Uses useThingQueries hook to perform the deletion and manage state.
  */
-export default function DeleteThing() {
+export function DeleteThing() {
   const { deleteThing } = useThingQueries()
   const { currentThing, campaignSlug } = useAppStore()
   const [open, setOpen] = useState(false)

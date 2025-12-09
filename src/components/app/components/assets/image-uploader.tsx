@@ -9,7 +9,7 @@ import {
   DialogTrigger,
 } from '@components/ui/dialog'
 import { Input } from '@components/ui/input'
-import PremiumPrompt from '@components/ui/premium-prompt'
+import { PremiumPrompt } from '@components/ui/premium-prompt'
 import { useAssetQueries } from '@hooks/useAssetQueries'
 import { useSubscriptionQueries } from '@hooks/useSubscriptionQueries'
 import { LinkIcon, UploadCloudIcon } from 'lucide-react'
@@ -24,7 +24,7 @@ type TImageUploaderProps = {
  * This component handles the insertion of images into the editor.
  * Users can either upload an image file (premium feature) or provide an image URL.
  */
-export default function ImageUploader({
+export function ImageUploader({
   onUploadSuccess,
   altText,
 }: TImageUploaderProps) {

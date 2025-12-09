@@ -1,13 +1,13 @@
 import { type TArc, useArcQueries } from '@hooks/useArcQueries'
 import { type TThing, useThingQueries } from '@hooks/useThingQueries'
-import ArcItem from '../components/arc/arc-item'
-import CreateArc from '../components/arc/create-arc/create-arc'
-import CampaignSettings from '../components/campaign/campaign-settings/campaign-settings'
-import Publish from '../components/publish/publish'
-import CreateThing from '../components/thing/create-thing/create-thing'
-import Thing from '../components/thing/thing'
+import { ArcItem } from '../components/arc/arc-item'
+import { CreateArc } from '../components/arc/create-arc/create-arc'
+import { CampaignSettings } from '../components/campaign/campaign-settings/campaign-settings'
+import { Publish } from '../components/publish/publish'
+import { CreateThing } from '../components/thing/create-thing/create-thing'
+import { Thing } from '../components/thing/thing'
 import { useCampaignQueries } from '../hooks/useCampaignQueries'
-import ScreenWrapper, { type TScreenWrapperProps } from '../screen-wrapper'
+import { ScreenWrapper, type TScreenWrapperProps } from '../screen-wrapper'
 
 type TCampaignProps = {
   initialArcs: TArc[]
@@ -103,7 +103,7 @@ function Campaign({
   )
 }
 
-export default function CampaignScreen({
+export function CampaignScreen({
   published,
   campaignSlug,
   initialArcs,

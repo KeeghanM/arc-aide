@@ -34,6 +34,7 @@ export function useCampaignQueries() {
         const response = await fetch(`/api/campaigns/${campaignSlug}`)
         return response.json()
       },
+      enabled: !!slug,
     })
 
   // --- Mutations ---
