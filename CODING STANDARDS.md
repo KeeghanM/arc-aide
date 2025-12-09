@@ -445,6 +445,5 @@ const processOrder = (order) => {
 
 We believe that good documentation starts with well-written code. Documentation should complement the code, not replace it.
 
-If your code is clean, well-structured, and follows best practices, it will be easier to understand and maintain. Documentation should complement the code, not replace it.
-
+If your code is clean, well-structured, and follows best practices, it will be easier to understand and maintain.
 We write documentation not for ourselves or our current team, but for future developers who weren't there when we first wrote this code. Documentation is a living document that should be updated as the code changes.
