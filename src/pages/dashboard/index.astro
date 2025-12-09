@@ -1,10 +1,10 @@
 ---
-import DashboardScreen from '@components/app/screens/dashboard'
+import { DashboardScreen } from '@components/app/screens/dashboard'
 import { db } from '@db/db'
 import { campaign } from '@db/schema'
 import MainLayout from '@layouts/main-layout.astro'
 import { desc } from 'drizzle-orm'
-import NavBar from '@/components/app/components/nav-bar/nav-bar'
+import { NavBar } from '@/components/app/components/nav-bar/nav-bar'
 
 const campaigns = await db
   .select()

@@ -12,14 +12,14 @@ import {
 import { Input } from '@components/ui/input'
 import { useCampaignQueries } from '@hooks/useCampaignQueries'
 import { useEffect, useState } from 'react'
-import DeleteCampaign from './delete-campaign'
+import { DeleteCampaign } from './delete-campaign'
 
 /**
  * Delete Campaign Component
  * Renders a button that opens a confirmation dialog to delete the current campaign.
  * Uses useCampaignQueries hook to perform the deletion and manage state.
  */
-export default function CampaignSettings() {
+export function CampaignSettings() {
   const { campaignSlug } = useAppStore()
   const { modifyCampaign, useCampaignQuery } = useCampaignQueries()
   const campaignQuery = useCampaignQuery(campaignSlug ?? '')

@@ -1,6 +1,6 @@
-import AccountSettings from '../components/account/account-settings'
+import { AccountSettings } from '../components/account/account-settings'
 import { SubscriptionManager } from '../components/account/subscription-manager'
-import ScreenWrapper, { type TScreenWrapperProps } from '../screen-wrapper'
+import { ScreenWrapper, type TScreenWrapperProps } from '../screen-wrapper'
 
 type TAccountProps = {}
 
@@ -14,7 +14,10 @@ type TAccountProps = {}
  *
  * Wrapped with ScreenWrapper to provide React Query context.
  */
-function Account({ user, campaignSlug }: TAccountProps & TScreenWrapperProps) {
+export function AccountScreen({
+  user,
+  campaignSlug,
+}: TAccountProps & TScreenWrapperProps) {
   return (
     <ScreenWrapper
       user={user}
@@ -41,5 +44,3 @@ function Account({ user, campaignSlug }: TAccountProps & TScreenWrapperProps) {
     </ScreenWrapper>
   )
 }
-
-export default Account

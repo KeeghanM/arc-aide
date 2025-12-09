@@ -5,7 +5,7 @@ type TCampaignList = {
   initialCampaigns: TCampaign[]
 }
 
-export default function CampaignList({ initialCampaigns }: TCampaignList) {
+export function CampaignList({ initialCampaigns }: TCampaignList) {
   const { campaignsQuery } = useCampaignQueries()
   return (
     <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3'>

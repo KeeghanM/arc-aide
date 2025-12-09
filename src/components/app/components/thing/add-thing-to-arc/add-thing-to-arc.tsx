@@ -25,7 +25,7 @@ type TAddThingToArcProps = {
  * relationship between Things and Arcs. This enables Things to appear
  * in multiple story arcs throughout the campaign.
  */
-export default function AddThingToArc({ thingSlug }: TAddThingToArcProps) {
+export function AddThingToArc({ thingSlug }: TAddThingToArcProps) {
   const { campaignSlug } = useAppStore()
   const { addThingToArc } = useThingQueries()
   const [arc, setArc] = useState<{ slug: string; name: string } | null>(null)

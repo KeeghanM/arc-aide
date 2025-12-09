@@ -1,9 +1,9 @@
 import type { TScreenWrapperProps } from '@components/app/screen-wrapper'
-import ScreenWrapper from '@components/app/screen-wrapper'
+import { ScreenWrapper } from '@components/app/screen-wrapper'
 import { useCampaignQueries } from '@hooks/useCampaignQueries'
 import { useAppStore } from '@stores/appStore'
 import { Cog } from 'lucide-react'
-import SearchBar from '../search-bar/search-bar'
+import { SearchBar } from '../search-bar/search-bar'
 
 function Header() {
   const { campaignSlug, user } = useAppStore()
@@ -56,7 +56,7 @@ function Header() {
   )
 }
 
-export default function NavBar({ user, campaignSlug }: TScreenWrapperProps) {
+export function NavBar({ user, campaignSlug }: TScreenWrapperProps) {
   return (
     <ScreenWrapper
       user={user}

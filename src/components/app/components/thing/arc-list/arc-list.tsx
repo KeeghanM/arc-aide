@@ -33,7 +33,7 @@ function ArcList({ initialArcs, campaignSlug, thingSlug }: TArcListProps) {
   )
 }
 
-export default function ArcListWrapper({
+export function ArcListWrapper({
   initialArcs,
   campaignSlug,
   user,

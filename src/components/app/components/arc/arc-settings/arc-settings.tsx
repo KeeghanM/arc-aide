@@ -13,14 +13,14 @@ import { Input } from '@components/ui/input'
 import { Label } from '@components/ui/label'
 import { useArcQueries } from '@hooks/useArcQueries'
 import { useEffect, useState } from 'react'
-import DeleteArc from './delete-arc'
+import { DeleteArc } from './delete-arc'
 
 /**
  * Arc Settings Component
  * Renders a dialog for editing the current arc's name and managing arc settings.
  * Also provides access to the DeleteArc component for deleting the arc.
  */
-export default function ArcSettings() {
+export function ArcSettings() {
   const { modifyArc, useArcQuery } = useArcQueries()
   const { currentArc } = useAppStore()
   const arcQuery = useArcQuery(currentArc?.slug ?? '')

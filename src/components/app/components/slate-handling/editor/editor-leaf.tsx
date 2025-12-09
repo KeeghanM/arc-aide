@@ -5,11 +5,7 @@ import { Transforms } from 'slate'
 import { type RenderLeafProps, useSlate } from 'slate-react'
 import ImageUploader from '../../assets/image-uploader'
 
-export default function EditorLeaf({
-  attributes,
-  children,
-  leaf,
-}: RenderLeafProps) {
+export function EditorLeaf({ attributes, children, leaf }: RenderLeafProps) {
   const { campaignSlug } = useAppStore()
   const editor = useSlate()
 

@@ -20,7 +20,7 @@ import DeleteThing from './delete-thing'
  * Renders a button that opens a confirmation dialog to delete the current thing.
  * Uses useThingQueries hook to perform the deletion and manage state.
  */
-export default function ThingSettings() {
+export function ThingSettings() {
   const { modifyThing, useThingQuery } = useThingQueries()
   const { currentThing } = useAppStore()
   const thingQuery = useThingQuery(currentThing?.slug ?? '')

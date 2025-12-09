@@ -1,14 +1,15 @@
-import ThingTypeSettings from '@components/app/components/side-bar/thing-type-settings'
-import ScreenWrapper, {
+import { ThingTypeSettings } from '@components/app/components/side-bar/thing-type-settings'
+import {
+  ScreenWrapper,
   type TScreenWrapperProps,
 } from '@components/app/screen-wrapper'
 import { useArcQueries } from '@hooks/useArcQueries'
 import { useThingQueries } from '@hooks/useThingQueries'
 import { useThingTypeQueries } from '@hooks/useThingTypeQueries'
 import { useAppStore } from '@stores/appStore'
-import ArcItem from './arc-item'
-import CreateArc from '../arc/create-arc/create-arc'
-import CreateThing from '../thing/create-thing/create-thing'
+import { ArcItem } from './arc-item'
+import { CreateArc } from '../arc/create-arc/create-arc'
+import { CreateThing } from '../thing/create-thing/create-thing'
 
 type TSideBarProps = {}
 
@@ -102,7 +103,7 @@ function SideBar() {
   )
 }
 
-export default function SideBarWrapper({
+export function SideBarWrapper({
   user,
   campaignSlug,
 }: TSideBarProps & TScreenWrapperProps) {

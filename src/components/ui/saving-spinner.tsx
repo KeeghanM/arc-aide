@@ -1,4 +1,4 @@
-export default function SavingSpinner() {
+export function SavingSpinner() {
   return (
     <svg
       className='text-primary/50 animate-spin'

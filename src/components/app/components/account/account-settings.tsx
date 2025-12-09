@@ -6,7 +6,7 @@ import { useUserQueries } from '@hooks/useUserQueries'
 import { useAppStore } from '@stores/appStore'
 import { useState } from 'react'
 
-export default function AccountSettings() {
+export function AccountSettings() {
   const { user } = useAppStore()
   const { updateProfile } = useUserQueries()
   const [isEditing, setIsEditing] = useState(false)

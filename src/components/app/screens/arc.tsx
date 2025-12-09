@@ -4,16 +4,17 @@ import { useAppStore } from '@stores/appStore'
 import { extractRelatedItems } from '@utils/slate-text-extractor'
 import { useEffect, useState } from 'react'
 import type { Descendant } from 'slate'
-import ArcItem from '../components/arc/arc-item'
-import ArcSettings from '../components/arc/arc-settings/arc-settings'
-import ParentArc from '../components/arc/parent-arc/parent-arc'
-import Publish from '../components/publish/publish'
-import MarkdownEditor, {
+import { ArcItem } from '../components/arc/arc-item'
+import { ArcSettings } from '../components/arc/arc-settings/arc-settings'
+import { ParentArc } from '../components/arc/parent-arc/parent-arc'
+import { Publish } from '../components/publish/publish'
+import {
   defaultEditorValue,
+  MarkdownEditor,
 } from '../components/slate-handling/editor/markdown-editor'
-import SlateViewer from '../components/slate-handling/viewer'
+import { SlateViewer } from '../components/slate-handling/viewer'
 import type { TScreenWrapperProps } from '../screen-wrapper'
-import ScreenWrapper from '../screen-wrapper'
+import { ScreenWrapper } from '../screen-wrapper'
 
 type TArcProps = {
   arc: TArc
@@ -267,7 +268,7 @@ function Arc({ arc }: TArcProps) {
  * the Arc component to be used in different contexts (testing, etc.)
  * while keeping the data dependencies clear.
  */
-export default function ArcScreen({
+export function ArcScreen({
   arc,
   campaignSlug,
   user,

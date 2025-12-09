@@ -18,11 +18,7 @@ import {
 import { Pencil } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
-export default function ThingTypeSettings({
-  thingType,
-}: {
-  thingType: TThingType
-}) {
+export function ThingTypeSettings({ thingType }: { thingType: TThingType }) {
   const { modifyThingType, useThingTypeQuery } = useThingTypeQueries()
   const { campaignSlug } = useAppStore()
   const thingTypeQuery = useThingTypeQuery(campaignSlug ?? '', thingType.id)

@@ -1,7 +1,7 @@
 import type { TCampaign } from '@hooks/useCampaignQueries'
-import CampaignList from '../components/campaign/campaign-list/campaign-list'
-import CreateCampaign from '../components/campaign/create-campaign/create-campaign'
-import ScreenWrapper, { type TScreenWrapperProps } from '../screen-wrapper'
+import { CampaignList } from '../components/campaign/campaign-list/campaign-list'
+import { CreateCampaign } from '../components/campaign/create-campaign/create-campaign'
+import { ScreenWrapper, type TScreenWrapperProps } from '../screen-wrapper'
 
 type TDashboardProps = {
   initialCampaigns: TCampaign[]
@@ -19,7 +19,7 @@ function Dashboard({ initialCampaigns }: TDashboardProps) {
   )
 }
 
-export default function DashboardScreen({
+export function DashboardScreen({
   initialCampaigns,
   user,
 }: TDashboardProps & TScreenWrapperProps) {

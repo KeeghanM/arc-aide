@@ -9,7 +9,7 @@ type TArcItemProps = {
   level?: number
 }
 
-export default function ArcItem({ arc, allArcs, level = 0 }: TArcItemProps) {
+export function ArcItem({ arc, allArcs, level = 0 }: TArcItemProps) {
   const { campaignSlug } = useAppStore()
   const [isExpanded, setIsExpanded] = useState(false)
 
