@@ -60,8 +60,6 @@ export const setPublishingMode = (
 
   const elements = editorEl.querySelectorAll('[data-slate-node="element"]')
 
-  console.log({ publishModeOn, elements })
-
   elements.forEach((el, i) => {
     const eventListener = () => {
       const node = editor.children[i] as any

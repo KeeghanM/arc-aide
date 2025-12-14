@@ -26,6 +26,23 @@ ENV PUBLIC_POSTHOG_HOST=$PUBLIC_POSTHOG_HOST
 ARG PUBLIC_STRIPE_PUBLISHABLE_KEY
 ENV PUBLIC_STRIPE_PUBLISHABLE_KEY=$PUBLIC_STRIPE_PUBLISHABLE_KEY
 
+# Env variables for the build, with dummy values.
+# These will be replaced by real values at runtime.
+ENV SITE_URL="http://localhost:4321"
+ENV REVISION="development"
+ENV TURSO_DATABASE_URL="file:local.db"
+ENV TURSO_AUTH_TOKEN="dummy"
+ENV BETTER_AUTH_SECRET="dummy"
+ENV BETTER_AUTH_URL="http://localhost:4321"
+ENV RESEND_API_KEY="dummy"
+ENV KILLBILL_URL="http://127.0.0.1:8080"
+ENV KILLBILL_USERNAME="admin"
+ENV KILLBILL_PASSWORD="password"
+ENV KILLBILL_API_KEY="dummy"
+ENV KILLBILL_API_SECRET="dummy"
+ENV STRIPE_SECRET_KEY="dummy"
+
+
 RUN yarn build
 
 RUN yarn install --production --frozen-lockfile

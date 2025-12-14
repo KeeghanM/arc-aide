@@ -11,7 +11,7 @@ import {
 import { useThingQueries } from '@hooks/useThingQueries'
 import { useAppStore } from '@stores/appStore'
 import { useState } from 'react'
-import SearchBar from '../../search-bar/search-bar'
+import { SearchBar } from '../../search-bar/search-bar'
 
 type TAddThingToArcProps = {
   thingSlug: string
