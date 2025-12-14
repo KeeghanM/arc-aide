@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 
 export function useTranscription() {
   const [isRecording, setIsRecording] = useState(false)
-  // eslint-disable-next-line no-undef -- it's a global
+
   const [recognition, setRecognition] = useState<SpeechRecognition | null>(null)
 
   // Initialise recognition only on the client side
@@ -37,7 +37,6 @@ export function useTranscription() {
     }
   }
 
-  // eslint-disable-next-line no-undef -- it's a global
   const setOnResult = (callback: (event: SpeechRecognitionEvent) => void) => {
     if (recognition) {
       recognition.onresult = callback
