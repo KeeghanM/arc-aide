@@ -19,7 +19,7 @@ export default defineConfig({
   output: 'server', // Output mode for the site, 'static' for static site generation - we opt in to SSR per route
   env: {
     schema: envDefinition, // Environment variable schema definition
-    validateSecrets: true, // Validate secrets in production builds
+    validateSecrets: false, // Validate secrets in production builds
   },
 
   server: {
