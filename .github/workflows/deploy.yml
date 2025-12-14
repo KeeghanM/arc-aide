@@ -53,4 +53,5 @@ jobs:
 
       - name: Trigger redeploy
         run: |
-          curl -X POST ${{ secrets.APP_DEPLOY_URL }}
+          curl -X POST ${{ secrets.APP_DEPLOY_URL }} \
+          --header 'Authorization: ${{ secrets.DEPLOY_TOKEN }}'
