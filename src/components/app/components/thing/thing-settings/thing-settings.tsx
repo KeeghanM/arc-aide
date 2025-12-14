@@ -13,7 +13,7 @@ import { Input } from '@components/ui/input'
 import { Label } from '@components/ui/label'
 import { useThingQueries } from '@hooks/useThingQueries'
 import { useEffect, useState } from 'react'
-import DeleteThing from './delete-thing'
+import { DeleteThing } from './delete-thing'
 
 /**
  * Delete Thing Component

@@ -4,7 +4,7 @@ import { useArcQueries } from '@hooks/useArcQueries'
 import { useThingQueries } from '@hooks/useThingQueries'
 import { Eye, Pencil } from 'lucide-react'
 import * as React from 'react'
-import ScreenWrapper, { type TScreenWrapperProps } from '../app/screen-wrapper'
+import { ScreenWrapper, type TScreenWrapperProps } from '../app/screen-wrapper'
 
 /**
  * This is a mode toggle button that switches between 'edit' and 'view' modes.

@@ -1,9 +1,9 @@
-import SearchBar from '@components/app/components/search-bar/search-bar.tsx'
+import { SearchBar } from '@components/app/components/search-bar/search-bar.tsx'
 import { css } from '@emotion/css'
 import { useAppStore } from '@stores/appStore.ts'
 import { Transforms } from 'slate'
 import { type RenderLeafProps, useSlate } from 'slate-react'
-import ImageUploader from '../../assets/image-uploader'
+import { ImageUploader } from '../../assets/image-uploader'
 
 export function EditorLeaf({ attributes, children, leaf }: RenderLeafProps) {
   const { campaignSlug } = useAppStore()

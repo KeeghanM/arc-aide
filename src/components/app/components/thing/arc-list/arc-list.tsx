@@ -1,8 +1,9 @@
 import { useThingQueries } from '@components/app/hooks/useThingQueries'
-import ScreenWrapper, {
+import {
+  ScreenWrapper,
   type TScreenWrapperProps,
 } from '@components/app/screen-wrapper'
-import AddThingToArc from '../add-thing-to-arc/add-thing-to-arc'
+import { AddThingToArc } from '../add-thing-to-arc/add-thing-to-arc'
 
 type TArcListProps = {
   initialArcs: { id: number; name: string; slug: string }[]
