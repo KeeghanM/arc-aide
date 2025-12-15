@@ -47,7 +47,7 @@ ENV CLOUDFLARE_IMAGES_TOKEN="dummy"
 
 RUN yarn build
 
-RUN yarn install --production --frozen-lockfile
+RUN yarn install --frozen-lockfile
 
 FROM node:22-alpine AS runner
 WORKDIR /app
